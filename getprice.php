@@ -1,6 +1,6 @@
 <?php include "connection.php";
 
-$a="SELECT * FROM serviceprice WHERE itemTypeID = '".$_POST["ItemTypeID"]."' AND treatmentID = '".$_POST["TreatmentID"]."'";
+$a="SELECT * FROM icd WHERE icd_code = '".$_POST["icd_code"]."' AND cat_id = '".$_POST["cat_id"]."'";
 $q=mysqli_query($db, $a);
 while ($record=mysqli_fetch_array($q)) {
     echo $record['price'];
