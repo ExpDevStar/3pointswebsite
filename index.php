@@ -218,7 +218,6 @@ http://demos.codexworld.com/add-remove-input-fields-dynamically-using-jquery/ --
   var maxField = 10; //Input fields increment limitation
   var addButton = $('.add_button'); //Add button selector
   var wrapper = $('.field_wrapper'); //Input field wrapper
-  var fieldHTML = '<div><input type="text" id="test" name="field_name[]" value=""/><a href="javascript:void(0);" class="remove_button"><img src="remove-icon.png"/></a></div>'; //New input field html
   var x = 1; //Initial field counter is 1
   //Once add button is clicked
   $(addButton).click(function() {
@@ -229,8 +228,7 @@ http://demos.codexworld.com/add-remove-input-fields-dynamically-using-jquery/ --
         cartDiag = $('#DiagnosisID').val(),
         cartPrice = $('#Price').val()
       text = cartID + cartDiag + cartPrice;
-      $(wrapper).append(fieldHTML)
-      $('#test').val(text)
+        $(wrapper).append(`<div><input type="text" id="test" value="${text}"/><a href="javascript:void(0);" class="remove_button"><img src="remove-icon.png"/></a></div>`)
     }
   });
   //Once remove button is clicked
