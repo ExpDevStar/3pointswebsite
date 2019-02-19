@@ -1,5 +1,5 @@
 <?php
-
+	// remove $DB and swap with PDO
 	$db         = mysqli_connect('localhost', 'root', '', 'pdpm');
 	// require 'connection.php';
 	// $db = new DbConnect;

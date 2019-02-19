@@ -3,8 +3,7 @@
 session_start();
 
 ?>
-<!-- https://phppot.com/php/simple-php-shopping-cart/  and
-http://demos.codexworld.com/add-remove-input-fields-dynamically-using-jquery/ -->
+
 
 <html lang="en">
   <head>
