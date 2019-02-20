@@ -97,30 +97,29 @@ session_start();
 
       <h1>Enter a ICD-10-CM Code to Begin</h1>
       <form id="f-code" class="form" method="post" >
-      <div id="diagnosis-card">
-        <?php
-        include 'connection.php';
-        ?>
-    <input name="searchbox" readonly class="form-control" onfocus="if (this.value=='search') this.value = ''" type="text" id="clinicalID" value="Clinical Category">
+        <div id="item-card">
+          <label for="suggest">Enter Code:</label>
 
-      </select>
-    </div>
+          <input type="text" class="typeahead form-control" aria-label="Search for Code"  name="suggest" id="suggest" placeholder="Search for Code" value=""/>
+          <input type="hidden" class="hidden-cat"/>
+        </div>
+
       <div class="jumbotron">
         <div class="row">
           <div class="offset-md-3 col-sm-4 col-md-6">
-              <div id="item-card">
-                <label for="codelist">Enter Code:</label>
+              <!-- <div id="item-card"> -->
+                <!-- <label for="codelist">Enter Code:</label>
                 <select name="codeID" class="form-control" id="codeID">
                   <option selected="" disabled="">Select ICD-10-CM</option>
-                    <?php
-                    require 'data.php';
-                    $codes = loadCodes();
-                    foreach ($codes as $icd) {
+                   /*  <?php
+                 require 'data.php';
+                   $codes = loadCodes();
+                  foreach ($codes as $icd) {
                         echo "<option id='".$icd['icd_id']."' value='".$icd['icd_id']."'>".$icd['icd_code']."</option>";
                     }
-                     ?>
-                </select>
-              </div>
+                    ?> */
+              <!--   </select>-->
+              <!-- </div> -->
             <!-- <input type="text" class="form-control" aria-label="Search for Code" list="codelist" name="codelist" id="suggest" placeholder="Search for Code"/>
 
             <datalist id="codelist">
@@ -131,7 +130,17 @@ session_start();
 
             <!-- </div> -->
             <div id="diagnosis-card">
-            <h2>Diagnosis</h2>
+
+              <h2>Clinical</h2>
+            <div id="diagnosis-card">
+              <?php
+              include 'connection.php';
+              ?>
+          <input name="searchbox" readonly class="form-control" onfocus="if (this.value=='search') this.value = ''" type="text" id="clinicalID" value="Clinical Category">
+
+            </select>
+          </div>
+              <h2>Diagnosis</h2>
               <input name="DiagnosisID" readonly class="form-control" type="text" id="DiagnosisID" value="">
           <!--//<?php  echo "<input id='DiagnosisID'  value='".$icd['icd_desc']."'/>"; ?>-->
             </div>
@@ -176,43 +185,99 @@ session_start();
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script type="text/javascript" src="typeahead.js"></script>
+  <script type="text/javascript" src="bloodhound.min.js"></script>
 <script>
   $(document).ready(function() {
-  $("#suggest").keyup(function() {
-    $.get("getautocomplete.php", {
-      codelist: $(this).val()
-    }, function(data) {
-      $("datalist").empty();
-      $("datalist").html(data);
-    });
-  });
-  $("#codeID").change(function() {
-    var cid = $("#codeID").val();
-    var iid = $("#codeID").val();
-    console.log(iid)
-    $.ajax({
-      url: 'data.php',
-      method: 'POST',
-      data: 'cid=' + cid
-    }).done(function(category) {
-      console.log(category);
-      cat_id = JSON.parse(category);
-      cat_id.forEach(function(cat_id) {
-        $('#clinicalID').val(cat_id.cat_name)
-      })
+
+    // Twitter Bloodhound and TypeAhead to handle Auto Complete
+    // Instantiate the Bloodhound suggestion engine
+      var source = new Bloodhound({
+          datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+          queryTokenizer: Bloodhound.tokenizers.whitespace,
+          remote: {
+              url:'getautocomplete.php?st=%QUERY',
+              wildcard: '%QUERY',
+              filter: function (results) {
+                  // Map the remote source JSON array to a JavaScript object array
+                  return $.map(results, function (result) {
+                      return {
+                          value: result
+                      };
+                  });
+              }
+          }
+      });
+      // Initialize the Bloodhound suggestion engine
+      source.initialize();
+
+      $('#suggest').typeahead(null, {
+              name: 'value',
+             display: 'value',
+             templates: {
+             suggestion: function(data) {
+               console.log(data.value);
+               var details = "<div>" + data.value + "</div>";
+                  $('.hidden-cat').val(data.value)
+               return details
+             }
+            },
+             source: source.ttAdapter(),
+             limit:10
+          });
+          // Listen to when a selection is made
+    $('#suggest').on('typeahead:selected', function (e, datum) {
+      // grab the hidden input value
+      var hiddenCat = $('.hidden-cat').val()
+      // ajax call it and return the category ID
+      $.ajax({
+             url: 'getautocomplete.php',
+             type: 'POST',
+             data: {itemID: hiddenCat},
+             success: function(data) {
+             cat_id = JSON.parse(data);
+            cat_id.forEach(function(cat_id) {
+            $('.hidden-cat').val(cat_id.cat_id)
+            console.log("category_id", cat_id.cat_id)
+            return cat_id
+             })
+           }
+         })
+
     })
-    $.ajax({
-      url: 'data.php',
-      method: 'POST',
-      data: 'iid=' + iid
-    }).done(function(icd) {
-      console.log(icd);
-      icd_desc = JSON.parse(icd);
-      icd_desc.forEach(function(icd_desc) {
-        $('#DiagnosisID').val(icd_desc.icd_desc)
-      })
-    })
-  })
+
+
+    // on change of input field, grab the category id and search for matching
+    $("#suggest").change(function() {
+       var cid =   $('.hidden-cat').val();
+       var iid =   $('.hidden-cat').val();
+       console.log(iid)
+       $.ajax({
+         url: 'data.php',
+         method: 'POST',
+         data: 'cid=' + cid
+       }).done(function(category) {
+         console.log(category);
+         cat_id = JSON.parse(category);
+         cat_id.forEach(function(cat_id) {
+           // fill in clinical id
+           $('#clinicalID').val(cat_id.cat_name)
+         })
+       })
+       $.ajax({
+         url: 'data.php',
+         method: 'POST',
+         data: 'iid=' + iid
+       }).done(function(icd) {
+         console.log(icd);
+         icd_desc = JSON.parse(icd);
+         icd_desc.forEach(function(icd_desc) {
+           // fill in diagnosis
+           $('#DiagnosisID').val(icd_desc.icd_desc)
+         })
+       })
+     })
+
   // Dynamically Add More Input Fields after Add Button //Add to cart
   var maxField = 10; //Input fields increment limitation
   var addButton = $('.add_button'); //Add button selector
@@ -236,7 +301,10 @@ session_start();
     $(this).parent('div').remove();
     x--; //Decrement field counter
   });
-  // Submit Final cart
+
+
+
+  // Submit Final cart Sample Code Doesn't Work Yet
   function finalCart() {
     var name = document.getElementById("name").value;
     var email = document.getElementById("email").value;
