@@ -80,109 +80,104 @@ if (isset($_GET['logout'])) {
     </style>
   </head>
   <body>
-  <div class="wrapper">
-    <!-- Sidebar -->
-    <nav id="sidebar">
-        <div class="sidebar-header">
-            <h3>Medical Software ©</h3>
-            <strong>MS</strong>
-        </div>
+    <!--Main Navigation-->
+<header>
+  <!-- Navbar -->
+  <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+    <div class="container">
 
-        <ul class="list-unstyled components">
-            <li class="active">
-                <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <i class="fas fa-home"></i>
-                    Home
-                </a>
-                <ul class="collapse list-unstyled" id="homeSubmenu">
-                    <li>
-                        <a href="#">Medical Code Lookup</a>
-                    </li>
-                    <li>
-                        <a href="#">Medical Treatment Price</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <i class="fas fa-copy"></i>
-                    Profile
-                </a>
-                <ul class="collapse list-unstyled" id="pageSubmenu">
-                    <li>
-                        <a href="#">Settings</a>
-                    </li>
-                    <li>
-                        <a href="#">Exit</a>
-                    </li>
-                    <li>
-                        <a href="#">Misc</a>
-                    </li>
-                </ul>
-              </li>
-              <li>
-                <a href="#">
-                    <i class="fas fa-briefcase"></i>
-                    About
-                </a>
-            </li>
+      <!-- Brand -->
+      <a class="navbar-brand waves-effect" href="3pointsoftware.com" target="_blank">
+        <strong class="blue-text">3Point</strong>
+      </a>
+
+      <!-- Collapse -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Links -->
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        <!-- Left -->
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link waves-effect" href="#">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link waves-effect" href="registration.php" target="_blank">Registration </a>
+          </li>
+
         </ul>
-    </nav>
-    <!-- Page Content -->
-    <div id="content">
+        <!-- notification message -->
+        <?php if (isset($_SESSION['success'])) : ?>
+          <div class="error success" >
+            <h3>
+              <?php
+                echo $_SESSION['success'];
+                unset($_SESSION['success']);
+              ?>
+            </h3>
+          </div>
+        <?php endif ?>
+
+        <!-- logged in user information -->
 
 
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-         <button type="button" id="sidebarCollapse" class="btn btn-info">
-             <i class="fas fa-bars"></i>
-             <!-- <span>Menu</span> -->
-         </button>
-         <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-             <i class="fas fa-align-justify"></i>
-         </button>
-         <div class="content">
-  	<!-- notification message -->
-  	<?php if (isset($_SESSION['success'])) : ?>
-      <div class="error success" >
-      	<h3>
-          <?php
-          	echo $_SESSION['success'];
-          	unset($_SESSION['success']);
-          ?>
-      	</h3>
+        <!-- Right -->
+        <ul class="navbar-nav nav-flex-icons">
+          <li class="nav-item">
+              <?php  if (isset($_SESSION['username'])) : ?>
+          <a href="index.php?logout='1'"  class="nav-link waves-effect" style="color: red;">logout <strong><?php echo $_SESSION['username']; ?></strong></a>
+
+          <?php endif ?>
+              <i class="fab fa-facebook-f"></i>
+            </a>
+          </li>
+
+        </ul>
+
       </div>
-  	<?php endif ?>
 
-    <!-- logged in user information -->
-    <?php  if (isset($_SESSION['username'])) : ?>
-    	<p>Welcome <strong><?php echo $_SESSION['username']; ?></strong></p>
-    	<p> <a href="index.php?logout='1'" style="color: red;">logout</a> </p>
-    <?php endif ?>
-</div>
-        </div>
-      </nav>
+    </div>
+  </nav>
+  <!-- Navbar -->
 
-      <h1>Enter a ICD-10-CM Code to Begin</h1>
-      <form id="f-code" class="form" method="post" >
-        <div id="item-card">
-          <label for="suggest">Enter Code:</label>
+</header>
+<main>
 
-          <input type="text" class="typeahead form-control" aria-label="Search for Code"  name="suggest" id="suggest" placeholder="Search for Code" value=""/>
+    <div class="container-fluid mt-5 pt-5">
+  <!--Main layout-->
+
+    <div class="row">
+
+      <div class="offset-md-2 col-lg-7 col-md-7">
+      <div class="card">
+        <div class="card-header">
           <input type="hidden" class="hidden-cat"/>
           <input type="hidden" class="hidden-id"/>
+          <label for="suggest"><h5 class="card-title"><strong>Enter Code</strong></h5></label>
+      <div class="md-form mt-0">
+        <input class="typeahead form-control" type="text" id="suggest" ria-label="Search for Code" placeholder="Search for Code" value="" name="suggest">
+      </div>
         </div>
+        <div class="card-body" id="cardResult">
 
-      <div class="jumbotron">
+
+
+
         <div class="row">
           <div class="offset-md-3 col-sm-4 col-md-6">
 
 
             <div id="diagnosis-card">
 
-              <h2>Clinical</h2>
+              <h5 class="card-title">Clinical</h5>
             <div id="diagnosis-card">
-
+                <form id="f-code" class="form" method="post" >
           <input name="searchbox" readonly class="form-control" onfocus="if (this.value=='search') this.value = ''" type="text" id="clinicalID" value="">
 
 
@@ -205,29 +200,50 @@ if (isset($_GET['logout'])) {
             <button type="button" id="addToCart"  class="add_button btn btn-primary">Add</button>
           </div>
       </div>
-    </div>
+
 </form>
 </div> <!-- page content -->
-<!-- <button id="sort">Sort</button>
-<div class="field_wrapper">
-      <div class="item" data-order=""><input type="text" readonly="" id="cartitem" value="ID: A0104 RANK:  "><a href="javascript:void(0);" class="remove_button"><img src="remove-icon.png"></a></div><div class="item" data-order="7">
-        <input type="text" readonly="" id="cartitem" value="ID: A0101 RANK:  7"><a href="javascript:void(0);" class="remove_button"><img src="remove-icon.png"></a></div><div class="item" data-order="5"><input type="text" readonly="" id="cartitem" value="ID: A009 RANK:  5">
-          <a href="javascript:void(0);" class="remove_button">
-        <img src="remove-icon.png"></a>
-      </div>
-    </div> -->
-  <!-- Medical Cart -->
-  <div id="sidebar-right">
-    <div id="shopping-cart">
-      <div class="field_wrapper">
-      </div>
-      <div class="txt-heading"># Of Codes Entered</div>
-      <button class="btn btn-danger"><a id="btnEmpty" href="index.php?action=empty">Reset List</a></button>
-      <div class="no-records">Nothing Exists</div>
-      <button type="button" onclick="finalCart()" class="btn btn-success">Complete</button>
-    </div>
-  </div>
+</div> <!-- card-->
+</div> <!-- col md-10-->
+
+
+<div class="col-md-3">
+  <div class="sticky" style="position: fixed; width: 222.575px; height: 260px; top: 90px; z-index: 2;">
+      <div id="scrollspy">
+
+    <!-- Medical Cart -->
+    <div id="sidebar-right">
+      <div id="shopping-cart">
+        <div class="card users-listing-small mb-4">
+          <div class="card-header text-center py-3">
+            <h4>Codes Entered</h4>
+          </div>
+          <!--Card content-->
+          <div class="card-body ">
+            <ul class="list-unstyled">
+              <div class="field_wrapper">
+
 </div>
+            </ul>
+            <button class="btn btn-danger align-items-center"><a id="btnEmpty" href="index.php?action=empty">Reset List</a></button>
+            <button type="button" onclick="finalCart()" class="align-items-center btn btn-success">Complete</button>
+          </div>
+        </div>
+
+
+
+      </div>
+    </div>
+      </div>
+        </div>
+</div>
+</div> <!-- col md-2-->
+
+</div><!-- row -->
+</div>
+
+
+</main>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
@@ -242,6 +258,8 @@ if (isset($_GET['logout'])) {
 <script>
   $(document).ready(function() {
 
+    // Hide result
+    $('#cardResult').hide();
     // Twitter Bloodhound and TypeAhead to handle Auto Complete
     // Instantiate the Bloodhound suggestion engine
       var source = new Bloodhound({
@@ -285,6 +303,9 @@ if (isset($_GET['logout'])) {
       // a simple user
    console.log(datumConvert);   // you'll get xxx
 
+     $('#cardResult').slideDown("slow", function() {
+
+    });
    // stripping this extra fluff out
    var stripDatum = datumConvert.replace(/[{()}]/g, '');
    var stripDatum2 = stripDatum.replace(/[\[\]':value]+/g, '');
@@ -363,6 +384,8 @@ if (isset($_GET['logout'])) {
           var icd_secondary_ranking = (icd_desc.icd_secondary_ranking);
            if (icd_ranking >= icd_secondary_ranking) {
              console.log('lesser or equal')
+             $('#ranking').html("Elgible for Discounts").val(icd_ranking);
+             $('#ranking_text').html("Not Elgible for Discounts").fadeIn("fast");
            } else {
              console.log('greater');
 
@@ -388,7 +411,7 @@ if (isset($_GET['logout'])) {
 
 
   // Dynamically Add More Input Fields after Add Button //Add to cart
-  var maxField = 10; //Input fields increment limitation
+  var maxField = 50; //Input fields increment limitation
   var addButton = $('.add_button'); //Add button selector
   var wrapper = $('.field_wrapper'); //Input field wrapper
   var x = 1; //Initial field counter is 1
@@ -397,14 +420,20 @@ if (isset($_GET['logout'])) {
     $('.item');
     //Check maximum number of input fields
     if (x < maxField) {
-      x++; //Increment field counter
-      var cartID = $('#suggest').val(),
+      x++; //Increment field
+      var cartID = $('.hidden-id').val(),
         cartDiag = $('#DiagnosisID').val(),
         cartRank = $('#ranking').val();
         cartPrice = $('#Price').val()
+        cartNumber = +x;
       text = "ID: " + cartID + " " + "RANK:  " + cartRank;
-        // $('.field_wrapper div').detach();
-        $(wrapper).append(`<div class="item" data-order="${cartRank}"><input type="text" readonly id="cartitem" value="${text}"/><a href="javascript:void(0);" class="remove_button"><img src="remove-icon.png"/></a></div>`)
+
+        $(wrapper).append(`<div>
+        <div class="item" data-order="${cartRank}"><h5 class="mt-0 mb-2 font-weight-bold">${cartNumber}
+        <a href="/icdnumberlist?id=2">${cartID}</a>
+        </h5>
+        <p class="badge teal darken-4">${cartRank}<i class="fas fa-thumbs-o-up mx-1"></i></p>
+        <a href="javascript:void(0);" class="remove_button"/> <i class="fa fa-times" aria-hidden="true"></i></div><hr></div>`)
         $('.field_wrapper div').sort(function(a, b) {
          return $(b).data('order') - $(a).data('order');
        }).appendTo('.field_wrapper');
