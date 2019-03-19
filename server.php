@@ -4,6 +4,8 @@ session_start();
 // initializing variables
 $username = "";
 $email    = "";
+$firstname = "";
+$lastname    = "";
 $errors = array();
 
 // connect to the database
@@ -12,6 +14,8 @@ $db = mysqli_connect('localhost', 'root', '', 'pdpm');
 // REGISTER USER
 if (isset($_POST['reg_user'])) {
   // receive all input values from the form
+  $firstname = mysqli_real_escape_string($db, $_POST['firstname']);
+  $lastname = mysqli_real_escape_string($db, $_POST['lastname']);
   $username = mysqli_real_escape_string($db, $_POST['username']);
   $email = mysqli_real_escape_string($db, $_POST['email']);
   $password_1 = mysqli_real_escape_string($db, $_POST['password_1']);
@@ -19,6 +23,8 @@ if (isset($_POST['reg_user'])) {
 
   // form validation: ensure that the form is correctly filled ...
   // by adding (array_push()) corresponding error unto $errors array
+  if (empty($firstname)) { array_push($errors, "First name is required"); }
+  if (empty($lastname)) { array_push($errors, "Last name is required"); }
   if (empty($username)) { array_push($errors, "Username is required"); }
   if (empty($email)) { array_push($errors, "Email is required"); }
   if (empty($password_1)) { array_push($errors, "Password is required"); }
@@ -46,8 +52,8 @@ if (isset($_POST['reg_user'])) {
   if (count($errors) == 0) {
   	$password = md5($password_1);//encrypt the password before saving in the database
 
-  	$query = "INSERT INTO users (username, email, password)
-  			  VALUES('$username', '$email', '$password')";
+  	$query = "INSERT INTO users (firstname, lastname, username, email, password)
+  			  VALUES('$firstname', '$lastname', '$username', '$email', '$password')";
   	mysqli_query($db, $query);
   	$_SESSION['username'] = $username;
   	$_SESSION['success'] = "You are now logged in";

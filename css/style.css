@@ -274,6 +274,10 @@ i, span {
 #sidebar-right a[data-toggle="collapse"] {
   position: relative;
 }
+.card-body-sidebar{
+  overflow-y: scroll;
+height: 460px;
+}
 .dropdown-toggle::after {
   display: block;
   position: absolute;
@@ -315,8 +319,9 @@ a.article, a.article:hover {
   transition: all 0.3s;
 }
 #cardResult {
-  display: none;
+  /* display: none; */
   top:2.0rem;
+  display:block;
 }
 /* ---------------------------------------------------
     MEDIAQUERIES

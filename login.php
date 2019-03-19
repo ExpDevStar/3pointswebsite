@@ -22,30 +22,59 @@
 
 </head>
 <body>
-  <div class="header">
-  	<h2>Login</h2>
-  </div>
-    <div class="container-fluid">
-      <div class="jumbotron">
-        <div class="row">
-          <div class="offset-md-3 col-sm-4 col-md-6">
-  <form method="post" action="login.php">
+  <div class="container-fluid mt-5 pt-5">
+  <!--Main layout-->
+
+  <div class="row">
+
+    <div class="offset-md-4 col-lg-4 col-md-5">
+<div class="card">
+
+    <h5 class="card-header info-color white-text text-center py-4">
+        <strong>Login</strong>
+    </h5>
+
+    <!--Card content-->
+    <div class="card-body px-lg-5 pt-0">
+  <form method="post" class="text-center" style="color: #757575;" action="login.php">
   	<?php include('errors.php'); ?>
-  	<div class="input-group">
-  		<label>Username</label>
-  		<input type="text" name="username" >
-  	</div>
-  	<div class="input-group">
-  		<label>Password</label>
-  		<input type="password" name="password">
-  	</div>
-  	<div class="input-group">
-  		<button type="submit" class="btn" name="login_user">Login</button>
-  	</div>
-  	<p>
-  		Not yet a member? <a href="register.php">Sign up</a>
-  	</p>
+    <!-- Email -->
+     <div class="md-form input-group">
+       <input type="TEXT" id="materialLoginFormUsername" class="form-control" name="username">
+       <label for="materialLoginFormUsername">Username</label>
+     </div>
+     <!-- Password -->
+    <div class="md-form input-group">
+      <input type="password" id="materialLoginFormPassword" class="form-control"  name="password">
+      <label for="materialLoginFormPassword">Password</label>
+    </div>
+    <div class="d-flex justify-content-around">
+         <div>
+           <!-- Remember me -->
+           <div class="form-check">
+             <input type="checkbox" class="form-check-input" id="materialLoginFormRemember">
+             <label class="form-check-label" for="materialLoginFormRemember">Remember me</label>
+           </div>
+         </div>
+         <div>
+           <!-- Forgot password -->
+           <a href="">Forgot password?</a>
+         </div>
+       </div>
+       <!-- Sign in button -->
+    <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0"  name="login_user" type="submit">Sign in</button>
+
+    <!-- Register -->
+    <p>Not a member?
+    <a href="register.php">Register</a>
+    </p>
+
+
   </form>
-</div></div></div></div>
+</div>
+
+</div>
+<!-- Material form login -->
+</div></div></div>
 </body>
 </html>
