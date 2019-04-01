@@ -73,7 +73,16 @@ i, span {
 /* ---------------------------------------------------
     Registration
 ------------------------------------------------------ */
+.btn-blue{
+  border: 2px solid #33b5e5!important;
+background-color: #33b5e5!important;
+color: #fff!important;
 
+}
+.btn-blue.disabled, .btn-blue:disabled {
+    color: #33b5e5!important;
+    background-color: transparent!important;
+}
 .input-group {
   margin: 10px 0px 10px 0px;
 }
@@ -107,6 +116,7 @@ i, span {
   border: 1px solid #3c763d;
   margin-bottom: 20px;
 }
+
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
@@ -274,9 +284,33 @@ i, span {
 #sidebar-right a[data-toggle="collapse"] {
   position: relative;
 }
+@media (min-width: 576px){
+.modal-dialog {
+    max-width: 700px;
+    margin: 1.75rem auto;
+}
+}
+.cart-rank{
+position: relative;
+}
+.highlight-red{
+  background-color: red;
+color: white;
+}
+.remove_button{
+  position: relative;
+  float: right;
+  margin: -39px 0;
+}
+.field_wrapper h5{
+  font-size: 14px;
+}
+.field_wrapper {
+  font-size: 14px;
+}
 .card-body-sidebar{
   overflow-y: scroll;
-height: 460px;
+height: 445px;
 }
 .dropdown-toggle::after {
   display: block;

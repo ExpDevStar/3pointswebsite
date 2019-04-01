@@ -11,6 +11,9 @@ if(isset($_POST['cid'])) {
 	echo json_encode($category);
 }
 
+
+
+
 if(isset($_POST['iid'])) {
 	$db = new DbConnect;
 	$conn = $db->connect();
@@ -22,26 +25,27 @@ if(isset($_POST['iid'])) {
 	$icd = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	echo json_encode($icd);
 
-	include 'connection.php';
-$a="SELECT * FROM icd WHERE icd_ranking >= icd_secondary_ranking";
-$q=mysqli_query($db, $a);
+	// include 'connection.php';
+	// $a="SELECT * FROM icd WHERE icd_ranking >= icd_secondary_ranking";
+	// $q=mysqli_query($db, $a);
+	//
+	//
+	// while($query_exec=mysqli_fetch_array($q, MYSQLI_ASSOC))
+	// {
+	// 	$bool = $query_exec['Available'];
+	// 	if($bool>0)
+	// 	{
+	// 		$bool="YES";
+	// 	}
+	// 	else
+	// 	{
+	// 		$bool="NO";
+	// 	}
+	//
+	// 	echo "<table><tr><td>'.$bool.'</td></tr></table>";
+	// }
+}
 
-
-while($query_exec=mysqli_fetch_array($q, MYSQLI_ASSOC))
-{
-$bool = $query_exec['Available'];
-if($bool>0)
-{
-$bool="YES";
-}
-else
-{
-$bool="NO";
-}
-
-echo "<table><tr><td>'.$bool.'</td></tr></table>";
-}
-}
 function loadCodes(){
 		$db = new DbConnect;
 		$conn = $db->connect();

@@ -2,7 +2,7 @@
 if (isset($_GET['st'])) {
     $str = $_GET['st'];
 
-    $connection = mysqli_connect("localhost", "root", "", "pdpm");
+    $connection = mysqli_connect("localhost", "root", "z%WA4747E*GW", "pdpm");
 
     $sql = "SELECT icd_code FROM icd WHERE icd_code LIKE '%{$str}%' ORDER BY icd_code";
 

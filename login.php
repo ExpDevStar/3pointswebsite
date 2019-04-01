@@ -6,7 +6,6 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- Bootstrap CSS -->
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -22,6 +21,15 @@
 
 </head>
 <body>
+  <!-- Navbar -->
+  <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+    <div class="container">
+      <!-- Brand -->
+      <a class="navbar-brand waves-effect" href="3pointssoftware.com" target="_blank">
+        <strong class="blue-text"><img src="./img/logo.png" width="40px"></strong>
+      </a>
+    </div>
+  </nav>
   <div class="container-fluid mt-5 pt-5">
   <!--Main layout-->
 
@@ -40,13 +48,13 @@
   	<?php include('errors.php'); ?>
     <!-- Email -->
      <div class="md-form input-group">
-       <input type="TEXT" id="materialLoginFormUsername" class="form-control" name="username">
-       <label for="materialLoginFormUsername">Username</label>
+       <input type="TEXT" id="materialLoginFormUsername" placeholder="Email"class="form-control" name="username">
+       <!-- <label for="materialLoginFormUsername">Email</label> -->
      </div>
      <!-- Password -->
     <div class="md-form input-group">
-      <input type="password" id="materialLoginFormPassword" class="form-control"  name="password">
-      <label for="materialLoginFormPassword">Password</label>
+      <input type="password" id="materialLoginFormPassword" placeholder="Password" class="form-control"  name="password">
+      <!-- <label for="materialLoginFormPassword">Password</label> -->
     </div>
     <div class="d-flex justify-content-around">
          <div>
@@ -65,8 +73,8 @@
     <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0"  name="login_user" type="submit">Sign in</button>
 
     <!-- Register -->
-    <p>Not a member?
-    <a href="register.php">Register</a>
+    <p>
+    <a href="register.php" style="text-decoration: underline;">Not a member? Register</a>
     </p>
 
 
@@ -76,5 +84,57 @@
 </div>
 <!-- Material form login -->
 </div></div></div>
+<footer id="footer" class="page-footer unique-color-dark mt-4">
+
+  <!--Footer Links-->
+  <div class="container text-center py-4 text-md-left mt-5">
+    <div class="row mt-3">
+
+
+      <!--/.Second column-->
+      <!--Fourth column-->
+      <div class="col-md-4 col-lg-3 mx-auto col-xl-3">
+        <h6 class="text-uppercase font-weight-bold">
+          <strong>Support</strong>
+        </h6>
+        <hr class="info-color mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+        <p>
+          <i class="fas fa-envelope mr-3"></i> support@3pointssoftware.com</p>
+      </div>
+      <!--/.Fourth column-->
+      <!--First column-->
+      <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+        <h6 class="text-uppercase font-weight-bold">
+          <strong>About Us</strong>
+        </h6>
+        <hr class="info-color mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+        <p>
+          <a id="footer-link-policy" href="./about-us.php">About Us</a>
+        </p>
+      </div>
+      <!--/.First column-->
+      <!--Second column-->
+      <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-4">
+        <h6 class="text-uppercase font-weight-bold">
+          <strong>Use Cases</strong>
+        </h6>
+        <hr class="info-color mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+        <p>
+          <a id="footer-link-tutBootstrap" href="./usecase.php">Use Case</a>
+        </p>
+        <p>
+      </div>
+    </div>
+  </div>
+  <!--/.Footer Links-->
+  <!-- Copyright-->
+  <div class="footer-copyright py-3 text-center">
+    © 2019 Copyright:
+    <a href="https://threepointssoftware.com">
+      <strong> 3Points Software</strong>
+    </a>
+  </div>
+  <!--/.Copyright -->
+</footer>
 </body>
 </html>
