@@ -68,6 +68,28 @@ if (isset($_GET['logout'])) {
       .tt-suggestion p {
           margin: 0;
       }
+      /* override styles when printing */
+      @media print {
+        body {
+          margin: 0;
+          color: #000;
+          background-color: #fff;
+        }
+        img, svg {
+        display: none;
+      }
+
+      img.print, svg.print {
+        display: block;
+        max-width: 100%;
+      }
+      header, footer, aside, nav, form, iframe, .menu, .hero, .modal-footer, .modal-header, .close{
+        display: none;
+      }
+      .modal-body {
+        display:block;
+      }
+      }
     </style>
   </head>
   <body screen_capture_injected="true">
@@ -78,7 +100,7 @@ if (isset($_GET['logout'])) {
     <div class="container">
       <!-- Brand -->
       <a class="navbar-brand waves-effect" href="3pointssoftware.com" target="_blank">
-          <strong class="blue-text"><img src="./img/logo.png" width="40px"></strong>
+          <strong class="blue-text"><img src="./img/logo.png" width="70px"></strong>
       </a>
       <!-- Collapse -->
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -192,13 +214,20 @@ if (isset($_GET['logout'])) {
                   </div>
                   <!--Card content-->
                   <div class="card-body card-body-sidebar">
-                    <ul class="list-unstyled">
+
                       <div class="field_wrapper">
+
                         <form id="cart"></form>
+                          <ul id="ulcart" style="list-style-type:disc;">
+                                </ul>
                       </div>
-                    </ul>
-                    <button class="btn btn-warning align-items-center"><a id="btnEmpty">Reset List</a></button>
+
+                    <div class="bottom-buttons">
+                      <span>
+                    <button class="btn btn-warning align-items-center" id="emptyBtn"><a id="btnEmpty">Reset List</a></button>
                     <button type="button" data-toggle="modal" data-target="#centralModalSuccess" id="completeBtn" class="align-items-center btn btn-success complete">Complete</button>
+                  </span>
+                  </div>
                   </div>
                 </div>
               </div>
@@ -222,8 +251,11 @@ if (isset($_GET['logout'])) {
           </button>
         </div>
         <!--Body-->
-        <div class="modal-body text-center">
-            <div id="modal-text"></div>
+        <div class="modal-body ">
+            <div id="modal-text">
+            <ol>
+
+            </ol></div>
         </div>
         <!--Footer-->
         <div class="modal-footer justify-content-center">
@@ -305,6 +337,7 @@ if (isset($_GET['logout'])) {
 <script type="text/javascript" src="js/bloodhound.min.js"></script>
 <script type="text/javascript" src="js/printThis.js"></script>
 <script>
+// Enable tooltips
   // feedback
 document.addEventListener('DOMContentLoaded',
   function () {
@@ -321,10 +354,10 @@ $(document).ready(function()
   $('#btnEmpty').click(function () {
     var r = confirm("You agree to resetting this list");
     if (r == true) {
-  console.log("You pressed OK!");
+  // console.log("You pressed OK!");
   window.location.assign("index.php?action=empty");
 } else {
-  console.log("You pressed Cancel!");
+  // console.log("You pressed Cancel!");
 }
 
   })
@@ -409,7 +442,7 @@ $(document).ready(function()
     // grab the hidden input value
     var datumConvert = JSON.stringify(datum);
     // a simple user
-    console.log(datumConvert); // you'll get xxx
+    // console.log(datumConvert); // you'll get xxx
     // $('#cardResult').slideDown("slow", function() {});
     // stripping this extra fluff out
     var stripDatum = datumConvert.replace(/[{()}]/g, '');
@@ -417,7 +450,7 @@ $(document).ready(function()
     var stripDatum3 = stripDatum2.replace(/[\[\]""]+/g, '');
     $('.hidden-cat').val(stripDatum3)
     $('.hidden-id').val(stripDatum3)
-    console.log(stripDatum3)
+    // console.log(stripDatum3)
     var hiddenCat = $('.hidden-cat').val()
     var hiddenID = $('.hidden-id').val()
     // ajax call it and return the category ID
@@ -435,7 +468,7 @@ $(document).ready(function()
         cat_id.forEach(function(cat_id)
         {
           $('.hidden-cat').val(cat_id.cat_id)
-          console.log("category_id", cat_id.cat_id)
+          // console.log("category_id", cat_id.cat_id)
           return cat_id
         })
       }
@@ -477,7 +510,7 @@ $(document).ready(function()
         data: 'cid=' + cid
       }).done(function(category)
       {
-        console.log(category);
+        // console.log(category);
         cat_id = JSON.parse(category);
         cat_id.forEach(function(cat_id)
         {
@@ -507,32 +540,47 @@ $(document).ready(function()
         {
           // fill in diagnosis
           $('#DiagnosisID').val(icd_desc.icd_desc)
-          $('#Price').val(icd_desc.case_min_index)
+          $('#Price').val(icd_desc.icd_tertiary_ranking)
 
           // grab ranking and compare if its higher or not
           var icd_ranking = (icd_desc.icd_ranking);
           var icd_secondary_ranking = (icd_desc.icd_secondary_ranking);
-          if (icd_secondary_ranking < icd_ranking)
+          if ( icd_secondary_ranking == '0' || icd_secondary_ranking == '' || icd_secondary_ranking == 'undefined' || icd_secondary_ranking == null )
           {
-            console.log('greater')
-            $('#ranking').val(icd_secondary_ranking);
-            // $('#ranking').html("Return to Provider").val(icd_secondary_ranking);
-            // $('#ranking_text').html("Return to Provider").fadeIn("fast");
+            // console.log("emty")
+            //console.log("secondary rank", icd_secondary_ranking)
+          // var icd_secondary_ranking = icd_ranking;
+           $('#ranking').val(icd_ranking);
           }
-          else
-          {
-            console.log('lesser');
-            // $('#ranking_text').html("");
-            // $('#ranking').html(" ").val(icd_ranking);
-            // $('#ranking_text').html(" ").fadeIn("fast");
+           else {
+             // console.log("secondary rank", icd_secondary_ranking)
+             var cartRankAdjusted = + 9.0 + icd_secondary_ranking;
+             $('#ranking').val(cartRankAdjusted);
+           }
+          // if (icd_ranking < icd_secondary_ranking)
+          // {
+          //     console.log('less than')
+          //
+          //   $('#ranking').val(cartRankAdjusted);
+          //   // $('#ranking').html("Return to Provider").val(icd_secondary_ranking);
+          //   // $('#ranking_text').html("Return to Provider").fadeIn("fast");
+          // }
+          // else
+          // {
+          //   console.log('greater');
+          //   // $('#ranking_text').html("");
+          //   // $('#ranking').html(" ").val(icd_ranking);
+          //   // $('#ranking_text').html(" ").fadeIn("fast");
+          //
+          //
+          //
+          //
+          // };
 
-            $('#ranking').val(icd_ranking);
-          };
 
 
-
-    console.log(cid);
-    console.log(iid);
+    // console.log(cid);
+    // console.log(iid);
     // $.ajax({
     //   type: "POST",
     //   url: "getprice.php",
@@ -560,9 +608,9 @@ $(document).ready(function()
   $('#sort').click(function(e)
   {
     e.preventDefault();
-    $('.field_wrapper div').sort(function(a, b)
+    $('.field_wrapper li').sort(function(a, b)
     {
-      return $(b).data('order') - $(a).data('order');
+      return $(a).data('order') - $(b).data('order');
     }).appendTo('.field_wrapper');
   });
 
@@ -587,32 +635,31 @@ $(document).ready(function()
         cartRank = $('#ranking').val();
       cartPrice = $('#Price').val()
       cartNumber = x;
-        console.log("cartRank", cartRank)
+        // console.log("cartRank", cartRank)
       if ($('#ranking_text:contains("Return to Provider")').length > 0){
 
 
-        console.log('return to provider now')
+        // console.log('return to provider now')
 
       text = "ID: " + cartID + " " + "RANK:  " + cartRank;
       // Append Values to Sidebar
-      $(wrapper).append(`
-      <div class="item" data-order="${cartRank}"><h5 class="mt-1 mb-1 cart-rank font-weight-bold highlight-red">
-        ${cartID}:  ${cartDiag}</h5><a href="javascript:void(0);" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a>
-      </div>`)
-      $('.field_wrapper div').sort(function(a, b)
+      $('#ulcart').append(`
+      <li class="item" data-order="${cartRank}"><h5 data-toggle="tooltip" data-placement="top" title="Return to Provider" class="mt-1 mb-1 cart-rank font-weight-bold highlight-red ">
+        ${cartID}   <div class="cartdiag" style="display:none">: ${cartDiag}</div></h5></a><a href="javascript:void(0);" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a>
+      </li>`)
+      $('.field_wrapper li').sort(function(a, b)
       {
-        return $(a).data('order') - $(b).data('order');
+        return $(b).data('order') - $(a).data('order');
       }).appendTo('.field_wrapper');
     }else {
-        console.log('dont to provider now')
-
-      $(wrapper).append(`
-      <div class="item" data-order="${cartRank}"><h5 class="mt-1 mb-1 cart-rank font-weight-bold">
-        ${cartID}:  ${cartDiag}</h5><a href="javascript:void(0);" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a>
-      </div>`)
-      $('.field_wrapper div').sort(function(a, b)
+        // console.log('dont to provider now')
+      $('#ulcart').append(`
+      <li class="item" data-order="${cartRank}"><h5 class="mt-1 mb-1 cart-rank font-weight-bold">
+        ${cartID}  <div class="cartdiag" style="display:none">: ${cartDiag}</div></h5><a href="javascript:void(0);" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a>
+      </li>`)
+      $('.field_wrapper li').sort(function(a, b)
       {
-        return $(a).data('order') - $(b).data('order');
+        return $(b).data('order') - $(a).data('order');
       }).appendTo('.field_wrapper');
     }
     }
@@ -622,7 +669,7 @@ $(document).ready(function()
   $(wrapper).on('click', '.remove_button', function(e)
   {
     e.preventDefault();
-    $(this).parent('div').remove();
+    $(this).parent('li').remove();
     x--; //Decrement field
   }); // === END wrapper Remove === //
 
@@ -630,10 +677,12 @@ $(document).ready(function()
   $('#completeBtn').on('click', function(e)
   {
     $('#modal-text').remove();
-     $('.modal-body').prepend('<div id="modal-text"></div>');
+     $('.modal-body').prepend('<div id="modal-text"><ol class="olcart">');
       // clone to modal
-      $('.field_wrapper').contents().clone().appendTo('#modal-text');
-        $("#modal-text > .item > .remove_button").hide();
+      $('.field_wrapper').contents().clone().appendTo('.olcart');
+        $(".olcart > .item > .remove_button").hide();
+        $(".olcart > .item > h5 > .cartdiag").show();
+
   }); // === END Clone === //
 }); // === END Document Ready === //
 </script>

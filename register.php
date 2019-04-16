@@ -26,7 +26,7 @@
     <div class="container">
       <!-- Brand -->
       <a class="navbar-brand waves-effect" href="3pointssoftware.com" target="_blank">
-        <strong class="blue-text"><img src="./img/logo.png" width="40px"></strong>
+        <strong class="blue-text"><img src="./img/logo.png" width="70px"></strong>
       </a>
     </div>
   </nav>

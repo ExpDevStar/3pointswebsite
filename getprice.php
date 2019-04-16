@@ -1,7 +1,7 @@
 <?php include "connection.php";
 
-$a="SELECT * FROM icd WHERE icd_code = '".$_POST["icd_code"]."' AND cat_id = '".$_POST["cat_id"]."'";
+$a="SELECT * FROM category WHERE AND cat_id = '".$_POST["CategoryID"]."'";
 $q=mysqli_query($db, $a);
 while ($record=mysqli_fetch_array($q)) {
-    echo $record['price'];
+    echo $record['cat_name'];
 }

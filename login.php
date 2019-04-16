@@ -26,7 +26,7 @@
     <div class="container">
       <!-- Brand -->
       <a class="navbar-brand waves-effect" href="3pointssoftware.com" target="_blank">
-        <strong class="blue-text"><img src="./img/logo.png" width="40px"></strong>
+        <strong class="blue-text"><img src="./img/logo.png" width="70px"></strong>
       </a>
     </div>
   </nav>
@@ -66,7 +66,7 @@
          </div>
          <div>
            <!-- Forgot password -->
-           <a href="">Forgot password?</a>
+           <a href="forgot-password.php">Forgot password?</a>
          </div>
        </div>
        <!-- Sign in button -->

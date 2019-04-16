@@ -21,6 +21,9 @@ h3 {
 #item-card, #treatment-card {
   padding: 10px 0;
 }
+.pt-5, .py-5 {
+    padding-top: 5rem!important;
+}
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 p {
   font-family: 'Poppins', sans-serif;
@@ -116,7 +119,30 @@ color: #fff!important;
   border: 1px solid #3c763d;
   margin-bottom: 20px;
 }
+.bottom-buttons{
+    height: 379px;
 
+margin: 10px;
+display: flex;
+}
+.bottom-buttons span {
+  align-self: flex-end;
+}
+
+#completeBtn{
+  position: relative;
+  bottom: 0;
+  right: 0;
+      padding: 12px;
+}
+
+#emptyBtn{
+
+    position: relative;
+    bottom: 0;
+    left: 0;
+        padding: 12px;
+}
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
@@ -292,25 +318,34 @@ color: #fff!important;
 }
 .cart-rank{
 position: relative;
+display: inline-block;
 }
 .highlight-red{
   background-color: red;
 color: white;
 }
+.cartdiag{
+  display: inline-block;
+}
 .remove_button{
   position: relative;
   float: right;
-  margin: -39px 0;
+  /* margin: -39px 0; */
 }
 .field_wrapper h5{
   font-size: 14px;
 }
 .field_wrapper {
   font-size: 14px;
+  text-align: left;
+}
+.modal-body{
+  text-align:left;
 }
 .card-body-sidebar{
   overflow-y: scroll;
-height: 445px;
+  height: 100%;
+  min-height: 444px;
 }
 .dropdown-toggle::after {
   display: block;
@@ -343,9 +378,46 @@ a.article, a.article:hover {
   color: #fff !important;
 }
 /* ---------------------------------------------------
+
+/* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
+[data-toggle="tooltip"]:active:after,
+[data-toggle="tooltip"]:hover:after,
+[data-toggle="tooltip"]:focus:after
+{
+content: " ";
+ position: absolute;
+ bottom: 100%; /* At the bottom of the tooltip */
+ left: 50%;
+ margin-left: -5px;
+ border-width: 5px;
+ border-style: solid;
+ border-color: black transparent transparent transparent;
+}
+[data-toggle="tooltip"]:active:before,
+[data-toggle="tooltip"]:hover:before,
+[data-toggle="tooltip"]:focus:before
+{
+  content:attr(title);
+  width: 120px;
+ background-color: black;
+ color: #fff;
+ text-align: center;
+ padding: 5px 0;
+ border-radius: 6px;
 
+ /* Position the tooltip text - see examples below! */
+ position: absolute;
+ z-index: 1;
+ bottom: 100%;
+ left: 50%;
+ margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
+  font-size:smaller;
+  z-index:11;
+  pointer-events:none;
+  white-space:nowrap;
+}
 #content {
   width: 100%;
   padding: 20px;
@@ -407,4 +479,26 @@ a.article, a.article:hover {
   #sidebarCollapse span {
     display: none;
   }
+}
+
+/* override styles when printing */
+@media print {
+  body {
+    margin: 0;
+    color: #000;
+    background-color: #fff;
+  }
+  img, svg {
+  display: none;
+}
+
+img.print, svg.print {
+  display: block;
+  max-width: 100%;
+}
+header, footer, aside, nav, form, iframe, .menu, .hero, .modal-footer, .modal-header, .close{
+  display: none;
+}
+.modal-body {
+  display:block;
 }
