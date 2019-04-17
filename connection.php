@@ -2,7 +2,7 @@
 //--------------------------------------------------------------------------
 // Create connection and select DB
 //--------------------------------------------------------------------------
-$db = new mysqli('localhost', 'root', '', 'pdpm');
+$db = new mysqli('localhost', 'root', 'z%WA4747E*GW', 'pdpm');
 
 
 // --------------------------------------------------------------------------
@@ -15,7 +15,7 @@ $db = new mysqli('localhost', 'root', '', 'pdpm');
 // }
 // print json_encode($rows);
 // $jsonData = array();
-// 
+//
 // echo json_encode($rows);
 // if ($db->connect_error) {
 //    echo "Not connected, error: " . $db->connect_error;

@@ -6,7 +6,7 @@ class DbConnect {
   private $host = 'localhost';
   private $dbName = 'pdpm';
   private $user = 'root';
-  private $pass = '';
+  private $pass = 'z%WA4747E*GW';
 
   public function connect() {
     try {
