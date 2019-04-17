@@ -1,7 +1,7 @@
 <!doctype html>
 <?php
 session_start();
-$feedbackdata = json_decode($_SESSION['feedbackdata']);
+// $feedbackdata = json_decode($_SESSION['feedbackdata']);
 if (!isset($_SESSION['username'])) {
     $_SESSION['msg'] = "You must log in first";
     header('location: login.php');
@@ -21,11 +21,14 @@ if (isset($_GET['logout'])) {
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- Material Design Bootstrap -->
     <link href="css/mdb.min.css" rel="stylesheet">
+    <!-- Jquery UI -->
+    <link href="css/style.css" rel="stylesheet">
     <!-- Your custom styles (optional) -->
     <link href="css/style.css" rel="stylesheet">
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="js/feedback.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="./css/feedback.min.css">
     <!-- Font Awesome JS -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
@@ -77,18 +80,21 @@ if (isset($_GET['logout'])) {
         }
         img, svg {
         display: none;
-      }
+        }
 
-      img.print, svg.print {
-        display: block;
-        max-width: 100%;
-      }
-      header, footer, aside, nav, form, iframe, .menu, .hero, .modal-footer, .modal-header, .close{
-        display: none;
-      }
-      .modal-body {
-        display:block;
-      }
+        img.print, svg.print {
+          display: block;
+          max-width: 100%;
+        }
+        header, footer, aside, nav, form, iframe, .menu, .hero, .modal-footer, .modal-header, .close{
+          display: none;
+        }
+        .modal-body {
+          display:block;
+        }
+        .cartdiag {
+          display: inline-block;
+        }
       }
     </style>
   </head>
@@ -116,9 +122,6 @@ if (isset($_GET['logout'])) {
               <span class="sr-only">(current)</span>
             </a>
           </li>
-          <!-- <li class="nav-item">
-            <a class="nav-link waves-effect" href="register.php" target="_blank">Registration </a>
-          </li> -->
         </ul>
         <!-- notification message -->
         <?php if (isset($_SESSION['success'])) : ?>
@@ -149,23 +152,12 @@ if (isset($_GET['logout'])) {
 <main>
     <div class="container-fluid mt-5 pt-5">
       <div class="row">
-        <!-- <div class="offset-md-1 col-lg-1 col-md-1">
-          <div class="card">
-            <div class="card-header">
 
-
-
-
-            </div>
-
-        </div>
-      </div> -->
         <div class="offset-md-2 col-lg-7 col-md-7">
           <div class="card">
             <div class="card-header">
               <input type="hidden" class="hidden-cat"/>
               <input type="hidden" class="hidden-id"/>
-              <!-- <label for="suggest"><h5 class="card-title"><strong>Enter Code</strong></h5></label> -->
               <div class="md-form mt-0">
                 <input class="typeahead form-control" type="text" id="suggest" ria-label="Search for Code" placeholder="Search for Code" value="" name="suggest">
               </div>
@@ -175,21 +167,17 @@ if (isset($_GET['logout'])) {
               <div class="offset-md-3 col-sm-5 col-md-7">
                 <div id="diagnosis-card">
                   <h2 class="card-title">Clinical</h2>
-
                     <div id="diagnosis-card">
                         <input name="clinicalID" readonly class="form-control" type="text" id="clinicalID" value="">
                     </div>
-    <div id="ranking_text"></div>
+                    <div id="ranking_text"></div>
                     <h2>Diagnosis</h2>
                     <input name="DiagnosisID" readonly class="form-control" type="text" id="DiagnosisID" value="">
-
                 </div>
                 <input type="hidden" class="" aria-label="" placeholder="" name="ranking" id="ranking" value="" />
-
                 <div id="treatment-card">
                   <h2>Treatment Options</h2>
                   <input type="text" readonly name="TreatmentID" val="" id="TreatmentID" class="form-control" />
-
                 </div>
                 <h2>Case Mix Index</h2>
                 <div class="price-box"><input readonly class="form-control" id="Price"></input>
@@ -203,7 +191,6 @@ if (isset($_GET['logout'])) {
       <!-- <button id="sort">Sort </button> -->
       <div class="col-md-2">
         <div class="sticky">
-        <!-- style="position: fixed; width: 222.575px; height: 260px; top: 90px; z-index: 2;"> -->
           <div id="scrollspy">
           <!-- Medical Cart -->
             <div id="sidebar-right">
@@ -214,14 +201,11 @@ if (isset($_GET['logout'])) {
                   </div>
                   <!--Card content-->
                   <div class="card-body card-body-sidebar">
-
                       <div class="field_wrapper">
-
                         <form id="cart"></form>
                           <ul id="ulcart" style="list-style-type:disc;">
-                                </ul>
+                          </ul>
                       </div>
-
                     <div class="bottom-buttons">
                       <span>
                     <button class="btn btn-warning align-items-center" id="emptyBtn"><a id="btnEmpty">Reset List</a></button>
@@ -245,7 +229,7 @@ if (isset($_GET['logout'])) {
       <div class="modal-content">
         <!--Header-->
         <div class="modal-header">
-          <p class="heading lead">COMPLETION</p>
+          <p class="heading lead">Finalize and Print</p>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true" class="white-text">&times;</span>
           </button>
@@ -253,9 +237,9 @@ if (isset($_GET['logout'])) {
         <!--Body-->
         <div class="modal-body ">
             <div id="modal-text">
-            <ol>
-
-            </ol></div>
+              <ul>
+              </ul>
+            </div>
         </div>
         <!--Footer-->
         <div class="modal-footer justify-content-center">
@@ -277,7 +261,6 @@ if (isset($_GET['logout'])) {
 <!-- Central Modal Medium Success-->
 </main>
 <footer id="footer" class="page-footer unique-color-dark mt-4">
-
   <!--Footer Links-->
   <div class="container text-center py-4 text-md-left mt-5">
     <div class="row mt-3">
@@ -350,26 +333,21 @@ document.addEventListener('DOMContentLoaded',
 
 $(document).ready(function()
 {
-
   $('#btnEmpty').click(function () {
     var r = confirm("You agree to resetting this list");
     if (r == true) {
-  // console.log("You pressed OK!");
-  window.location.assign("index.php?action=empty");
-} else {
-  // console.log("You pressed Cancel!");
-}
-
+      window.location.assign("index.php?action=empty");
+    } else {
+    }
   })
   // Print Functionality
   var printButton = $('.printBtn');
   $(printButton).click(function()
   {
       $("#modal-text > .item > .remove_button").hide();
-    $("#centralModalSuccess").printThis({
-
-     importCSS: true,                // import parent page css
-         importStyle: true,             // import style tags
+      $("#centralModalSuccess").printThis({
+          importCSS: true,                // import parent page css
+          importStyle: true,             // import style tags
           printContainer: false,           // grab outer container as well as the contents of the selector
           loadCSS: ["../css/bootstrap.min.css",
                             "../css/mdb.min.css",
@@ -380,18 +358,16 @@ $(document).ready(function()
           removeInline: true,            // remove all inline styles from print elements
           removeInlineSelector: "body *", // custom selectors to filter inline styles. removeInline must be true
           printDelay: 333,                // variable print delay
-                      // postfix to html
           base: true,                    // preserve the BASE tag, or accept a string for the URL
-        formValues: true,               // preserve input/form values
-         canvas: false,                  // copy canvas elements
+          formValues: true,               // preserve input/form values
+          canvas: false,                  // copy canvas elements
           doctypeString: '...',           // enter a different doctype for older markup
-         removeScripts: false,           // remove script tags from print content
-         copyTagClasses: true,           // copy classes from the html & body tag
-        beforePrintEvent: null,         // callback function for printEvent in iframe
-         beforePrint: null,              // function called before iframe is filled
-         afterPrint: null                // function called before iframe is removed
+          removeScripts: false,           // remove script tags from print content
+          copyTagClasses: true,           // copy classes from the html & body tag
+          beforePrintEvent: null,         // callback function for printEvent in iframe
+          beforePrint: null,              // function called before iframe is filled
+          afterPrint: null                // function called before iframe is removed
      });
-
   })
 
   // Twitter Bloodhound and TypeAhead to handle Auto Complete
@@ -427,7 +403,6 @@ $(document).ready(function()
       suggestion: function(data)
       {
         // lists all suggestions
-        // console.log(data.value);
         var details = "<div>" + data.value + "</div>";
         return details
       }
@@ -441,16 +416,13 @@ $(document).ready(function()
   {
     // grab the hidden input value
     var datumConvert = JSON.stringify(datum);
-    // a simple user
-    // console.log(datumConvert); // you'll get xxx
-    // $('#cardResult').slideDown("slow", function() {});
     // stripping this extra fluff out
     var stripDatum = datumConvert.replace(/[{()}]/g, '');
     var stripDatum2 = stripDatum.replace(/[\[\]':value]+/g, '');
     var stripDatum3 = stripDatum2.replace(/[\[\]""]+/g, '');
     $('.hidden-cat').val(stripDatum3)
     $('.hidden-id').val(stripDatum3)
-    // console.log(stripDatum3)
+
     var hiddenCat = $('.hidden-cat').val()
     var hiddenID = $('.hidden-id').val()
     // ajax call it and return the category ID
@@ -468,7 +440,7 @@ $(document).ready(function()
         cat_id.forEach(function(cat_id)
         {
           $('.hidden-cat').val(cat_id.cat_id)
-          // console.log("category_id", cat_id.cat_id)
+
           return cat_id
         })
       }
@@ -484,13 +456,6 @@ $(document).ready(function()
       success: function(data)
       {
         addExtraFields();
-        // icd_id = JSON.parse(data);
-        // data.forEach(function(icd_id)
-        // {
-          // $('.hidden-id').val(data.icd_id)
-          // console.log("icd_id", icd_id)
-        //   return icd_id
-        // })
       }
     })
   })   // === END Suggest === //
@@ -500,7 +465,6 @@ $(document).ready(function()
     {
       var cid = $('.hidden-cat').val();
       var iid = $('.hidden-id').val();
-      //var myJSON = JSON.stringify(cid);
       // console.log(iid)
       $.ajax(
       {
@@ -516,14 +480,14 @@ $(document).ready(function()
         {
           // fill in clinical id
           $('#clinicalID').val(cat_id.cat_name)
-              $('#ranking_text').val(cat_id.cat_name);
-              if ($("#ranking_text").val() == "Return to Provider") {
-    $('#ranking_text').html(cat_id.cat_name).val(cat_id.cat_name)
-      $('#DiagnosisID').css('color', 'red');
-  } else{
-      $('#ranking_text').html(" ")
-        $('#DiagnosisID').css('color', 'black');
-  }
+          $('#ranking_text').val(cat_id.cat_name);
+          if ($("#ranking_text").val() == "Return to Provider") {
+            $('#ranking_text').html(cat_id.cat_name).val(cat_id.cat_name)
+            $('#DiagnosisID').css('color', 'red');
+          } else{
+            $('#ranking_text').html(" ")
+            $('#DiagnosisID').css('color', 'black');
+          }
         })
       })
       $.ajax(
@@ -541,64 +505,17 @@ $(document).ready(function()
           // fill in diagnosis
           $('#DiagnosisID').val(icd_desc.icd_desc)
           $('#Price').val(icd_desc.icd_tertiary_ranking)
-
           // grab ranking and compare if its higher or not
           var icd_ranking = (icd_desc.icd_ranking);
           var icd_secondary_ranking = (icd_desc.icd_secondary_ranking);
           if ( icd_secondary_ranking == '0' || icd_secondary_ranking == '' || icd_secondary_ranking == 'undefined' || icd_secondary_ranking == null )
           {
-            // console.log("emty")
-            //console.log("secondary rank", icd_secondary_ranking)
-          // var icd_secondary_ranking = icd_ranking;
            $('#ranking').val(icd_ranking);
           }
            else {
-             // console.log("secondary rank", icd_secondary_ranking)
              var cartRankAdjusted = + 9.0 + icd_secondary_ranking;
              $('#ranking').val(cartRankAdjusted);
            }
-          // if (icd_ranking < icd_secondary_ranking)
-          // {
-          //     console.log('less than')
-          //
-          //   $('#ranking').val(cartRankAdjusted);
-          //   // $('#ranking').html("Return to Provider").val(icd_secondary_ranking);
-          //   // $('#ranking_text').html("Return to Provider").fadeIn("fast");
-          // }
-          // else
-          // {
-          //   console.log('greater');
-          //   // $('#ranking_text').html("");
-          //   // $('#ranking').html(" ").val(icd_ranking);
-          //   // $('#ranking_text').html(" ").fadeIn("fast");
-          //
-          //
-          //
-          //
-          // };
-
-
-
-    // console.log(cid);
-    // console.log(iid);
-    // $.ajax({
-    //   type: "POST",
-    //   url: "getprice.php",
-    //   data: {
-    //     ItemTypeID: iid,
-    //     CategoryID: cid,
-    //   },
-    //   success: function(result) {
-    //     $("#TreatmentID").val(result);
-    //     if (result == 0) {
-    //       $("#TreatmentID").val("N/A");
-    //       console.log("null", result)
-    //     } else {
-    //       console.log("the", result);
-    //     }
-    //   }
-    // });
-
            $('#TreatmentID').html(icd_desc.icd_note).val(icd_desc.icd_note)
         })
       })
@@ -633,35 +550,29 @@ $(document).ready(function()
         cartDiag = $('#DiagnosisID').val(),
         cartTreat = $('#TreatmentID').val(),
         cartRank = $('#ranking').val();
-      cartPrice = $('#Price').val()
-      cartNumber = x;
-        // console.log("cartRank", cartRank)
+        cartPrice = $('#Price').val()
+        cartNumber = x;
       if ($('#ranking_text:contains("Return to Provider")').length > 0){
-
-
-        // console.log('return to provider now')
-
-      text = "ID: " + cartID + " " + "RANK:  " + cartRank;
-      // Append Values to Sidebar
-      $('#ulcart').append(`
-      <li class="item" data-order="${cartRank}"><h5 data-toggle="tooltip" data-placement="top" title="Return to Provider" class="mt-1 mb-1 cart-rank font-weight-bold highlight-red ">
-        ${cartID}   <div class="cartdiag" style="display:none">: ${cartDiag}</div></h5></a><a href="javascript:void(0);" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a>
-      </li>`)
-      $('.field_wrapper li').sort(function(a, b)
-      {
-        return $(b).data('order') - $(a).data('order');
-      }).appendTo('.field_wrapper');
-    }else {
-        // console.log('dont to provider now')
-      $('#ulcart').append(`
-      <li class="item" data-order="${cartRank}"><h5 class="mt-1 mb-1 cart-rank font-weight-bold">
-        ${cartID}  <div class="cartdiag" style="display:none">: ${cartDiag}</div></h5><a href="javascript:void(0);" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a>
-      </li>`)
-      $('.field_wrapper li').sort(function(a, b)
-      {
-        return $(b).data('order') - $(a).data('order');
-      }).appendTo('.field_wrapper');
-    }
+        text = "ID: " + cartID + " " + "RANK:  " + cartRank;
+        // Append Values to Sidebar
+        $('#ulcart').append(`
+        <li class="item ui-state-default" data-order="${cartRank}"><h5 data-toggle="tooltip" data-placement="top" title="Return to Provider" class="mt-1 mb-1 cart-rank font-weight-bold highlight-red ">
+          ${cartID}   <div class="cartdiag" style="display:none">: ${cartDiag}</div></h5></a><a href="javascript:void(0);" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a>
+        </li>`)
+        $('.field_wrapper li').sort(function(a, b)
+        {
+          return $(b).data('order') - $(a).data('order');
+        }).appendTo('.field_wrapper');
+      } else {
+        $('#ulcart').append(`
+        <li class="item ui-state-default" data-order="${cartRank}"><h5 class="mt-1 mb-1 cart-rank font-weight-bold">
+          ${cartID}  <div class="cartdiag" style="display:none">: ${cartDiag}</div></h5><a href="javascript:void(0);" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a>
+        </li>`)
+        $('.field_wrapper li').sort(function(a, b)
+        {
+          return $(b).data('order') - $(a).data('order');
+        }).appendTo('.field_wrapper');
+      }
     }
   }); // === END addButton === //
 
@@ -677,12 +588,20 @@ $(document).ready(function()
   $('#completeBtn').on('click', function(e)
   {
     $('#modal-text').remove();
-     $('.modal-body').prepend('<div id="modal-text"><ol class="olcart">');
+     $('.modal-body').prepend('<div id="modal-text"><ul id="sortable" class="ui-sortable olcart">');
       // clone to modal
       $('.field_wrapper').contents().clone().appendTo('.olcart');
-        $(".olcart > .item > .remove_button").hide();
-        $(".olcart > .item > h5 > .cartdiag").show();
-
+      $(".olcart > #cart").remove();
+      $(".olcart > #ulcart").remove();
+      $(".olcart > .item > .remove_button").remove();
+      $(".olcart > .item > h5 > .cartdiag").show();
+        // Enable Sortable now
+      $( "#sortable" ).sortable({
+          tolerance: 'touch',
+          placeholder: "ui-state-highlight"
+      });
+      $( "#sortable" ).disableSelection();
+      $('#sortable ').sortable();
   }); // === END Clone === //
 }); // === END Document Ready === //
 </script>

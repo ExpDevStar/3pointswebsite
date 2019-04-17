@@ -1,6 +1,7 @@
 <?php
 session_start();
-
+// connect to the database
+require 'connection.php';
 // initializing variables
 // $username = "";
 $email    = "";
@@ -9,8 +10,8 @@ $lastname    = "";
 $hospital    = "";
 $errors = array();
 
-// connect to the database
-$db = mysqli_connect('localhost', 'root', 'z%WA4747E*GW', 'pdpm');
+
+
 
 // REGISTER USER
 if (isset($_POST['reg_user'])) {

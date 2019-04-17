@@ -72,7 +72,9 @@ i, span {
 .twitter-typeahead{
     display:block!important;
 }
+#sortable { list-style-type: none; margin: 0; padding: 0; }
 
+ .ui-state-highlight { height: 1.5em; line-height: 1.2em; }
 /* ---------------------------------------------------
     Registration
 ------------------------------------------------------ */
