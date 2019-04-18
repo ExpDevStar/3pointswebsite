@@ -1,9 +1,0 @@
-
-*.sql
-*.sql
-sql_file/medical4.sql
-database_config/database-working-with-data/medical4.sql
-database_config/medical4sqlmakes.sql
-node_modules/
-connection.php
-DbConnect.php
