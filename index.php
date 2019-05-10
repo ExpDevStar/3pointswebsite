@@ -159,8 +159,9 @@ if (isset($_GET['logout'])) {
               <input type="hidden" class="hidden-cat"/>
               <input type="hidden" class="hidden-id"/>
               <div class="md-form mt-0">
-                <input class="typeahead form-control" type="text" id="suggest" ria-label="Search for Code" placeholder="Search for Code" value="" name="suggest">
-              </div>
+                  <!-- <button class="btn btn-success align-items-center" id="search-by-code"><a id="search-by-code">Search By Code</a></button> <button class="btn btn-success align-items-center" id="search-by-description"><a id="search-by-description">Search By Description</a></button> -->
+                <input class="typeahead form-control" type="text" id="suggest" ria-label="Search for Code or Description" placeholder="Search for Code or Description" value="" name="suggest">
+
             </div>
             <div class="card-body" id="cardResult">
             <div class="row">
@@ -333,6 +334,16 @@ document.addEventListener('DOMContentLoaded',
 
 $(document).ready(function()
 {
+  $('#suggest').show()
+  $('#suggestD').hide();
+  $('#search-by-code').click(function (){
+      $('#suggestD').hide();
+        $('#suggest').show()
+  })
+  $('#search-by-description').click(function (){
+      $('#suggest').hide();
+        $('#suggestD').show()
+  })
   $('#btnEmpty').click(function () {
     var r = confirm("You agree to resetting this list");
     if (r == true) {
@@ -372,57 +383,88 @@ $(document).ready(function()
 
   // Twitter Bloodhound and TypeAhead to handle Auto Complete
   // Instantiate the Bloodhound suggestion engine
-  var source = new Bloodhound(
-  {
-    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-    queryTokenizer: Bloodhound.tokenizers.whitespace,
-    remote:
-    {
-      url: 'getautocomplete.php?st=%QUERY',
-      wildcard: '%QUERY',
-      filter: function(results)
-      {
-        // Map the remote source JSON array to a JavaScript object array
-        return $.map(results, function(result)
-        {
-          return {
-            value: result
-          };
-        });
-      }
-    }
-  });
-  // Initialize the Bloodhound suggestion engine
-  source.initialize();
-  $('#suggest').typeahead(null,
-  {
-    name: 'value',
-    display: 'value',
-    templates:
-    {
-      suggestion: function(data)
-      {
-        // lists all suggestions
-        var details = "<div>" + data.value + "</div>";
-        return details
-      }
-    },
-    source: source.ttAdapter(),
-    limit: 10
-  });
+  var source1 = new Bloodhound({
+       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('icd_code'),
+       queryTokenizer: Bloodhound.tokenizers.whitespace,
+       remote: {
+           url: 'getautocomplete.php?st=%QUERY',
+           wildcard: '%QUERY'
+       }
+   });
 
+  var source2 = new Bloodhound({
+       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('icd_desc'),
+       queryTokenizer: Bloodhound.tokenizers.whitespace,
+       remote: {
+           url: 'getautocomplete.php?std=%QUERY',
+           wildcard: '%QUERY'
+       }
+   });
+
+  // Initialize the Bloodhound suggestion engine
+  source1.initialize();
+  source2.initialize();
+  $('#suggest').typeahead(null,
+    {
+    name: 'source1',
+    display: 'icd_code',
+    highlight:true,
+    source: source1.ttAdapter(),
+    templates:
+  {
+    suggestion: function(data)
+    {
+      // lists all suggestions
+      var details = "<div>" + data +"</div>";
+      return details
+    }
+
+  }
+},
+  {
+  name: 'source2',
+   displayKey: 'icd_desc',
+   source: source2.ttAdapter(),
+   templates:
+ {
+   suggestion: function(data)
+   {
+     // lists all suggestions
+     var details = "<div>" + data +"</div>";
+     return details
+   }
+ },
+
+
+});
   // Listen to when a selection is made
   $('#suggest').on('typeahead:selected', function(e, datum)
   {
     // grab the hidden input value
-    var datumConvert = JSON.stringify(datum);
-    // stripping this extra fluff out
-    var stripDatum = datumConvert.replace(/[{()}]/g, '');
-    var stripDatum2 = stripDatum.replace(/[\[\]':value]+/g, '');
-    var stripDatum3 = stripDatum2.replace(/[\[\]""]+/g, '');
-    $('.hidden-cat').val(stripDatum3)
-    $('.hidden-id').val(stripDatum3)
 
+    var datumConvert = JSON.stringify(datum);
+
+
+    // if autocomplete contains description as well
+    if (datumConvert.includes(":")) {
+      // remove any characters after :
+        var stripDatum2 = datumConvert.substring(0, datumConvert.lastIndexOf(":"));
+        //remove all characters
+        var stripDatum3 = stripDatum2.replace(/[\[\]""]+/g, '');
+        $('.hidden-cat').val(stripDatum3)
+        $('.hidden-id').val(stripDatum3)
+    }
+    // if no description
+    else{
+
+      // remove special characters
+      var stripDatum = datumConvert.replace(/[{()}]/g, '');
+      // remove special characters
+      var stripDatum3 = stripDatum.replace(/[\[\]""]+/g, '');
+      $('.hidden-cat').val(stripDatum3)
+      $('.hidden-id').val(stripDatum3)
+    }
+    //var stripDatum4 = stripDatum3.substring(0, stripDatum3.lastIndexOf(":") );
     var hiddenCat = $('.hidden-cat').val()
     var hiddenID = $('.hidden-id').val()
     // ajax call it and return the category ID
@@ -513,7 +555,8 @@ $(document).ready(function()
            $('#ranking').val(icd_ranking);
           }
            else {
-             var cartRankAdjusted = + 9.0 + icd_secondary_ranking;
+             // var cartRankAdjusted = + 9.0 + icd_secondary_ranking;
+             var cartRankAdjusted = icd_secondary_ranking;
              $('#ranking').val(cartRankAdjusted);
            }
            $('#TreatmentID').html(icd_desc.icd_note).val(icd_desc.icd_note)
@@ -557,20 +600,20 @@ $(document).ready(function()
         // Append Values to Sidebar
         $('#ulcart').append(`
         <li class="item ui-state-default" data-order="${cartRank}"><h5 data-toggle="tooltip" data-placement="top" title="Return to Provider" class="mt-1 mb-1 cart-rank font-weight-bold highlight-red ">
-          ${cartID}   <div class="cartdiag" style="display:none">: ${cartDiag}</div></h5></a><a href="javascript:void(0);" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a>
+          ${cartID}   <div class="cartdiag" style="display:none">: ${cartDiag} , ${cartPrice}</div></h5></a><a href="javascript:void(0);" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a>
         </li>`)
         $('.field_wrapper li').sort(function(a, b)
         {
-          return $(b).data('order') - $(a).data('order');
+          return $(a).data('order') - $(b).data('order');
         }).appendTo('.field_wrapper');
       } else {
         $('#ulcart').append(`
         <li class="item ui-state-default" data-order="${cartRank}"><h5 class="mt-1 mb-1 cart-rank font-weight-bold">
-          ${cartID}  <div class="cartdiag" style="display:none">: ${cartDiag}</div></h5><a href="javascript:void(0);" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a>
+          ${cartID}  <div class="cartdiag" style="display:none">: ${cartDiag} , ${cartPrice}</div></h5><a href="javascript:void(0);" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a>
         </li>`)
         $('.field_wrapper li').sort(function(a, b)
         {
-          return $(b).data('order') - $(a).data('order');
+          return $(a).data('order') - $(b).data('order');
         }).appendTo('.field_wrapper');
       }
     }

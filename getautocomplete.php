@@ -10,7 +10,23 @@ if (isset($_GET['st'])) {
     $array = array();
 
     while ($row = mysqli_fetch_assoc($result)) {
-        $array[] = $row['icd_code'];
+        // $array[] = $row['icd_code'] . ',' . $row['icd_desc'];
+         $array[] = $row['icd_code'];
+    }
+    echo json_encode($array);
+}
+
+if (isset($_GET['std'])) {
+    $strs = $_GET['std'];
+
+    $sql = "SELECT icd_code, icd_desc FROM icd WHERE icd_desc LIKE '%{$strs}%' ORDER BY icd_code";
+
+    $result = mysqli_query($db, $sql);
+
+    $array = array();
+
+    while ($row = mysqli_fetch_assoc($result)) {
+      $array[] = $row['icd_code'] . ':' . $row['icd_desc'];
     }
     echo json_encode($array);
 }
