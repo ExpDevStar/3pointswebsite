@@ -6,6 +6,16 @@ if (!isset($_SESSION['username'])) {
     $_SESSION['msg'] = "You must log in first";
     header('location: login.php');
 }
+
+
+if(!isset($_POST['medicalrecord']))
+{
+  $medicalrecord=$_POST['medicalrecord'];
+  echo $medicalrecord;
+    // store medical record for safe keeping
+}
+
+
 if (isset($_GET['logout'])) {
     session_destroy();
     unset($_SESSION['username']);
@@ -160,8 +170,9 @@ if (isset($_GET['logout'])) {
               <input type="hidden" class="hidden-id"/>
               <div class="md-form mt-0">
                   <!-- <button class="btn btn-success align-items-center" id="search-by-code"><a id="search-by-code">Search By Code</a></button> <button class="btn btn-success align-items-center" id="search-by-description"><a id="search-by-description">Search By Description</a></button> -->
-                <input class="typeahead form-control" type="text" id="suggest" ria-label="Search for Code or Description" placeholder="Search for Code or Description" value="" name="suggest">
+                <input class="typeahead form-control" type="text" id="suggest" ria-label="Search for Code" placeholder="Search for Code" value="" name="suggest">
 
+              </div>
             </div>
             <div class="card-body" id="cardResult">
             <div class="row">
@@ -240,7 +251,11 @@ if (isset($_GET['logout'])) {
             <div id="modal-text">
               <ul>
               </ul>
+
             </div>
+            <input type="checkbox" class="form-check-input" id="diabetesCaseMin">
+            <label class="form-check-label" for="diabetesCaseMin">Does the Patient have Diabetes?</label>
+
         </div>
         <!--Footer-->
         <div class="modal-footer justify-content-center">
@@ -334,16 +349,10 @@ document.addEventListener('DOMContentLoaded',
 
 $(document).ready(function()
 {
-  $('#suggest').show()
-  $('#suggestD').hide();
-  $('#search-by-code').click(function (){
-      $('#suggestD').hide();
-        $('#suggest').show()
-  })
-  $('#search-by-description').click(function (){
-      $('#suggest').hide();
-        $('#suggestD').show()
-  })
+  if ($('#diabetesCaseMin').is(':checked')) {
+
+  }
+ // Reset Button
   $('#btnEmpty').click(function () {
     var r = confirm("You agree to resetting this list");
     if (r == true) {
@@ -434,17 +443,12 @@ $(document).ready(function()
      return details
    }
  },
-
-
 });
   // Listen to when a selection is made
   $('#suggest').on('typeahead:selected', function(e, datum)
   {
     // grab the hidden input value
-
     var datumConvert = JSON.stringify(datum);
-
-
     // if autocomplete contains description as well
     if (datumConvert.includes(":")) {
       // remove any characters after :

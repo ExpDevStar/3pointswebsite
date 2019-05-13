@@ -8,6 +8,7 @@ $email    = "";
 $firstname = "";
 $lastname    = "";
 $hospital    = "";
+$medicalrecord    = "";
 $errors = array();
 
 
@@ -56,7 +57,7 @@ if (isset($_POST['reg_user'])) {
   	mysqli_query($db, $query);
   	$_SESSION['username'] = $email;
   	$_SESSION['success'] = "You are now logged in";
-  	header('location: index.php');
+  	header('location: patientorexisting.php');
   }
 }
 
@@ -80,11 +81,50 @@ if (isset($_POST['login_user'])) {
   	if (mysqli_num_rows($results) == 1) {
   	  $_SESSION['username'] = $email;
   	  $_SESSION['success'] = "You are now logged in";
-  	  header('location: index.php');
+  	  header('location: patientorexisting.php');
   	}else {
   		array_push($errors, "Wrong email/password combination");
   	}
   }
 }
+
+// REGISTER Patient
+if (isset($_POST['reg_patient'])) {
+  // receive all input values from the form
+  $firstname = mysqli_real_escape_string($db, $_POST['firstname']);
+  $lastname = mysqli_real_escape_string($db, $_POST['lastname']);
+  $medicalrecord = mysqli_real_escape_string($db, $_POST['medicalrecord']);
+  $hospital = mysqli_real_escape_string($db, $_POST['hospital']);
+
+  // form validation: ensure that the form is correctly filled ...
+  // by adding (array_push()) corresponding error unto $errors array
+  if (empty($firstname)) { array_push($errors, "First name is required"); }
+  if (empty($lastname)) { array_push($errors, "Last name is required"); }
+  if (empty($hospital)) { array_push($errors, "Hospital is required"); }
+  if (empty($medicalrecord)) { array_push($errors, "Medical Record is required"); }
+  // a user does not already exist with the same username and/or email
+  $medical_check_query = "SELECT medicalrecord FROM patients WHERE medicalrecord='$medicalrecord' LIMIT 1";
+  $result = mysqli_query($db, $medical_check_query);
+  $medical = mysqli_fetch_assoc($result);
+
+  if ($medical) { // if user exists
+    if ($medical['medicalrecord'] === $medicalrecord) {
+      array_push($errors, "medical record already exists");
+    }
+  }
+
+  // Finally, register user if there are no errors in the form
+  if (count($errors) == 0) {
+  	$password = md5($password_1);//encrypt the password before saving in the database
+
+  	$query = "INSERT INTO patients (firstname, lastname, medicalrecord, hospital)
+  			  VALUES('$firstname', '$lastname', '$medicalrecord', '$hospital')";
+  	mysqli_query($db, $query);
+  	$_SESSION['medicalrecord'] = $medicalrecord;
+  	$_SESSION['success'] = "Patient Created";
+  	header('location: index.php');
+  }
+}
+
 
 ?>
