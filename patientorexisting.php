@@ -7,7 +7,9 @@ if (!isset($_SESSION['username'])) {
     $_SESSION['msg'] = "You must log in first";
     header('location: login.php');
 }
+// send to next page
 $_SESSION['medicalrecord'] = $medicalrecord;
+$_SESSION['hospital'] = $hospital;
 
 if (isset($_GET['logout'])) {
     session_destroy();
@@ -24,8 +26,6 @@ if (isset($_GET['logout'])) {
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- Material Design Bootstrap -->
     <link href="css/mdb.min.css" rel="stylesheet">
-    <!-- Jquery UI -->
-    <link href="css/style.css" rel="stylesheet">
     <!-- Your custom styles (optional) -->
     <link href="css/style.css" rel="stylesheet">
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -96,9 +96,9 @@ if (isset($_GET['logout'])) {
         <div class="offset-md-2 col-lg-7 col-md-7">
           <div class="card">
             <div class="card-header">
-              <div class="md-form mt-0">
+              <div class="text-center mt-0" >
                 <button class="btn btn-success align-items-center new-patient"><a id="new-patient">New Patient</a></button>
-                <button class="btn btn-success align-items-center existing-patient"><a id="existing-patien">View Existing Patients</a></button>
+                <button class="btn btn-success align-items-center existing-patient"><a id="existing-patient">View Existing Patients</a></button>
               </div>
             </div>
           </div>
@@ -107,8 +107,10 @@ if (isset($_GET['logout'])) {
     </div>
     <div class="new-patient-form offset-md-2 col-lg-7 col-md-7">
       <div class="card">
+          <div class="card-body px-lg-5 pt-0">
         <form action="patientorexisting.php" class="text-center" method="post" style="color: #757575;">
           <?php include('errors.php'); ?>
+          <?php $medicalrecord = "";?>
             <div class="form-row">
               <div class="col">
                 <!-- First name -->
@@ -124,7 +126,7 @@ if (isset($_GET['logout'])) {
               </div>
             </div>
             <div class="md-form mt-0">
-              <input class="form-control" id="materialRegisterFormHospital" name="medicalrecord" placeholder="Hospital Name" type="text" value="<?php echo $medicalrecord; ?>">
+              <input class="form-control" id="materialRegisterFormHospital" name="medicalrecord" placeholder="Patient Medical Record" type="text" value="<?php echo $medicalrecord; ?>">
             </div>
             <!-- Hospital -->
             <div class="md-form mt-0">
@@ -133,7 +135,7 @@ if (isset($_GET['logout'])) {
             <button class="btn btn-outline-info btn-rounded btn-block my-4 btn-blue waves-effect z-depth-0" id="register-btn" name="reg_patient" type="submit">Create Patient</button>
 
           </form><!-- Form -->
-    </div>
+    </div></div>
   </div>
 </main>
 <footer id="footer" class="page-footer unique-color-dark mt-4">

@@ -100,15 +100,9 @@
                   </div>
                   <!-- Sign up button -->
           <button class="btn btn-outline-info btn-rounded btn-block my-4 btn-blue waves-effect z-depth-0"  disabled id="register-btn" name="reg_user" type="submit">Register</button>
-
-
-  	<p>
-  		<a href="login.php" style="text-decoration: underline;">Already a member? Sign in</a>
-  	</p>
-
-
-
-
+          	<p>
+          		<a href="login.php" style="text-decoration: underline;">Already a member? Sign in</a>
+          	</p>
           </form>
           <!-- Form -->
 

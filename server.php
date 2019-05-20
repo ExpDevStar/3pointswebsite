@@ -121,7 +121,44 @@ if (isset($_POST['reg_patient'])) {
   			  VALUES('$firstname', '$lastname', '$medicalrecord', '$hospital')";
   	mysqli_query($db, $query);
   	$_SESSION['medicalrecord'] = $medicalrecord;
+    $_SESSION['hopsital'] = $hospital;
   	$_SESSION['success'] = "Patient Created";
+  	header('location: index.php');
+  }
+}
+
+
+
+// Submit Patient Records
+if (isset($_POST['reg_medialsubmission'])) {
+  // $data = $_POST['data'];
+  //
+  // // convert json into array
+  // $array = json_decode($data);
+  // receive all input values from the form
+  $medicalrecord = mysqli_real_escape_string($db, $_POST['medicalrecord']);
+  $submission = mysqli_real_escape_string($db, $_POST['submission']);
+  $hospital = mysqli_real_escape_string($db, $_POST['hospital']);
+
+  // form validation: ensure that the form is correctly filled ...
+  // by adding (array_push()) corresponding error unto $errors array
+  if (empty($medicalrecord)) { array_push($errors, "Medial Record is required"); }
+  if (empty($submission)) { array_push($errors, "Submission is required"); }
+  if (empty($hospital)) { array_push($errors, "Hospital is required"); }
+
+  // a user does not already exist with the same username and/or email
+  $medical_check_query = "SELECT medicalrecord FROM patients WHERE medicalrecord='$medicalrecord' LIMIT 1";
+  $result = mysqli_query($db, $medical_check_query);
+  $medical = mysqli_fetch_assoc($result);
+
+  // Finally, register user if there are no errors in the form
+  if (count($errors) == 0) {
+  	$query = "INSERT INTO record_submissions (medicalrecord, submission, hospital)
+  			  VALUES('$medicalrecord', '$submission', '$hospital')";
+  	mysqli_query($db, $query);
+    echo json_encode($query);
+  	$_SESSION['medicalrecordsubmission'] = $medicalrecordsubmitted;
+  	$_SESSION['success'] = "Patient Record Submitted";
   	header('location: index.php');
   }
 }

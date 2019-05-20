@@ -12,6 +12,9 @@ if (isset($_GET['logout'])) {
     unset($_SESSION['username']);
     header("location: login.php");
 }
+$get = mysqli_query("SELECT medicalrecord FROM patients WHERE medicalrecord = '" . $_SESSION['medicalrecord'] . "'");
+$stuff = mysqli_query($db, $get);
+echo $stuff;
 ?>
 <head>
   <!-- Required meta tags -->

@@ -7,13 +7,10 @@ if (!isset($_SESSION['username'])) {
     header('location: login.php');
 }
 
-
-if(!isset($_POST['medicalrecord']))
-{
-  $medicalrecord=$_POST['medicalrecord'];
-  echo $medicalrecord;
-    // store medical record for safe keeping
-}
+// $hospital=$_POST['hospital'];
+// echo $hospital;
+ // $medicalrecord=$_POST['medicalrecord'];
+ // echo $medicalrecord;
 
 
 if (isset($_GET['logout'])) {
@@ -166,6 +163,7 @@ if (isset($_GET['logout'])) {
         <div class="offset-md-2 col-lg-7 col-md-7">
           <div class="card">
             <div class="card-header">
+
               <input type="hidden" class="hidden-cat"/>
               <input type="hidden" class="hidden-id"/>
               <div class="md-form mt-0">
@@ -216,7 +214,9 @@ if (isset($_GET['logout'])) {
                       <div class="field_wrapper">
                         <form id="cart"></form>
                           <ul id="ulcart" style="list-style-type:disc;">
-                          </ul>
+                              <!-- <input name="medicalrecord" id="medicalrecord" type="hidden" value="<?php echo $_SESSION['medicalrecord'];?>">
+                                <input name="hospital" id="hospital" type="hidden" value="<?php echo $_SESSION['hospital'];?>"> -->
+
                       </div>
                     <div class="bottom-buttons">
                       <span>
@@ -247,22 +247,20 @@ if (isset($_GET['logout'])) {
           </button>
         </div>
         <!--Body-->
-        <div class="modal-body ">
-            <div id="modal-text">
+        <div class="modal-body" data-keyboard="false" data-backdrop="static" >
+            <form id="modal-text" method="post" class="text-center" action="server.php">
               <ul>
               </ul>
 
+            </form>
+            <div class="modal-footers justify-content-center">
+              <button class="printBtn align-items-center btn btn-success complete waves-effect waves-light"><i class="fas fa-print"></i> Print</button>
             </div>
-            <input type="checkbox" class="form-check-input" id="diabetesCaseMin">
-            <label class="form-check-label" for="diabetesCaseMin">Does the Patient have Diabetes?</label>
+            <!-- <input type="checkbox" class="form-check-input" id="diabetesCaseMin">
+            <label class="form-check-label" for="diabetesCaseMin">Does the Patient have Diabetes?</label> -->
 
         </div>
-        <!--Footer-->
-        <div class="modal-footer justify-content-center">
-          <button class="printBtn align-items-center btn btn-success complete waves-effect waves-light"><i class="fas fa-print"></i> Print</button>
-          <!-- <button class="align-items-center btn btn-success complete waves-effect waves-light"><i class="fas fa-download"></i> Download</button> -->
-          <button  class="btn btn-outline-success waves-effect" data-dismiss="modal"><i class="fas fa-save"></i>  Save</button>
-        </div>
+
       </div>
       <!--/.Content-->
     </div>
@@ -281,9 +279,9 @@ if (isset($_GET['logout'])) {
   <div class="container text-center py-4 text-md-left mt-5">
     <div class="row mt-3">
       <!--First column-->
-      <div class="col-md-3 col-lg-4 col-xl-3 mb-4">
+      <div class="col-md-4 col-lg-3 col-xl-3 mb-4">
         <h6 class="text-uppercase font-weight-bold">
-          <strong>Useful links</strong>
+          <strong>Legal</strong>
         </h6>
         <hr class="info-color mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
         <p>
@@ -292,16 +290,6 @@ if (isset($_GET['logout'])) {
       </div>
       <!--/.First column-->
       <!--Second column-->
-      <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-4">
-        <h6 class="text-uppercase font-weight-bold">
-          <strong>How To Guide</strong>
-        </h6>
-        <hr class="info-color mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
-        <p>
-          <a id="footer-link-tutBootstrap" href="/howto">How to use this Software</a>
-        </p>
-        <p>
-      </div>
       <!--/.Second column-->
       <!--Fourth column-->
       <div class="col-md-4 col-lg-3 col-xl-3">
@@ -460,7 +448,6 @@ $(document).ready(function()
     }
     // if no description
     else{
-
       // remove special characters
       var stripDatum = datumConvert.replace(/[{()}]/g, '');
       // remove special characters
@@ -598,23 +585,27 @@ $(document).ready(function()
         cartTreat = $('#TreatmentID').val(),
         cartRank = $('#ranking').val();
         cartPrice = $('#Price').val()
+        cartMedialRecord = $('#medicalrecord').val()
+        cartHospital = $('#hospital').val()
         cartNumber = x;
+        // If Rank has return to provider, reorder
       if ($('#ranking_text:contains("Return to Provider")').length > 0){
         text = "ID: " + cartID + " " + "RANK:  " + cartRank;
         // Append Values to Sidebar
-        $('#ulcart').append(`
-        <li class="item ui-state-default" data-order="${cartRank}"><h5 data-toggle="tooltip" data-placement="top" title="Return to Provider" class="mt-1 mb-1 cart-rank font-weight-bold highlight-red ">
+        $('#ulcart').append(`<li class="item ui-state-default" data-order="${cartRank}"><h5 data-toggle="tooltip" data-placement="top" title="Return to Provider" class="mt-1 mb-1 cart-rank font-weight-bold highlight-red ">
           ${cartID}   <div class="cartdiag" style="display:none">: ${cartDiag} , ${cartPrice}</div></h5></a><a href="javascript:void(0);" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a>
         </li>`)
+        // Auto Sort
         $('.field_wrapper li').sort(function(a, b)
         {
           return $(a).data('order') - $(b).data('order');
         }).appendTo('.field_wrapper');
       } else {
         $('#ulcart').append(`
-        <li class="item ui-state-default" data-order="${cartRank}"><h5 class="mt-1 mb-1 cart-rank font-weight-bold">
+          <li class="item ui-state-default" data-order="${cartRank}"><h5 class="mt-1 mb-1 cart-rank font-weight-bold">
           ${cartID}  <div class="cartdiag" style="display:none">: ${cartDiag} , ${cartPrice}</div></h5><a href="javascript:void(0);" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a>
         </li>`)
+        // Auto Sort
         $('.field_wrapper li').sort(function(a, b)
         {
           return $(a).data('order') - $(b).data('order');
@@ -635,7 +626,7 @@ $(document).ready(function()
   $('#completeBtn').on('click', function(e)
   {
     $('#modal-text').remove();
-     $('.modal-body').prepend('<div id="modal-text"><ul id="sortable" class="ui-sortable olcart">');
+     $('.modal-body').prepend('<form id="modal-text" method="post" class="text-center" action="server.php"><ul id="sortable" class="ui-sortable olcart"><input type="hidden" id="hospitalinput" name="hospitalinput" value="${cartHospital}"><input type="hidden" id="medicalrecordinput" name="medicalrecordinput" value="${cartMedialRecord}">');
       // clone to modal
       $('.field_wrapper').contents().clone().appendTo('.olcart');
       $(".olcart > #cart").remove();
@@ -649,7 +640,96 @@ $(document).ready(function()
       });
       $( "#sortable" ).disableSelection();
       $('#sortable ').sortable();
+      $('#modal-text').append(`      <!--Footer-->
+
+              <!-- <button class="align-items-center btn btn-success complete waves-effect waves-light"><i class="fas fa-download"></i> Download</button> -->
+                <button class="btn btn-outline-info btn-rounded btn-block my-4 btn-blue waves-effect z-depth-0" id="save-btn" name="reg_medialsubmission" type="submit"><i class="fas fa-save"></i>  Save</button>
+
+            </div>`)
   }); // === END Clone === //
+
+  // Convert Cloned Data in LI to string// Javascript/jQuery
+  // this is the id of the form
+ $('#modal-text').submit(function(event) {
+   // get the form data
+     // there are many ways to get this data using jQuery (you can use the class or id also)
+     var formData = {
+         'name'              : $('input[name=name]').val(),
+         'email'             : $('input[name=email]').val(),
+         'superheroAlias'    : $('input[name=superheroAlias]').val()
+     };
+
+     // process the form
+     $.ajax({
+         type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+         url         : 'process.php', // the url where we want to POST
+         data        : formData, // our data object
+         dataType    : 'json', // what type of data do we expect back from the server
+                     encode          : true
+     })
+         // using the done promise callback
+         .done(function(data) {
+
+             // log data to the console so we can see
+             console.log(data);
+
+             // here we will handle errors and validation messages
+         });
+
+     // stop the form from submitting the normal way and refreshing the page
+     event.preventDefault();
+ });
+
+
+  $("#save-btn").submit(function(e) {
+    e.preventDefault();
+    // var liarray = [];
+    // $("li").each(function() {
+    //     array.push($(this).html());
+    // });
+    //
+    // var lisubmission = JSON.stringify(liarray);
+    //
+    //   var formData = {
+    //         'hospital'              : $('input[name=hospitalinput]').val(),
+    //         'medicalrecord'             : $('input[name=medicalrecordinput]').val(),
+    //         'submission'    : lisubmission
+    //     };
+    //     console.log(formData);
+    //     // process the form
+    //            $.ajax({
+    //                type        : 'POST',
+    //                url         : 'server.php',
+    //                data        : formData,
+    //                dataType    : 'json',
+    //               encode          : true
+    //            })
+    //                // using the done promise callback
+    //                .done(function(data) {
+    //
+    //                    // log data to the console so we can see
+    //                    console.log(data);
+    //                    // var array = [];
+    //                    // $("h3").each(function() {
+    //                    //     array.push($(this).html());
+    //                    // });
+    //                    //
+    //                    // var message = JSON.stringify(array);
+    //                    // $.post('test.php', {data: message}, function(data) {
+    //                    //     document.write(data); // "success"
+    //                    // });
+    //                    // here we will handle errors and validation messages
+    //                });
+    //
+    //            // stop the form from submitting the normal way and refreshing the page
+    //            event.preventDefault();
+           });
+
+
+
+
+
+
 }); // === END Document Ready === //
 </script>
 </body>
