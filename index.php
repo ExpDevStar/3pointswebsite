@@ -256,8 +256,6 @@ if (isset($_GET['logout'])) {
             <div class="modal-footers justify-content-center">
               <button class="printBtn align-items-center btn btn-success complete waves-effect waves-light"><i class="fas fa-print"></i> Print</button>
             </div>
-            <!-- <input type="checkbox" class="form-check-input" id="diabetesCaseMin">
-            <label class="form-check-label" for="diabetesCaseMin">Does the Patient have Diabetes?</label> -->
 
         </div>
 
@@ -626,6 +624,7 @@ $(document).ready(function()
   $('#completeBtn').on('click', function(e)
   {
     $('#modal-text').remove();
+    // Append Form for Server.php Data Ingestion.
      $('.modal-body').prepend('<form id="modal-text" method="post" class="text-center" action="server.php"><ul id="sortable" class="ui-sortable olcart"><input type="hidden" id="hospitalinput" name="hospitalinput" value="${cartHospital}"><input type="hidden" id="medicalrecordinput" name="medicalrecordinput" value="${cartMedialRecord}">');
       // clone to modal
       $('.field_wrapper').contents().clone().appendTo('.olcart');
@@ -633,6 +632,7 @@ $(document).ready(function()
       $(".olcart > #ulcart").remove();
       $(".olcart > .item > .remove_button").remove();
       $(".olcart > .item > h5 > .cartdiag").show();
+
         // Enable Sortable now
       $( "#sortable" ).sortable({
           tolerance: 'touch',
@@ -640,13 +640,53 @@ $(document).ready(function()
       });
       $( "#sortable" ).disableSelection();
       $('#sortable ').sortable();
-      $('#modal-text').append(`      <!--Footer-->
-
+      $('#modal-text').append(`<div class="custom-control custom-checkbox"><input type="checkbox" class="form-check-input" id="cogCaseMin" name="cogCaseMin" increment="1">  <label class="form-check-label" for="cogCaseMin">Does the resident have cognitive impairment?</label></div> <div class="custom-control custom-checkbox"> <input type="checkbox" class="form-check-input" name="swallowCaseMin" id="swallowCaseMin" increment="1"> <label class="form-check-label" for="swallowCaseMin">Does the resident have Swallowing Difficulties?</label></div> <div class="custom-control custom-checkbox"> <input type="checkbox" class="form-check-input" name="mechCaseMin" id="mechCaseMin" increment="1"> <label class="form-check-label" for="mechCaseMin">Is the resident on a mechanically altered diet?</label> </div>  <div id="caseMinIndexFinal">CaseMinIndex  <h2 class="caseMinIndexPrice"> ${cartPrice} </h2> </div>  <!--Footer-->
               <!-- <button class="align-items-center btn btn-success complete waves-effect waves-light"><i class="fas fa-download"></i> Download</button> -->
                 <button class="btn btn-outline-info btn-rounded btn-block my-4 btn-blue waves-effect z-depth-0" id="save-btn" name="reg_medialsubmission" type="submit"><i class="fas fa-save"></i>  Save</button>
-
             </div>`)
+
+    // Case Min Index Questionairre
+    $('input[name="cogCaseMin"]').click(function(){
+           if($(this).is(":checked")){
+             var i = parseInt($(this).attr('increment'));
+             var current_value = parseInt($('.caseMinIndexPrice').text());
+              $('.caseMinIndexPrice').text(current_value+i);
+           }
+           else if($(this).is(":not(:checked)")){
+             var i = parseInt($(this).attr('increment'));
+             var current_value = parseInt($('.caseMinIndexPrice').text());
+              $('.caseMinIndexPrice').text(current_value-i);
+           }
+       });
+     $('input[name="swallowCaseMin"]').click(function(){
+            if($(this).is(":checked")){
+              var i = parseInt($(this).attr('increment'));
+              var current_value = parseInt($('.caseMinIndexPrice').text());
+               $('.caseMinIndexPrice').text(current_value+i);
+            }
+            else if($(this).is(":not(:checked)")){
+              var i = parseInt($(this).attr('increment'));
+              var current_value = parseInt($('.caseMinIndexPrice').text());
+               $('.caseMinIndexPrice').text(current_value-i);
+            }
+        });
+      $('input[name="mechCaseMin"]').click(function(){
+             if($(this).is(":checked")){
+               var i = parseInt($(this).attr('increment'));
+               var current_value = parseInt($('.caseMinIndexPrice').text());
+                $('.caseMinIndexPrice').text(current_value+i);
+             }
+             else if($(this).is(":not(:checked)")){
+               var i = parseInt($(this).attr('increment'));
+               var current_value = parseInt($('.caseMinIndexPrice').text());
+                $('.caseMinIndexPrice').text(current_value-i);
+             }
+         });
   }); // === END Clone === //
+
+
+
+
 
   // Convert Cloned Data in LI to string// Javascript/jQuery
   // this is the id of the form
@@ -680,7 +720,7 @@ $(document).ready(function()
      event.preventDefault();
  });
 
-
+// Save Button To Database
   $("#save-btn").submit(function(e) {
     e.preventDefault();
     // var liarray = [];
