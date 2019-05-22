@@ -628,24 +628,27 @@ $(document).ready(function()
      $('.modal-body').prepend('<form id="modal-text" method="post" class="text-center" action="server.php"><ul id="sortable" class="ui-sortable olcart"><input type="hidden" id="hospitalinput" name="hospitalinput" value="${cartHospital}"><input type="hidden" id="medicalrecordinput" name="medicalrecordinput" value="${cartMedialRecord}">');
       // clone to modal
       $('.field_wrapper').contents().clone().appendTo('.olcart');
+      // remove unncessary content
       $(".olcart > #cart").remove();
       $(".olcart > #ulcart").remove();
       $(".olcart > .item > .remove_button").remove();
+      // show whats left
       $(".olcart > .item > h5 > .cartdiag").show();
 
-        // Enable Sortable now
+      // Enable Sortable now
       $( "#sortable" ).sortable({
           tolerance: 'touch',
           placeholder: "ui-state-highlight"
       });
-      $( "#sortable" ).disableSelection();
-      $('#sortable ').sortable();
+      $("#sortable").disableSelection();
+      $('#sortable').sortable();
+      // Append Questionairre and Print + Save Button
       $('#modal-text').append(`<div class="custom-control custom-checkbox"><input type="checkbox" class="form-check-input" id="cogCaseMin" name="cogCaseMin" increment="1">  <label class="form-check-label" for="cogCaseMin">Does the resident have cognitive impairment?</label></div> <div class="custom-control custom-checkbox"> <input type="checkbox" class="form-check-input" name="swallowCaseMin" id="swallowCaseMin" increment="1"> <label class="form-check-label" for="swallowCaseMin">Does the resident have Swallowing Difficulties?</label></div> <div class="custom-control custom-checkbox"> <input type="checkbox" class="form-check-input" name="mechCaseMin" id="mechCaseMin" increment="1"> <label class="form-check-label" for="mechCaseMin">Is the resident on a mechanically altered diet?</label> </div>  <div id="caseMinIndexFinal">CaseMinIndex  <h2 class="caseMinIndexPrice"> ${cartPrice} </h2> </div>  <!--Footer-->
               <!-- <button class="align-items-center btn btn-success complete waves-effect waves-light"><i class="fas fa-download"></i> Download</button> -->
                 <button class="btn btn-outline-info btn-rounded btn-block my-4 btn-blue waves-effect z-depth-0" id="save-btn" name="reg_medialsubmission" type="submit"><i class="fas fa-save"></i>  Save</button>
             </div>`)
 
-    // Case Min Index Questionairre
+    // Case Min Index Questionairre Logic
     $('input[name="cogCaseMin"]').click(function(){
            if($(this).is(":checked")){
              var i = parseInt($(this).attr('increment'));
@@ -684,42 +687,7 @@ $(document).ready(function()
          });
   }); // === END Clone === //
 
-
-
-
-
-  // Convert Cloned Data in LI to string// Javascript/jQuery
-  // this is the id of the form
- $('#modal-text').submit(function(event) {
-   // get the form data
-     // there are many ways to get this data using jQuery (you can use the class or id also)
-     var formData = {
-         'name'              : $('input[name=name]').val(),
-         'email'             : $('input[name=email]').val(),
-         'superheroAlias'    : $('input[name=superheroAlias]').val()
-     };
-
-     // process the form
-     $.ajax({
-         type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
-         url         : 'process.php', // the url where we want to POST
-         data        : formData, // our data object
-         dataType    : 'json', // what type of data do we expect back from the server
-                     encode          : true
-     })
-         // using the done promise callback
-         .done(function(data) {
-
-             // log data to the console so we can see
-             console.log(data);
-
-             // here we will handle errors and validation messages
-         });
-
-     // stop the form from submitting the normal way and refreshing the page
-     event.preventDefault();
- });
-
+  // Convert Cloned Data in LI to string// Javascript/jQuery WIP
 // Save Button To Database
   $("#save-btn").submit(function(e) {
     e.preventDefault();
@@ -764,12 +732,6 @@ $(document).ready(function()
     //            // stop the form from submitting the normal way and refreshing the page
     //            event.preventDefault();
            });
-
-
-
-
-
-
 }); // === END Document Ready === //
 </script>
 </body>
