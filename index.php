@@ -643,48 +643,48 @@ $(document).ready(function()
       $("#sortable").disableSelection();
       $('#sortable').sortable();
       // Append Questionairre and Print + Save Button
-      $('#modal-text').append(`<div class="custom-control custom-checkbox"><input type="checkbox" class="form-check-input" id="cogCaseMin" name="cogCaseMin" increment="1">  <label class="form-check-label" for="cogCaseMin">Does the resident have cognitive impairment?</label></div> <div class="custom-control custom-checkbox"> <input type="checkbox" class="form-check-input" name="swallowCaseMin" id="swallowCaseMin" increment="1"> <label class="form-check-label" for="swallowCaseMin">Does the resident have Swallowing Difficulties?</label></div> <div class="custom-control custom-checkbox"> <input type="checkbox" class="form-check-input" name="mechCaseMin" id="mechCaseMin" increment="1"> <label class="form-check-label" for="mechCaseMin">Is the resident on a mechanically altered diet?</label> </div>  <div id="caseMinIndexFinal">CaseMinIndex  <h2 class="caseMinIndexPrice"> ${cartPrice} </h2> </div>  <!--Footer-->
+      $('#modal-text').append(`<div class="custom-control custom-checkbox"><input type="checkbox" class="form-check-input" id="cogCaseMin" name="cogCaseMin" increment="1">  <label class="form-check-label" for="cogCaseMin">Does the resident have cognitive impairment?</label></div> <div class="custom-control custom-checkbox"> <input type="checkbox" class="form-check-input" name="swallowCaseMin" id="swallowCaseMin" increment="1"> <label class="form-check-label" for="swallowCaseMin">Does the resident have Swallowing Difficulties?</label></div> <div class="custom-control custom-checkbox"> <input type="checkbox" class="form-check-input" name="mechCaseMin" id="mechCaseMin" increment="1"> <label class="form-check-label" for="mechCaseMin">Is the resident on a mechanically altered diet?</label> </div>   <!--Footer-->
               <!-- <button class="align-items-center btn btn-success complete waves-effect waves-light"><i class="fas fa-download"></i> Download</button> -->
                 <button class="btn btn-outline-info btn-rounded btn-block my-4 btn-blue waves-effect z-depth-0" id="save-btn" name="reg_medialsubmission" type="submit"><i class="fas fa-save"></i>  Save</button>
             </div>`)
 
     // Case Min Index Questionairre Logic
-    $('input[name="cogCaseMin"]').click(function(){
-           if($(this).is(":checked")){
-             var i = parseInt($(this).attr('increment'));
-             var current_value = parseInt($('.caseMinIndexPrice').text());
-              $('.caseMinIndexPrice').text(current_value+i);
-           }
-           else if($(this).is(":not(:checked)")){
-             var i = parseInt($(this).attr('increment'));
-             var current_value = parseInt($('.caseMinIndexPrice').text());
-              $('.caseMinIndexPrice').text(current_value-i);
-           }
-       });
-     $('input[name="swallowCaseMin"]').click(function(){
-            if($(this).is(":checked")){
-              var i = parseInt($(this).attr('increment'));
-              var current_value = parseInt($('.caseMinIndexPrice').text());
-               $('.caseMinIndexPrice').text(current_value+i);
-            }
-            else if($(this).is(":not(:checked)")){
-              var i = parseInt($(this).attr('increment'));
-              var current_value = parseInt($('.caseMinIndexPrice').text());
-               $('.caseMinIndexPrice').text(current_value-i);
-            }
-        });
-      $('input[name="mechCaseMin"]').click(function(){
-             if($(this).is(":checked")){
-               var i = parseInt($(this).attr('increment'));
-               var current_value = parseInt($('.caseMinIndexPrice').text());
-                $('.caseMinIndexPrice').text(current_value+i);
-             }
-             else if($(this).is(":not(:checked)")){
-               var i = parseInt($(this).attr('increment'));
-               var current_value = parseInt($('.caseMinIndexPrice').text());
-                $('.caseMinIndexPrice').text(current_value-i);
-             }
-         });
+    // $('input[name="cogCaseMin"]').click(function(){
+    //        if($(this).is(":checked")){
+    //          var i = parseInt($(this).attr('increment'));
+    //          var current_value = parseInt($('.caseMinIndexPrice').text());
+    //           $('.caseMinIndexPrice').text(current_value+i);
+    //        }
+    //        else if($(this).is(":not(:checked)")){
+    //          var i = parseInt($(this).attr('increment'));
+    //          var current_value = parseInt($('.caseMinIndexPrice').text());
+    //           $('.caseMinIndexPrice').text(current_value-i);
+    //        }
+    //    });
+    //  $('input[name="swallowCaseMin"]').click(function(){
+    //         if($(this).is(":checked")){
+    //           var i = parseInt($(this).attr('increment'));
+    //           var current_value = parseInt($('.caseMinIndexPrice').text());
+    //            $('.caseMinIndexPrice').text(current_value+i);
+    //         }
+    //         else if($(this).is(":not(:checked)")){
+    //           var i = parseInt($(this).attr('increment'));
+    //           var current_value = parseInt($('.caseMinIndexPrice').text());
+    //            $('.caseMinIndexPrice').text(current_value-i);
+    //         }
+    //     });
+    //   $('input[name="mechCaseMin"]').click(function(){
+    //          if($(this).is(":checked")){
+    //            var i = parseInt($(this).attr('increment'));
+    //            var current_value = parseInt($('.caseMinIndexPrice').text());
+    //             $('.caseMinIndexPrice').text(current_value+i);
+    //          }
+    //          else if($(this).is(":not(:checked)")){
+    //            var i = parseInt($(this).attr('increment'));
+    //            var current_value = parseInt($('.caseMinIndexPrice').text());
+    //             $('.caseMinIndexPrice').text(current_value-i);
+    //          }
+    //      });
   }); // === END Clone === //
 
   // Convert Cloned Data in LI to string// Javascript/jQuery WIP
