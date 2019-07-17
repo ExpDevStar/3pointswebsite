@@ -9,7 +9,6 @@ if (!isset($_SESSION['username'])) {
 }
 // send to next page
 $_SESSION['medicalrecord'] = $medicalrecord;
-$_SESSION['hospital'] = $hospital;
 
 if (isset($_GET['logout'])) {
     session_destroy();
@@ -36,6 +35,8 @@ if (isset($_GET['logout'])) {
     <!-- Font Awesome JS -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+   
     <title>3Points</title>
   </head>
 
@@ -94,6 +95,7 @@ if (isset($_GET['logout'])) {
       <div class="row">
 
         <div class="offset-md-2 col-lg-7 col-md-7">
+         <?php flashMsg(); ?>
           <div class="card">
             <div class="card-header">
               <div class="text-center mt-0" >
@@ -137,6 +139,29 @@ if (isset($_GET['logout'])) {
           </form><!-- Form -->
     </div></div>
   </div>
+  <div class="existing-patient-content offset-md-2 col-lg-7 col-md-7">
+      <div class="card">
+          <div class="card-body px-lg-5 pt-0">
+            <table id="existingPatients" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Medical Record</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </tfoot>
+                </table>
+          </div>
+      </div>
+  </div>
 </main>
 <footer id="footer" class="page-footer unique-color-dark mt-4">
   <!--Footer Links-->
@@ -175,8 +200,107 @@ if (isset($_GET['logout'])) {
       <strong> 3Points Software</strong>
     </a>
   </div>
+  <div class="modal modal-print fade" id="patientAnswers" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-notify modal-success" role="document">
+      <!--Content-->
+      <div class="modal-content">
+        <!--Header-->
+        <div class="modal-header">
+          <p class="heading lead">Answers ( Score: <span class="scoreView"></span> )</p>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" class="white-text">&times;</span>
+          </button>
+        </div>
+        <!--Body-->
+        <div class="modal-body" data-keyboard="false" data-backdrop="static" >
+
+        </div>
+
+      </div>
+      <!--/.Content-->
+    </div>
+  </div>
   <!--/.Copyright -->
 </footer>
+<script>
+  $('.existing-patient-content').hide();
+  $('.new-patient').on('click', function(){
+    $('.new-patient-form').show();
+    $('.existing-patient-content').hide();
+  });
+  $('.existing-patient').on('click', function(){
+    $('.new-patient-form').hide();
+    $('.existing-patient-content').show();
+  });
+
+  $(document).ready(function() {
+    $('#existingPatients').DataTable( {
+      "processing": true,
+        "serverSide": true,
+        "searching": false,
+        "pageLength": 10,
+        "lengthChange": false,
+        "info": false,
+        "ordering": false,
+        "ajax": {
+            "url": "data.php?action=getPatients",
+            "type": "POST"
+        },
+        "columns": [
+            { "data": "firstname" },
+            { "data": "lastname" },
+            { "data": "medicalrecord" },
+            { "data": "medicalrecord" }
+        ],
+        columnDefs: [{
+            targets: 3,
+            render: function (data, type, row, meta)
+            {
+                if (type === 'display')
+                {
+                    data = '<a class="viewPatient" data-medicalrecord="' + encodeURIComponent(data) + '" href="javascript:void(0)">View</a>';
+                }
+                return data;
+            }
+        }],
+    } );
+} );
+
+$(document).on('click', '.viewPatient', function(){
+  var popupElem   = $('#patientAnswers').find('.modal-body');
+  popupElem.html('');
+  var medicalRecord   = $(this).data('medicalrecord');
+  $.ajax({
+							url: 'data.php',
+							type: 'POST',
+							data: {action: 'getAnswers', medicalrecord: medicalRecord },
+							success: function(data) {
+                data    = JSON.parse(data);
+                var html    = '';
+                var checked = '';
+                score = 0;
+                $.each(data,function(index, value){
+                  //console.log(value);
+                  if(value.answer == 'Yes'){
+                    checked  = 'checked="checked"';
+                  } else{
+                    checked  = '';
+                  }
+                  score += parseInt(value.points);
+                  html  += '<div class="custom-control custom-checkbox"><input '+ checked +' disabled type="checkbox" class="form-check-input" id="q'+ value.id +'" name="ques['+ value.id +']" increment="1" value="yes">  <label class="form-check-label" for="q'+ value.id +'">'+ value.title +'</label></div>';
+                });
+                $('#patientAnswers').find('.scoreView').html(score);
+                console.log(html);
+                popupElem.html(html);
+                $('#patientAnswers').modal('show');
+							}
+	});
+ 
+});
+</script>
+
+
 <!-- Optional JavaScript -->
 <!-- Bootstrap tooltips -->
 <script type="text/javascript" src="js/popper.min.js"></script>
@@ -187,14 +311,7 @@ if (isset($_GET['logout'])) {
 <script type="text/javascript" src="js/typeahead.js"></script>
 <script type="text/javascript" src="js/bloodhound.min.js"></script>
 <script type="text/javascript" src="js/printThis.js"></script>
-<script>
-$('.new-patient-form').hide();
-$('.new-patient').click(function () {
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 
-  $('.new-patient-form').fadeIn("fast");
-
-})
-
-</script>
 </body>
 </html>

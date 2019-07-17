@@ -1,24 +1,13 @@
 <?php
 session_start();
 // connect to the database
-require 'connection.php';
-
-function pr($arr){
-	echo '<pre>';
-	print_r($arr);
-	echo '</pre>';
-}
-
-function prd($arr){
-	pr($arr);
-	die;
-}
+require_once 'connection.php';
 // initializing variables
 // $username = "";
 $email    = "";
 $firstname = "";
 $lastname    = "";
-$hospital    = "";
+$hospital    = isset($_SESSION['hospital']) ? $_SESSION['hospital'] : '';
 $medicalrecord    = "";
 $errors = array();
 
@@ -87,10 +76,11 @@ if (isset($_POST['login_user'])) {
 
   if (count($errors) == 0) {
   	$password = md5($password);
-  	$query = "SELECT * FROM users WHERE email='$email' AND password='$password'";
-  	$results = mysqli_query($db, $query);
-  	if (mysqli_num_rows($results) == 1) {
+  	$query = "SELECT * FROM users WHERE email=? AND password=?";
+    $results  =  $pdo->getResult($query, [$email, $password]);
+  	if ($results) {
   	  $_SESSION['username'] = $email;
+  	  $_SESSION['hospital'] = $results[0]['Hospital'];
   	  $_SESSION['success'] = "You are now logged in";
   	  header('location: patientorexisting.php');
   	}else {
@@ -127,10 +117,9 @@ if (isset($_POST['reg_patient'])) {
   // Finally, register user if there are no errors in the form
   if (count($errors) == 0) {
   	$password = md5($password_1);//encrypt the password before saving in the database
-
-  	$query = "INSERT INTO patients (firstname, lastname, medicalrecord, hospital)
-  			  VALUES('$firstname', '$lastname', '$medicalrecord', '$hospital')";
-  	mysqli_query($db, $query);
+    $query = "INSERT INTO patients (firstname, lastname, medicalrecord, hospital)
+    VALUES(?,?,?,?)";
+    $patientId   = $pdo->insert($query, [$firstname, $lastname, $medicalrecord, $hospital]);
   	$_SESSION['medicalrecord'] = $medicalrecord;
     $_SESSION['hopsital'] = $hospital;
   	$_SESSION['success'] = "Patient Created";
@@ -142,35 +131,70 @@ if (isset($_POST['reg_patient'])) {
 
 // Submit Patient Records
 if (isset($_POST['reg_medialsubmission'])) {
+  //pr($_POST);
+  
   // $data = $_POST['data'];
   //
   // // convert json into array
   // $array = json_decode($data);
   // receive all input values from the form
-  $medicalrecord = mysqli_real_escape_string($db, $_POST['medicalrecord']);
-  $submission = mysqli_real_escape_string($db, $_POST['submission']);
-  $hospital = mysqli_real_escape_string($db, $_POST['hospital']);
+  $medicalrecordInput = mysqli_real_escape_string($db, $_POST['medicalrecordinput']);
+  //$submission = mysqli_real_escape_string($db, $_POST['submission']);
+  $hospital = mysqli_real_escape_string($db, $_POST['hospitalinput']);
 
   // form validation: ensure that the form is correctly filled ...
   // by adding (array_push()) corresponding error unto $errors array
-  if (empty($medicalrecord)) { array_push($errors, "Medial Record is required"); }
-  if (empty($submission)) { array_push($errors, "Submission is required"); }
+  if (empty($medicalrecordInput)) { array_push($errors, "Medial Record is required"); }
+  //if (empty($submission)) { array_push($errors, "Submission is required"); }
   if (empty($hospital)) { array_push($errors, "Hospital is required"); }
 
   // a user does not already exist with the same username and/or email
-  $medical_check_query = "SELECT medicalrecord FROM patients WHERE medicalrecord='$medicalrecord' LIMIT 1";
+  /* $medical_check_query = "SELECT medicalrecord FROM patients WHERE medicalrecord='$medicalrecord' LIMIT 1";
   $result = mysqli_query($db, $medical_check_query);
-  $medical = mysqli_fetch_assoc($result);
+  $medical = mysqli_fetch_assoc($result); */
 
+  $submission = ''; 
   // Finally, register user if there are no errors in the form
   if (count($errors) == 0) {
-  	$query = "INSERT INTO record_submissions (medicalrecord, submission, hospital)
-  			  VALUES('$medicalrecord', '$submission', '$hospital')";
-  	mysqli_query($db, $query);
-    echo json_encode($query);
-  	$_SESSION['medicalrecordsubmission'] = $medicalrecordsubmitted;
-  	$_SESSION['success'] = "Patient Record Submitted";
-  	header('location: index.php');
+    $recordArr  = explode(',', $_POST['medicalrecordinput']);
+    $args       = explode(',', $_POST['qids']);
+    $ques       = $pdo->getResult('select * from questions where id IN ('. str_pad('',count($args)*2-1,'?,').')', $args);
+    $score      = [];
+    foreach($ques as $q){
+      $key    = $q['id'];
+      $score[$key]  = $q['points'];
+    }
+
+    $totalScore   = 0;
+    foreach($_POST['ques'] as $key => $input){
+      if(isset($score[$key])){
+        $totalScore   += $score[$key];
+      }
+    }
+
+    foreach($recordArr as $record){
+      $query = "INSERT INTO patient_icd_codes (medicalrecord, icd_code)
+            VALUES(?, ?)";
+      $pdo->insert($query, [$_SESSION['medicalrecord'], $record]);
+    }
+
+    foreach($ques as $q){
+      $key    = $q['id'];
+      $answer = 'No';
+      $points   = 0;
+     if(isset($_POST['ques'][$key])){
+        $points   = $score[$key];
+        $answer = 'Yes';
+      }
+      $query = "INSERT INTO patient_answers (medicalrecord, question_id, answer, points)
+          VALUES(?, ?, ?, ?)";
+      $pdo->insert($query, [$_SESSION['medicalrecord'], $q['id'], $answer, $points]);
+    }
+   
+
+    flashMsg("Patient Record Submitted successfully and score was ". $totalScore);
+    unset($_SESSION['medicalrecord']);
+    header('location: patientorexisting.php');
   }
 }
 

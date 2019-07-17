@@ -1,10 +1,17 @@
 <!doctype html>
 <?php
+include_once 'functions.php';
 session_start();
 // $feedbackdata = json_decode($_SESSION['feedbackdata']);
 if (!isset($_SESSION['username'])) {
     $_SESSION['msg'] = "You must log in first";
     header('location: login.php');
+    exit;
+}
+
+if (!isset($_SESSION['medicalrecord']) || empty($_SESSION['medicalrecord'])) {
+    header('location: patientorexisting.php');
+    exit;
 }
 
 // $hospital=$_POST['hospital'];
@@ -159,8 +166,10 @@ if (isset($_GET['logout'])) {
 <main>
     <div class="container-fluid mt-5 pt-5">
       <div class="row">
+        
 
         <div class="offset-md-2 col-lg-7 col-md-7">
+        <?php flashMsg(); ?>
           <div class="card">
             <div class="card-header">
 
@@ -214,8 +223,7 @@ if (isset($_GET['logout'])) {
                       <div class="field_wrapper">
                         <form id="cart"></form>
                           <ul id="ulcart" style="list-style-type:disc;">
-                              <!-- <input name="medicalrecord" id="medicalrecord" type="hidden" value="<?php echo $_SESSION['medicalrecord'];?>">
-                                <input name="hospital" id="hospital" type="hidden" value="<?php echo $_SESSION['hospital'];?>"> -->
+                                <input name="hospital" id="hospital" type="hidden" value="<?php echo $_SESSION['hospital'];?>">
 
                       </div>
                     <div class="bottom-buttons">
@@ -568,7 +576,7 @@ $(document).ready(function()
   var addButton = $('.add_button'); //Add button selector
   var wrapper = $('.field_wrapper'); //Input field wrapper
   var x = 1; //Initial field counter is 1
-
+  var codes   = [];
   //Once add button is clicked
   $(addButton).click(function()
   {
@@ -586,6 +594,7 @@ $(document).ready(function()
         cartMedialRecord = $('#medicalrecord').val()
         cartHospital = $('#hospital').val()
         cartNumber = x;
+        codes.push(cartID);
         // If Rank has return to provider, reorder
       if ($('#ranking_text:contains("Return to Provider")').length > 0){
         text = "ID: " + cartID + " " + "RANK:  " + cartRank;
@@ -625,7 +634,7 @@ $(document).ready(function()
   {
     $('#modal-text').remove();
     // Append Form for Server.php Data Ingestion.
-     $('.modal-body').prepend('<form id="modal-text" method="post" class="text-center" action="server.php"><ul id="sortable" class="ui-sortable olcart"><input type="hidden" id="hospitalinput" name="hospitalinput" value="${cartHospital}"><input type="hidden" id="medicalrecordinput" name="medicalrecordinput" value="${cartMedialRecord}">');
+     $('.modal-body').prepend('<form id="modal-text" method="post" class="text-center" action="server.php"><ul id="sortable" class="ui-sortable olcart"><input type="hidden" id="hospitalinput" name="hospitalinput" value="'+ cartHospital +'"><input type="hidden" id="medicalrecordinput" name="medicalrecordinput" value="'+ codes +'">');
       // clone to modal
       $('.field_wrapper').contents().clone().appendTo('.olcart');
       // remove unncessary content
@@ -642,11 +651,27 @@ $(document).ready(function()
       });
       $("#sortable").disableSelection();
       $('#sortable').sortable();
-      // Append Questionairre and Print + Save Button
-      $('#modal-text').append(`<div class="custom-control custom-checkbox"><input type="checkbox" class="form-check-input" id="cogCaseMin" name="cogCaseMin" increment="1">  <label class="form-check-label" for="cogCaseMin">Does the resident have cognitive impairment?</label></div> <div class="custom-control custom-checkbox"> <input type="checkbox" class="form-check-input" name="swallowCaseMin" id="swallowCaseMin" increment="1"> <label class="form-check-label" for="swallowCaseMin">Does the resident have Swallowing Difficulties?</label></div> <div class="custom-control custom-checkbox"> <input type="checkbox" class="form-check-input" name="mechCaseMin" id="mechCaseMin" increment="1"> <label class="form-check-label" for="mechCaseMin">Is the resident on a mechanically altered diet?</label> </div>   <!--Footer-->
-              <!-- <button class="align-items-center btn btn-success complete waves-effect waves-light"><i class="fas fa-download"></i> Download</button> -->
-                <button class="btn btn-outline-info btn-rounded btn-block my-4 btn-blue waves-effect z-depth-0" id="save-btn" name="reg_medialsubmission" type="submit"><i class="fas fa-save"></i>  Save</button>
-            </div>`)
+      $.ajax(
+      {
+        url: 'data.php',
+        method: 'POST',
+        dataType : 'html',
+        data: {action: 'getQuestions'}
+      }).done(function(data)
+      {
+        var questions = JSON.parse(data);
+        var quesHtml  = '';
+        var ids     = [];
+        $.each(questions,function(index, value){
+          ids.push(value.id);
+          quesHtml  += '<div class="custom-control custom-checkbox"><input type="checkbox" class="form-check-input" id="q'+ value.id +'" name="ques['+ value.id +']" increment="1" value="yes">  <label class="form-check-label" for="q'+ value.id +'">'+ value.title +'</label></div>';
+        });
+        // Append Questionairre and Print + Save Button
+        $('#modal-text').append(quesHtml + `<input type="hidden" name="qids" value="${ids}"><!--Footer-->
+                <!-- <button class="align-items-center btn btn-success complete waves-effect waves-light"><i class="fas fa-download"></i> Download</button> -->
+                  <button class="btn btn-outline-info btn-rounded btn-block my-4 btn-blue waves-effect z-depth-0" id="save-btn" name="reg_medialsubmission" type="submit"><i class="fas fa-save"></i>  Save</button>
+              </div>`)
+      });
 
     // Case Min Index Questionairre Logic
     // $('input[name="cogCaseMin"]').click(function(){

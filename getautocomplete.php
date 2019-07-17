@@ -32,26 +32,14 @@ if (isset($_GET['std'])) {
 }
 
 if (isset($_POST['itemID'])) {
-    require 'DbConnect.php';
     $var1 = $_POST['itemID'];
-    $db = new DbConnect;
-    $conn = $db->connect();
     $str = $_POST['itemID'];
-    $stmt = $conn->prepare("SELECT icd_code, cat_id FROM icd WHERE icd_code = '$str'");
-
-    $stmt->execute();
-    $icd = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $icd = $pdo->getResult("SELECT icd_code, cat_id FROM icd WHERE icd_code = '$str'");
     echo json_encode($icd);
 }
 if (isset($_POST['itemID2'])) {
-    require 'DbConnect.php';
     $var1 = $_POST['itemID2'];
-    $db = new DbConnect;
-    $conn = $db->connect();
     $str = $_POST['itemID2'];
-    $stmt = $conn->prepare("SELECT * FROM icd WHERE icd_code ='$str'");
-
-    $stmt->execute();
-    $icd = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $icd = $pdo->getResult("SELECT * FROM icd WHERE icd_code ='$str'");
     echo json_encode($icd);
 }

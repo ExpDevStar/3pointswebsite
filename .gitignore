@@ -1,4 +1,5 @@
 
 DbConnect.php
 connection.php
+config.php
 **/*.sw?
