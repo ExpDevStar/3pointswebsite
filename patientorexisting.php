@@ -276,11 +276,18 @@ $(document).on('click', '.viewPatient', function(){
 							type: 'POST',
 							data: {action: 'getAnswers', medicalrecord: medicalRecord },
 							success: function(data) {
-                data    = JSON.parse(data);
-                var html    = '';
+                var data    = JSON.parse(data);
+                var answers = data.answers;
+                var codes   = data.icd_codes;
+                var html    = '<ul id="sortable" class="ui-sortable olcart">';
+                $.each(codes,function(index, value){
+                  html    += `<li class="item ui-state-default ui-sortable-handle"    data-order="13"><h5 class="mt-1 mb-1 cart-rank font-weight-bold">${value.icd_code}<div class="cartdiag" style="">: ${value.icd_desc} , </div></h5>
+                  </li>`;
+                });
+                html  += '</ul>';
                 var checked = '';
                 score = 0;
-                $.each(data,function(index, value){
+                $.each(answers,function(index, value){
                   //console.log(value);
                   if(value.answer == 'Yes'){
                     checked  = 'checked="checked"';
@@ -291,7 +298,6 @@ $(document).on('click', '.viewPatient', function(){
                   html  += '<div class="custom-control custom-checkbox"><input '+ checked +' disabled type="checkbox" class="form-check-input" id="q'+ value.id +'" name="ques['+ value.id +']" increment="1" value="yes">  <label class="form-check-label" for="q'+ value.id +'">'+ value.title +'</label></div>';
                 });
                 $('#patientAnswers').find('.scoreView').html(score);
-                console.log(html);
                 popupElem.html(html);
                 $('#patientAnswers').modal('show');
 							}

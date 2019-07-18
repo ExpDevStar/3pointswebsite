@@ -31,7 +31,10 @@ if(isset($_REQUEST['action'])) {
 	}
 	if($_REQUEST['action'] == 'getAnswers'){
 		$result = $pdo->getResult("SELECT p.*, q.title FROM patient_answers p INNER JOIN questions q ON (p.question_id = q.id) where medicalrecord = ?", [$_POST['medicalrecord']]);
-		echo json_encode($result);
+		$data['answers']	= $result;
+		$result = $pdo->getResult("SELECT p.*, i.icd_desc FROM patient_icd_codes p INNER JOIN icd i ON (p.icd_code = i.icd_code) where medicalrecord = ?", [$_POST['medicalrecord']]);
+		$data['icd_codes']	= $result;
+		echo json_encode($data);
 	}
 }
 
