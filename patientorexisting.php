@@ -207,7 +207,7 @@ if (isset($_GET['logout'])) {
       <div class="modal-content">
         <!--Header-->
         <div class="modal-header">
-          <p class="heading lead">Answers ( Score: <span class="scoreView"></span> )</p>
+          <p class="heading lead"> NTA Score: <span class="scoreView"></span></p>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true" class="white-text">&times;</span>
           </button>
@@ -280,8 +280,17 @@ $(document).on('click', '.viewPatient', function(){
                 var answers = data.answers;
                 var codes   = data.icd_codes;
                 var html    = '<ul id="sortable" class="ui-sortable olcart">';
+				var  score2 = 0;
                 $.each(codes,function(index, value){
-                  html    += `<li class="item ui-state-default ui-sortable-handle"    data-order="13"><h5 class="mt-1 mb-1 cart-rank font-weight-bold">${value.icd_code}<div class="cartdiag" style="">: ${value.icd_desc} , </div></h5>
+					
+					if(value.icd_tertiary_ranking == ''){
+						value.icd_tertiary_ranking = 0;
+					}
+						
+					
+					score2 += parseInt(value.icd_tertiary_ranking);
+					var icd_tertiary_ranking = '('+value.icd_tertiary_ranking+')';
+                  html    += `<li class="item ui-state-default ui-sortable-handle"    data-order="13"><h5 class="mt-1 mb-1 cart-rank font-weight-bold"> ${value.icd_code}${icd_tertiary_ranking} <div class="cartdiag" style="">: ${value.icd_desc} , </div></h5>
                   </li>`;
                 });
                 html  += '</ul>';
@@ -297,7 +306,10 @@ $(document).on('click', '.viewPatient', function(){
                   score += parseInt(value.points);
                   html  += '<div class="custom-control custom-checkbox"><input '+ checked +' disabled type="checkbox" class="form-check-input" id="q'+ value.id +'" name="ques['+ value.id +']" increment="1" value="yes">  <label class="form-check-label" for="q'+ value.id +'">'+ value.title +'</label></div>';
                 });
-                $('#patientAnswers').find('.scoreView').html(score);
+				var finalscore = 0;
+				finalscore += parseInt(score) + parseInt(score2);
+                /* $('#patientAnswers').find('.scoreView').html(score +'+'+score2+'='+finalscore); */
+				$('#patientAnswers').find('.scoreView').html(finalscore);
                 popupElem.html(html);
                 $('#patientAnswers').modal('show');
 							}

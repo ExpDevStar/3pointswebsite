@@ -122,6 +122,7 @@ if (isset($_POST['reg_patient'])) {
     $patientId   = $pdo->insert($query, [$firstname, $lastname, $medicalrecord, $hospital]);
   	$_SESSION['medicalrecord'] = $medicalrecord;
     $_SESSION['hopsital'] = $hospital;
+    $_SESSION['patient_name'] = $firstname.' '.$lastname;
   	$_SESSION['success'] = "Patient Created";
   	header('location: index.php');
   }

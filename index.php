@@ -194,6 +194,7 @@ if (isset($_GET['logout'])) {
                     <input name="DiagnosisID" readonly class="form-control" type="text" id="DiagnosisID" value="">
                 </div>
                 <input type="hidden" class="" aria-label="" placeholder="" name="ranking" id="ranking" value="" />
+                <input type="hidden" name="icd_tertiary_ranking" id="icd_tertiary_ranking" value="" />
                 <div id="treatment-card">
                   <h2>Treatment Options</h2>
                   <input type="text" readonly name="TreatmentID" val="" id="TreatmentID" class="form-control" />
@@ -222,9 +223,11 @@ if (isset($_GET['logout'])) {
                   <div class="card-body card-body-sidebar">
                       <div class="field_wrapper">
                         <form id="cart"></form>
-                          <ul id="ulcart" style="list-style-type:disc;">
-                                <input name="hospital" id="hospital" type="hidden" value="<?php echo $_SESSION['hospital'];?>">
-
+							
+								<ul id="ulcart" style="list-style-type:disc;">
+									<input name="hospital" id="hospital" type="hidden" value="<?php echo $_SESSION['hospital'];?>">
+								</ul>
+							
                       </div>
                     <div class="bottom-buttons">
                       <span>
@@ -256,7 +259,7 @@ if (isset($_GET['logout'])) {
         </div>
         <!--Body-->
         <div class="modal-body" data-keyboard="false" data-backdrop="static" >
-            <form id="modal-text" method="post" class="text-center" action="server.php">
+            <form id="modal-text" method="post" action="server.php">
               <ul>
               </ul>
 
@@ -498,6 +501,20 @@ $(document).ready(function()
       }
     })
   })   // === END Suggest === //
+  
+  function findValueInArray(value,arr){
+	  var result = "Doesn't exist";
+	 
+	  for(var i=0; i<arr.length; i++){
+		var name = arr[i];
+		if(name == value){
+		  result = 'Exist';
+		  break;
+		}
+	  }
+
+	  return result;
+	}
 
   // On change of input field, grab the category id and search for matching
   function addExtraFields()
@@ -520,6 +537,7 @@ $(document).ready(function()
           // fill in clinical id
           $('#clinicalID').val(cat_id.cat_name)
           $('#ranking_text').val(cat_id.cat_name);
+         
           if ($("#ranking_text").val() == "Return to Provider") {
             $('#ranking_text').html(cat_id.cat_name).val(cat_id.cat_name)
             $('#DiagnosisID').css('color', 'red');
@@ -541,9 +559,10 @@ $(document).ready(function()
         icd_desc = JSON.parse(icd);
         icd_desc.forEach(function(icd_desc)
         {
+		  $('#icd_tertiary_ranking').val(icd_desc.icd_tertiary_ranking);
           // fill in diagnosis
           $('#DiagnosisID').val(icd_desc.icd_desc)
-          $('#Price').val(icd_desc.icd_tertiary_ranking)
+         // $('#Price').val(icd_desc.icd_tertiary_ranking)
           // grab ranking and compare if its higher or not
           var icd_ranking = (icd_desc.icd_ranking);
           var icd_secondary_ranking = (icd_desc.icd_secondary_ranking);
@@ -580,6 +599,7 @@ $(document).ready(function()
   //Once add button is clicked
   $(addButton).click(function()
   {
+	  
     $('.item');
     // Check maximum number of input fields
     if (x < maxField)
@@ -589,29 +609,41 @@ $(document).ready(function()
       var cartID = $('.hidden-id').val(),
         cartDiag = $('#DiagnosisID').val(),
         cartTreat = $('#TreatmentID').val(),
+        icd_tertiary_ranking = $('#icd_tertiary_ranking').val(),
         cartRank = $('#ranking').val();
         cartPrice = $('#Price').val()
         cartMedialRecord = $('#medicalrecord').val()
         cartHospital = $('#hospital').val()
         cartNumber = x;
+		
+		if(icd_tertiary_ranking == ''){
+			icd_tertiary_ranking = 0;
+		}
+		
+		var chkC = findValueInArray(cartID,codes);
+		if(chkC === 'Exist'){
+			alert("Code is already added");
+			return false;
+		}
+		
+		
         codes.push(cartID);
+		
+		
+		
+		
         // If Rank has return to provider, reorder
       if ($('#ranking_text:contains("Return to Provider")').length > 0){
         text = "ID: " + cartID + " " + "RANK:  " + cartRank;
         // Append Values to Sidebar
-        $('#ulcart').append(`<li class="item ui-state-default" data-order="${cartRank}"><h5 data-toggle="tooltip" data-placement="top" title="Return to Provider" class="mt-1 mb-1 cart-rank font-weight-bold highlight-red ">
-          ${cartID}   <div class="cartdiag" style="display:none">: ${cartDiag} , ${cartPrice}</div></h5></a><a href="javascript:void(0);" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a>
-        </li>`)
+        $('#ulcart').append('<li class="list-unstyled item ui-state-default cartid_'+cartID+'" data-order="'+cartRank+'"><h5 data-toggle="tooltip" data-placement="top" title="Return to Provider" class="mt-1 mb-1 cart-rank font-weight-bold highlight-red "> '+cartID+'<span style="display:none" class="icd_tertiary_ranking">('+icd_tertiary_ranking+')</span><div class="cartdiag" style="display:none">:'+cartDiag+','+cartPrice+'</div></h5></a><a href="javascript:void(0);" data-id="'+cartID+'" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a></li>');
         // Auto Sort
         $('.field_wrapper li').sort(function(a, b)
         {
           return $(a).data('order') - $(b).data('order');
         }).appendTo('.field_wrapper');
       } else {
-        $('#ulcart').append(`
-          <li class="item ui-state-default" data-order="${cartRank}"><h5 class="mt-1 mb-1 cart-rank font-weight-bold">
-          ${cartID}  <div class="cartdiag" style="display:none">: ${cartDiag} , ${cartPrice}</div></h5><a href="javascript:void(0);" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a>
-        </li>`)
+        $('#ulcart').append('<li class="list-unstyled item ui-state-default cartid_'+cartID+'" data-order="'+cartRank+'"><h5 class=" mt-1 mb-1 cart-rank font-weight-bold"> '+cartID+'<span style="display:none" class="icd_tertiary_ranking">('+icd_tertiary_ranking+')</span><div class="cartdiag" style="display:none">:'+cartDiag+' '+cartPrice+'</div></h5><a href="javascript:void(0);" data-id="'+cartID+'" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a></li>');
         // Auto Sort
         $('.field_wrapper li').sort(function(a, b)
         {
@@ -620,11 +652,22 @@ $(document).ready(function()
       }
     }
   }); // === END addButton === //
+  
+  $('#centralModalSuccess').on('hidden.bs.modal', function () {
+  //Display icd_tertiary_ranking
+	  
+	  $('.icd_tertiary_ranking').hide();
+	})
 
   // Once remove button is clicked
   $(wrapper).on('click', '.remove_button', function(e)
   {
     e.preventDefault();
+	var h = $(this).data('id');
+	codes = jQuery.grep(codes, function(value) {
+	  return value != h;
+	});
+	
     $(this).parent('li').remove();
     x--; //Decrement field
   }); // === END wrapper Remove === //
@@ -633,10 +676,16 @@ $(document).ready(function()
   $('#completeBtn').on('click', function(e)
   {
     $('#modal-text').remove();
+	$('.patient_name').html('');
+	var patientName = "<?php echo $_SESSION['patient_name']; ?>";
     // Append Form for Server.php Data Ingestion.
-     $('.modal-body').prepend('<form id="modal-text" method="post" class="text-center" action="server.php"><ul id="sortable" class="ui-sortable olcart"><input type="hidden" id="hospitalinput" name="hospitalinput" value="'+ cartHospital +'"><input type="hidden" id="medicalrecordinput" name="medicalrecordinput" value="'+ codes +'">');
+     $('.modal-body').prepend('<div class="col-12 text-success"><h4 class="patient_name">Patient Name: '+patientName+'</h4></div><form id="modal-text" method="post" action="server.php"><ul id="sortable" class="ui-sortable olcart"><input type="hidden" id="hospitalinput" name="hospitalinput" value="'+ cartHospital +'"><input type="hidden" id="medicalrecordinput" name="medicalrecordinput" value="'+ codes +'">');
       // clone to modal
       $('.field_wrapper').contents().clone().appendTo('.olcart');
+	  
+	  //Display icd_tertiary_ranking
+	  
+	  $('.icd_tertiary_ranking').show();
       // remove unncessary content
       $(".olcart > #cart").remove();
       $(".olcart > #ulcart").remove();
@@ -664,7 +713,7 @@ $(document).ready(function()
         var ids     = [];
         $.each(questions,function(index, value){
           ids.push(value.id);
-          quesHtml  += '<div class="custom-control custom-checkbox"><input type="checkbox" class="form-check-input" id="q'+ value.id +'" name="ques['+ value.id +']" increment="1" value="yes">  <label class="form-check-label" for="q'+ value.id +'">'+ value.title +'</label></div>';
+          quesHtml  += '<div class="custom-control custom-checkbox float-left"><input type="checkbox" class="form-check-input" id="q'+ value.id +'" name="ques['+ value.id +']" increment="1" value="yes">  <label class="form-check-label" for="q'+ value.id +'">'+ value.title +'</label></div>';
         });
         // Append Questionairre and Print + Save Button
         $('#modal-text').append(quesHtml + `<input type="hidden" name="qids" value="${ids}"><!--Footer-->
