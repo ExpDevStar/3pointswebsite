@@ -207,7 +207,7 @@ if (isset($_GET['logout'])) {
       <div class="modal-content">
         <!--Header-->
         <div class="modal-header">
-          <p class="heading lead "> Patient Name: <span class="pt-name"></span></p>
+          <p class="heading lead ">Patient Name: <span class="pt-name"></span></p>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true" class="white-text">&times;</span>
           </button>
