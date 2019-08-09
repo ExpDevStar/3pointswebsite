@@ -214,7 +214,7 @@ if (isset($_GET['logout'])) {
         </div>
         <!--Body-->
         <div class="modal-body" data-keyboard="false" data-backdrop="static" >
-			<p class="heading lead text-dark"> NTA Score: <span class="scoreView"></span></p>
+			<p class="heading lead text-dark">NTA Score: <span class="scoreView"></span></p>
 			<div class="model-inner"></div>
         </div>
 
