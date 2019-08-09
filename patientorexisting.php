@@ -207,14 +207,15 @@ if (isset($_GET['logout'])) {
       <div class="modal-content">
         <!--Header-->
         <div class="modal-header">
-          <p class="heading lead"> NTA Score: <span class="scoreView"></span></p>
+          <p class="heading lead "> Patient Name: <span class="pt-name"></span></p>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true" class="white-text">&times;</span>
           </button>
         </div>
         <!--Body-->
         <div class="modal-body" data-keyboard="false" data-backdrop="static" >
-
+			<p class="heading lead text-dark"> NTA Score: <span class="scoreView"></span></p>
+			<div class="model-inner"></div>
         </div>
 
       </div>
@@ -257,9 +258,11 @@ if (isset($_GET['logout'])) {
             targets: 3,
             render: function (data, type, row, meta)
             {
+				//console.log(row);
+				//console.log(meta);
                 if (type === 'display')
                 {
-                    data = '<a class="viewPatient" data-medicalrecord="' + encodeURIComponent(data) + '" href="javascript:void(0)">View</a>';
+                    data = '<a class="viewPatient" data-medicalrecord="' + encodeURIComponent(data) + '" data-patientname="' + row.firstname +' '+row.lastname + '" href="javascript:void(0)">View</a>';
                 }
                 return data;
             }
@@ -268,9 +271,11 @@ if (isset($_GET['logout'])) {
 } );
 
 $(document).on('click', '.viewPatient', function(){
-  var popupElem   = $('#patientAnswers').find('.modal-body');
+  var popupElem   = $('#patientAnswers').find('.model-inner');
   popupElem.html('');
   var medicalRecord   = $(this).data('medicalrecord');
+  var patientname   = $(this).data('patientname');
+  $('.pt-name').html(patientname);
   $.ajax({
 							url: 'data.php',
 							type: 'POST',
@@ -308,8 +313,9 @@ $(document).on('click', '.viewPatient', function(){
                 });
 				var finalscore = 0;
 				finalscore += parseInt(score) + parseInt(score2);
+				
                 /* $('#patientAnswers').find('.scoreView').html(score +'+'+score2+'='+finalscore); */
-				$('#patientAnswers').find('.scoreView').html(finalscore);
+				$('.scoreView').html(finalscore);
                 popupElem.html(html);
                 $('#patientAnswers').modal('show');
 							}
