@@ -164,6 +164,8 @@ if (isset($_POST['reg_medialsubmission'])) {
     foreach($ques as $q){
       $key    = $q['id'];
       $score[$key]  = $q['points'];
+      // each question is worth 1 point
+      $score[$key]  = 1;
     }
 
     $totalScore   = 0;
@@ -173,11 +175,21 @@ if (isset($_POST['reg_medialsubmission'])) {
       }
     }
 
+    $icd_nat_score = 0;
     foreach($recordArr as $record){
+      // get icd_nat_score
+      $arr_icd_data = $pdo->getResult('select * from icd where icd_code = ?', Array($record));
+      //print_r($arr_icd_data);
+      if (count($arr_icd_data) > 0) {
+        if ($arr_icd_data[0]['icd_tertiary_ranking'] > 0) {
+          $icd_nat_score = $arr_icd_data[0]['icd_tertiary_ranking'];
+        }
+      }
       $query = "INSERT INTO patient_icd_codes (medicalrecord, icd_code)
             VALUES(?, ?)";
       $pdo->insert($query, [$_SESSION['medicalrecord'], $record]);
     }
+    $totalScore += $icd_nat_score;
 
     foreach($ques as $q){
       $key    = $q['id'];
