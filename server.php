@@ -163,9 +163,8 @@ if (isset($_POST['reg_medialsubmission'])) {
     $score      = [];
     foreach($ques as $q){
       $key    = $q['id'];
+      // scores are based on what is in db
       $score[$key]  = $q['points'];
-      // each question is worth 1 point
-      $score[$key]  = 1;
     }
 
     $totalScore   = 0;
