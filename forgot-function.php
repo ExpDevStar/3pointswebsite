@@ -60,7 +60,7 @@ function send_mail($to, $token)
 	$mail->isHTML(true);
 
 	$mail->Subject = 'Demo: Password Recovery Instruction';
-	$link = 'https://localhost/forget.php?email='.$to.'&token='.$token;
+	$link = 'https://www.3pointssoftware.com/forget.php?email='.$to.'&token='.$token;
 	$mail->Body    = "<b>Hello</b><br><br>You have requested for your password recovery. <a href='$link' target='_blank'>Click here</a> to reset your password. If you are unable to click the link then copy the below link and paste in your browser to reset your password.<br><i>". $link."</i>";
 
 	$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';

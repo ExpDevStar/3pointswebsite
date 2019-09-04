@@ -166,7 +166,7 @@ if (isset($_GET['logout'])) {
 <main>
     <div class="container-fluid mt-5 pt-5">
       <div class="row">
-        
+
 
         <div class="offset-md-2 col-lg-7 col-md-7">
         <?php flashMsg(); ?>
@@ -199,7 +199,7 @@ if (isset($_GET['logout'])) {
                   <h2>Treatment Options</h2>
                   <input type="text" readonly name="TreatmentID" val="" id="TreatmentID" class="form-control" />
                 </div>
-                <h2>Case Mix Index</h2>
+                <h2>NTA Score</h2>
                 <div class="price-box"><input readonly class="form-control" id="Price"></input>
                 </div>
                 <button type="button" id="addToCart"  class="add_button btn btn-primary">Add</button>
@@ -223,11 +223,11 @@ if (isset($_GET['logout'])) {
                   <div class="card-body card-body-sidebar">
                       <div class="field_wrapper">
                         <form id="cart"></form>
-							
+
 								<ul id="ulcart" style="list-style-type:disc;">
 									<input name="hospital" id="hospital" type="hidden" value="<?php echo $_SESSION['hospital'];?>">
 								</ul>
-							
+
                       </div>
                     <div class="bottom-buttons">
                       <span>
@@ -501,10 +501,10 @@ $(document).ready(function()
       }
     })
   })   // === END Suggest === //
-  
+
   function findValueInArray(value,arr){
 	  var result = "Doesn't exist";
-	 
+
 	  for(var i=0; i<arr.length; i++){
 		var name = arr[i];
 		if(name == value){
@@ -537,7 +537,7 @@ $(document).ready(function()
           // fill in clinical id
           $('#clinicalID').val(cat_id.cat_name)
           $('#ranking_text').val(cat_id.cat_name);
-         
+
           if ($("#ranking_text").val() == "Return to Provider") {
             $('#ranking_text').html(cat_id.cat_name).val(cat_id.cat_name)
             $('#DiagnosisID').css('color', 'red');
@@ -562,7 +562,7 @@ $(document).ready(function()
 		  $('#icd_tertiary_ranking').val(icd_desc.icd_tertiary_ranking);
           // fill in diagnosis
           $('#DiagnosisID').val(icd_desc.icd_desc)
-         // $('#Price').val(icd_desc.icd_tertiary_ranking)
+         $('#Price').val(icd_desc.icd_tertiary_ranking)
           // grab ranking and compare if its higher or not
           var icd_ranking = (icd_desc.icd_ranking);
           var icd_secondary_ranking = (icd_desc.icd_secondary_ranking);
@@ -599,7 +599,7 @@ $(document).ready(function()
   //Once add button is clicked
   $(addButton).click(function()
   {
-	  
+
     $('.item');
     // Check maximum number of input fields
     if (x < maxField)
@@ -615,23 +615,23 @@ $(document).ready(function()
         cartMedialRecord = $('#medicalrecord').val()
         cartHospital = $('#hospital').val()
         cartNumber = x;
-		
+
 		if(icd_tertiary_ranking == ''){
 			icd_tertiary_ranking = 0;
 		}
-		
+
 		var chkC = findValueInArray(cartID,codes);
 		if(chkC === 'Exist'){
 			alert("Code is already added");
 			return false;
 		}
-		
-		
+
+
         codes.push(cartID);
-		
-		
-		
-		
+
+
+
+
         // If Rank has return to provider, reorder
       if ($('#ranking_text:contains("Return to Provider")').length > 0){
         text = "ID: " + cartID + " " + "RANK:  " + cartRank;
@@ -652,10 +652,10 @@ $(document).ready(function()
       }
     }
   }); // === END addButton === //
-  
+
   $('#centralModalSuccess').on('hidden.bs.modal', function () {
   //Display icd_tertiary_ranking
-	  
+
 	  $('.icd_tertiary_ranking').hide();
 	})
 
@@ -667,7 +667,7 @@ $(document).ready(function()
 	codes = jQuery.grep(codes, function(value) {
 	  return value != h;
 	});
-	
+
     $(this).parent('li').remove();
     x--; //Decrement field
   }); // === END wrapper Remove === //
@@ -682,9 +682,9 @@ $(document).ready(function()
      $('.modal-body').prepend('<div class="col-12 text-success"><h4 class="patient_name">Patient Name: '+patientName+'</h4></div><form id="modal-text" method="post" action="server.php"><ul id="sortable" class="ui-sortable olcart"><input type="hidden" id="hospitalinput" name="hospitalinput" value="'+ cartHospital +'"><input type="hidden" id="medicalrecordinput" name="medicalrecordinput" value="'+ codes +'">');
       // clone to modal
       $('.field_wrapper').contents().clone().appendTo('.olcart');
-	  
+
 	  //Display icd_tertiary_ranking
-	  
+
 	  $('.icd_tertiary_ranking').show();
       // remove unncessary content
       $(".olcart > #cart").remove();
