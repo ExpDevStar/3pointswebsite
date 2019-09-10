@@ -636,19 +636,27 @@ $(document).ready(function()
       if ($('#ranking_text:contains("Return to Provider")').length > 0){
         text = "ID: " + cartID + " " + "RANK:  " + cartRank;
         // Append Values to Sidebar
-        $('#ulcart').append('<li class="list-unstyled item ui-state-default cartid_'+cartID+'" data-order="'+cartRank+'"><h5 data-toggle="tooltip" data-placement="top" title="Return to Provider" class="mt-1 mb-1 cart-rank font-weight-bold highlight-red "> '+cartID+'<span style="display:none" class="icd_tertiary_ranking">('+icd_tertiary_ranking+')</span><div class="cartdiag" style="display:none">:'+cartDiag+','+cartPrice+'</div></h5></a><a href="javascript:void(0);" data-id="'+cartID+'" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a></li>');
+        $('#ulcart').append('<li class="list-unstyled item ui-state-default cartid_'+cartID+'" data-cart-id = "'+cartID+'" data-order="'+cartRank+'"><h5 data-toggle="tooltip" data-placement="top" title="Return to Provider" class="mt-1 mb-1 cart-rank font-weight-bold highlight-red "> '+cartID+'<span style="display:none" class="icd_tertiary_ranking">('+icd_tertiary_ranking+')</span><div class="cartdiag" style="display:none">:'+cartDiag+','+cartPrice+'</div></h5></a><a href="javascript:void(0);" data-id="'+cartID+'" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a></li>');
         // Auto Sort
+        
         $('.field_wrapper li').sort(function(a, b)
         {
           return $(a).data('order') - $(b).data('order');
         }).appendTo('.field_wrapper');
+    
+        //$('.field_wrapper li').appendTo('.field_wrapper');
+        
       } else {
-        $('#ulcart').append('<li class="list-unstyled item ui-state-default cartid_'+cartID+'" data-order="'+cartRank+'"><h5 class=" mt-1 mb-1 cart-rank font-weight-bold"> '+cartID+'<span style="display:none" class="icd_tertiary_ranking">('+icd_tertiary_ranking+')</span><div class="cartdiag" style="display:none">:'+cartDiag+' '+cartPrice+'</div></h5><a href="javascript:void(0);" data-id="'+cartID+'" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a></li>');
+        $('#ulcart').append('<li class="list-unstyled item ui-state-default cartid_'+cartID+'" data-cart-id = "'+cartID+'" data-order="'+cartRank+'"><h5 class=" mt-1 mb-1 cart-rank font-weight-bold"> '+cartID+'<span style="display:none" class="icd_tertiary_ranking">('+icd_tertiary_ranking+')</span><div class="cartdiag" style="display:none">:'+cartDiag+' '+cartPrice+'</div></h5><a href="javascript:void(0);" data-id="'+cartID+'" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a></li>');
+        
         // Auto Sort
         $('.field_wrapper li').sort(function(a, b)
         {
           return $(a).data('order') - $(b).data('order');
         }).appendTo('.field_wrapper');
+    
+        //$('.field_wrapper li').appendTo('.field_wrapper');
+        
       }
     }
   }); // === END addButton === //
@@ -672,6 +680,9 @@ $(document).ready(function()
     x--; //Decrement field
   }); // === END wrapper Remove === //
 
+
+    
+
   // loop and clone to modal
   $('#completeBtn').on('click', function(e)
   {
@@ -679,7 +690,7 @@ $(document).ready(function()
 	$('.patient_name').html('');
 	var patientName = "<?php echo $_SESSION['patient_name']; ?>";
     // Append Form for Server.php Data Ingestion.
-     $('.modal-body').prepend('<div class="col-12 text-success"><h4 class="patient_name">Patient Name: '+patientName+'</h4></div><form id="modal-text" method="post" action="server.php"><ul id="sortable" class="ui-sortable olcart"><input type="hidden" id="hospitalinput" name="hospitalinput" value="'+ cartHospital +'"><input type="hidden" id="medicalrecordinput" name="medicalrecordinput" value="'+ codes +'">');
+     $('.modal-body').prepend('<div class="col-12 text-success"><h4 class="patient_name">Patient Name: '+patientName+'</h4></div><form id="modal-text" method="post" action="server.php"><ul id="sortable" class="ui-sortable olcart"><input type="hidden" id="hospitalinput" name="hospitalinput" value="'+ cartHospital +'"><input type="hidden" id="medicalrecordinput" name="medicalrecordinput" value="'+ codes +'"><input type="hidden" name="sort_order" id="sort_order">');
       // clone to modal
       $('.field_wrapper').contents().clone().appendTo('.olcart');
 
@@ -689,17 +700,48 @@ $(document).ready(function()
       // remove unncessary content
       $(".olcart > #cart").remove();
       $(".olcart > #ulcart").remove();
-      $(".olcart > .item > .remove_button").remove();
+      $(".olcart > .item > .remove_button").remove(); 
       // show whats left
       $(".olcart > .item > h5 > .cartdiag").show();
 
       // Enable Sortable now
       $( "#sortable" ).sortable({
-          tolerance: 'touch',
-          placeholder: "ui-state-highlight"
+            tolerance: 'touch', 
+            placeholder: "ui-state-highlight",
+            stop: function(evt, ui) {
+                //console.log("stop event");    
+                var code_list = '';
+                $('#sortable li').each(function(i, obj) { 
+                    console.log(obj);
+                    var code_id = $(obj).attr('data-cart-id');
+                    //console.log(code_id);
+                    code_list+=","+code_id;
+                });
+                if(code_list != "") {
+                    code_list = code_list.slice(1);
+                }
+                console.log(code_list);
+                $("#medicalrecordinput").val(code_list);
+            }, 
       });
+      
       $("#sortable").disableSelection();
       $('#sortable').sortable();
+      
+      
+        /****************New Code ****************/
+        var code_list = '';
+        $('#sortable li').each(function(i, obj) {   
+          var code_id = $(obj).attr('data-cart-id');
+          code_list+=","+code_id;
+        });
+        if(code_list != "") {
+            code_list = code_list.slice(1);
+        }
+        console.log(code_list);
+        $("#medicalrecordinput").val(code_list);
+        
+        /*****************************************/
       $.ajax(
       {
         url: 'data.php',
