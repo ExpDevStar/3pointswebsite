@@ -1,6 +1,6 @@
 <?php
 
-require_once $_SERVER["DOCUMENT_ROOT"] . '/connection.php';
+require_once __DIR__ . "/../../connection.php";
 
 class PatientController {
     /* public function getConnection($HOST,$USERNAME,$PASSWORD,$DB) {
