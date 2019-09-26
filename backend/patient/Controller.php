@@ -39,11 +39,23 @@ class PatientController {
                           <label>Medical Record:</label>
                           <input type="text" class="form-control" id="medicalrecord">
                         </div>
+
+                        <div class="form-group">
+                            <input type="hidden" class="hidden-cat"/>
+                            <input type="hidden" class="hidden-id"/>
+                            <label>Code:</label>
+                            <div class="md-form mt-0">
+                              <!-- <input class="typeahead form-control" type="text" id="suggest" ria-label="Search for Code" placeholder="Search for Code" value="" name="suggest"> -->
+                              <select class="js-data-example-ajax"></select>
+                            </div>
+                        </div>
+                        <div id="code_result"></div>
+
                         <div class="form-group">
                           <label>Hospital:</label>
                           <input type="text" class="form-control" id="hospital" readonly="">
                         </div>
-                        <div id="code_result"></div>
+                        
                         <input type="hidden" name="patient_id" id="patient_id">
                         <input type="hidden" name="medicalrecordinput" id="medicalrecordinput" value="">
                         <button type="button" class="btn btn-primary submitPatient">Submit</button>

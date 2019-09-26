@@ -4,6 +4,7 @@ $(document).ready(function () {
         var medicalRecord = $(this).data('medicalrecord');
         var patientname = $(this).data('patientname');
         var patient_id = $(this).data('id');
+        
         $.ajax({
             url: 'backend/patient/Controller.php',
             type: 'POST',
@@ -26,6 +27,10 @@ $(document).ready(function () {
                 if(data.medicalrecordinput !='' && data.medicalrecordinput!=null) {
                     $("#medicalrecordinput").val(data.medicalrecordinput);
                 }
+                
+                $('.js-data-example-ajax').select2('data', null);
+                $('.js-data-example-ajax').empty().trigger("change"); 
+                
                 $(".patient_code_sort").sortable({
                     tolerance: 'touch',
                     placeholder: "ui-state-highlight",
@@ -52,6 +57,91 @@ $(document).ready(function () {
         });
 
     });
+    
+    /******************Edit code *******************/
+    $('.filter-modal select').css('width', '100%');
+    $('.js-data-example-ajax').select2({
+        placeholder: "Please select code",
+        //dropdownParent: $("#editPatient"),
+        //tags: [],
+        multiple: true,
+        ajax: {
+            url: 'getcode_select.php',
+            dataType: 'json',
+            quietMillis: 50,
+            type: "GET",
+            data: function (term) {
+                return {
+                    term: term
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data.items, function (item) {
+                        return {
+                            text: item.text,
+                            slug: item.slug,
+                            id: item.id
+                        }
+                    })
+                };
+            }
+        }
+    });
+    
+    /*var source1 = new Bloodhound({
+       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('icd_code'),
+       queryTokenizer: Bloodhound.tokenizers.whitespace,
+       remote: {
+           url: 'getautocomplete.php?st=%QUERY',
+           wildcard: '%QUERY'
+       }
+    });
+
+    // Initialize the Bloodhound suggestion engine
+    source1.initialize();
+    //source2.initialize();
+    $('#suggest').typeahead(null,
+    { 
+        name: 'source1',
+        display: 'icd_code',
+        highlight:true,
+        source: source1.ttAdapter(),
+        templates:
+        {
+          suggestion: function(data)
+          {
+            // lists all suggestions
+            var details = "<div>" + data +"</div>";
+            return details
+          }
+
+        }
+    });   
+    
+    
+    
+    // Listen to when a selection is made
+    $('#suggest').on('typeahead:selected', function(e, datum)
+    { 
+      var datumConvert = JSON.stringify(datum);
+      if (datumConvert.includes(":")) {
+          var stripDatum2 = datumConvert.substring(0, datumConvert.lastIndexOf(":"));
+          var stripDatum3 = stripDatum2.replace(/[\[\]""]+/g, '');
+          $('.hidden-cat').val(stripDatum3)
+          $('.hidden-id').val(stripDatum3)
+      } else {
+        var stripDatum = datumConvert.replace(/[{()}]/g, '');
+        var stripDatum3 = stripDatum.replace(/[\[\]""]+/g, '');
+        $('.hidden-cat').val(stripDatum3)
+        $('.hidden-id').val(stripDatum3)
+      }
+      var hiddenCat = $('.hidden-cat').val();
+      var hiddenID = $('.hidden-id').val();
+      $('#suggest').val('test');
+    }); */
+
+    /**********************************/
 
     $(document).on('click', '.deletePatient', function () {
         var medicalRecord = $(this).data('medicalrecord');
@@ -80,7 +170,12 @@ $(document).ready(function () {
         var medicalrecord = $("#medicalrecord").val();
         var hospital = $("#hospital").val();
         var patient_id = $("#patient_id").val();
+        
+        
+        var code_data = $(".js-data-example-ajax").select2("val");
+        $("#medicalrecordinput").val(code_data);
         var medicalrecordinput = $("#medicalrecordinput").val();
+        
         var error_count = 0;
         if (firstname == '') {
             $("#firstname").addClass('has-error');

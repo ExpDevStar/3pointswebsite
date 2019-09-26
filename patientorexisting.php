@@ -43,6 +43,31 @@ if (isset($_GET['logout'])) {
             .has-error {
                 border: 1px solid red;
             }
+            .tt-menu {
+                width: 100% !important;
+            }
+            .tt-suggestion {
+                color: white;
+                background: gray;
+                cursor: pointer;
+                border: 1px solid white;
+            }
+            .select2-container {
+                width: 100% !important;
+                padding: 0;
+            }
+            span.select2-container {
+                z-index:10050;
+            }
+            .select2-container--open{
+                z-index:9999999         
+            }
+            .selection {
+                width: 100% !important;
+            }
+            .select2-results__option {
+                background: #5897fb !important;
+            }
         </style>
     </head>
 
@@ -349,6 +374,10 @@ if (isset($_GET['logout'])) {
     <script type="text/javascript" src="js/bloodhound.min.js"></script>
     <script type="text/javascript" src="js/printThis.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
 </body>
 </html>
