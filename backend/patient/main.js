@@ -89,6 +89,22 @@ $(document).ready(function () {
         }
     });
     
+    $('.js-data-example-ajax').on("select2:select", function (e) {
+        console.log("selected tag");
+        console.log(e.params.data);
+        var id = e.params.data.id;
+        var slug = e.params.data.slug;
+        var text = e.params.data.text;
+        var full_text = '<b>'+text+'-'+slug+'</b>';
+        var $li = $("<li class='ui-state-default' data-cart-id='"+id+"' />").html(full_text);
+        $(".patient_code_sort").append($li);
+        $(".patient_code_sort").sortable('refresh');
+        
+        var medicalrecordinput = $("#medicalrecordinput").val();
+        $("#medicalrecordinput").val(medicalrecordinput+','+id);
+        
+    });
+    
     /*var source1 = new Bloodhound({
        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('icd_code'),
        queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -172,8 +188,8 @@ $(document).ready(function () {
         var patient_id = $("#patient_id").val();
         
         
-        var code_data = $(".js-data-example-ajax").select2("val");
-        $("#medicalrecordinput").val(code_data);
+        /*var code_data = $(".js-data-example-ajax").select2("val");
+        $("#medicalrecordinput").val(code_data);*/
         var medicalrecordinput = $("#medicalrecordinput").val();
         
         var error_count = 0;
