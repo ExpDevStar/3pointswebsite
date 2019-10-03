@@ -24,6 +24,13 @@ $(document).ready(function () {
                 $('#editPatient').modal('show');
 
                 $("#code_result").html(data.code_result);
+				
+				//CB
+				$('.patient_code_sort li').sort(function(a, b)
+				{
+					 return $(a).data('order') - $(b).data('order');
+				}).appendTo('.patient_code_sort');
+				
                 if(data.medicalrecordinput !='' && data.medicalrecordinput!=null) {
                     $("#medicalrecordinput").val(data.medicalrecordinput);
                 }
@@ -48,6 +55,10 @@ $(document).ready(function () {
                         }
                         console.log(code_list);
                         $("#medicalrecordinput").val(code_list);
+						$("#customsorting").val('1');
+						
+						
+						
                     },
                 }); 
 
@@ -81,7 +92,8 @@ $(document).ready(function () {
                         return {
                             text: item.text,
                             slug: item.slug,
-                            id: item.id
+                            id: item.id,
+                            icd_secondary_ranking: item.icd_secondary_ranking
                         }
                     })
                 };
@@ -95,10 +107,17 @@ $(document).ready(function () {
         var id = e.params.data.id;
         var slug = e.params.data.slug;
         var text = e.params.data.text;
+        var icd_secondary_ranking = e.params.data.icd_secondary_ranking;
         var full_text = '<b>'+text+'-'+slug+'</b>';
-        var $li = $("<li class='ui-state-default' data-cart-id='"+id+"' />").html(full_text);
+        var $li = $("<li class='ui-state-default' data-cart-id='"+id+"' data-order='"+icd_secondary_ranking+"' />").html(full_text);
         $(".patient_code_sort").append($li);
+		//alert("rere");
         $(".patient_code_sort").sortable('refresh');
+		
+		$('.patient_code_sort li').sort(function(a, b)
+        {
+		     return $(a).data('order') - $(b).data('order');
+        }).appendTo('.patient_code_sort');
         
         var medicalrecordinput = $("#medicalrecordinput").val();
         $("#medicalrecordinput").val(medicalrecordinput+','+id);

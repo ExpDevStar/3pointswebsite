@@ -10,6 +10,7 @@ if (isset($_GET['term']['term'])) {
         $array[$count]['text'] = $row['icd_code'];
         $array[$count]['slug'] = $row['icd_desc'];
         $array[$count]['id'] = $row['icd_code'];
+        $array[$count]['icd_secondary_ranking'] = $row['icd_secondary_ranking'];
         $count++;
     }
     echo json_encode(array('items'=>$array));

@@ -58,6 +58,7 @@ class PatientController {
                         
                         <input type="hidden" name="patient_id" id="patient_id">
                         <input type="hidden" name="medicalrecordinput" id="medicalrecordinput" value="">
+                        <input type="hidden" name="customsorting" id="customsorting" value="">
                         <button type="button" class="btn btn-primary submitPatient">Submit</button>
                     </div>
                 </div>
@@ -73,7 +74,7 @@ class PatientController {
         $code = "";
         if (!empty($result)) {
             $medicalrecord = $result[0]['medicalrecord'];
-            $query = "SELECT pic.id,pic.icd_code,icd.icd_desc "
+            $query = "SELECT pic.id,pic.icd_code,icd.icd_desc,icd.icd_secondary_ranking "
                     . "FROM patient_icd_codes as pic "
                     . "INNER JOIN icd ON icd.icd_code = pic.icd_code "
                     . "where pic.medicalrecord = '" . $medicalrecord . "' "
@@ -81,7 +82,7 @@ class PatientController {
             $code_result = $pdo->getResult($query);
             if (!empty($code_result)) {
                 foreach ($code_result as $key => $value) {
-                    $sortable_html .= '<li class="ui-state-default" data-cart-id="' . $value['icd_code'] . '"><b>' . $value['icd_code'] . ' - ' . $value['icd_desc'] . '</b></li>';
+                    $sortable_html .= '<li class="ui-state-default" data-cart-id="' . $value['icd_code'] . '" data-order="' . $value['icd_secondary_ranking'] . '"><b>' . $value['icd_code'] . ' - ' . $value['icd_desc'] . '</b></li>';
                     $code .= "," . $value['icd_code'];
                 }
                 $code = substr($code, 1);
