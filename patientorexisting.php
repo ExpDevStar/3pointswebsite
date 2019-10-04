@@ -186,6 +186,7 @@ if (isset($_GET['logout'])) {
                             <tr>
                                 <th>First Name</th>
                                 <th>Last Name</th>
+								<th>Medical Record</th>
                                 <th>Actions</th>
                             </tr>
                         </tfoot>
