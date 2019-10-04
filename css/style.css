@@ -293,6 +293,10 @@ display: flex;
   padding: 20px 0;
   /* border-bottom: 1px solid #47748b; */
 }
+#shopping-cart ul
+{
+	padding-left: 0;
+}
 #sidebar-right ul li a {
   padding: 0px;
   font-size: 1.1em;

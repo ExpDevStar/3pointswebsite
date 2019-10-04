@@ -698,7 +698,7 @@ $(document).ready(function()
     // Append Form for Server.php Data Ingestion.
      $('.modal-body').prepend('<div class="col-12 text-success"><h4 class="patient_name">Patient Name: '+patientName+'</h4></div><form id="modal-text" method="post" action="server.php"><ul id="sortable" class="ui-sortable olcart"><input type="hidden" id="hospitalinput" name="hospitalinput" value="'+ cartHospital +'"><input type="hidden" id="medicalrecordinput" name="medicalrecordinput" value="'+ codes +'"><input type="hidden" name="sort_order" id="sort_order">');
       // clone to modal
-      $('.field_wrapper').contents().clone().appendTo('.olcart');
+      $('.field_wrapper ul').contents().clone().appendTo('.olcart');
 
 	  //Display icd_tertiary_ranking
 
