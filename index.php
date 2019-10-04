@@ -568,7 +568,13 @@ $(document).ready(function()
           var icd_secondary_ranking = (icd_desc.icd_secondary_ranking);
           if ( icd_secondary_ranking == '0' || icd_secondary_ranking == '' || icd_secondary_ranking == 'undefined' || icd_secondary_ranking == null )
           {
-           $('#ranking').val(icd_ranking);
+			   if(icd_ranking != 'N/A'){
+				$('#ranking').val(icd_ranking);
+			  }
+			  else{
+				 $('#ranking').val('');
+			  }
+           
           }
            else {
              // var cartRankAdjusted = + 9.0 + icd_secondary_ranking;
@@ -636,13 +642,13 @@ $(document).ready(function()
       if ($('#ranking_text:contains("Return to Provider")').length > 0){
         text = "ID: " + cartID + " " + "RANK:  " + cartRank;
         // Append Values to Sidebar
-        $('#ulcart').append('<li class="list-unstyled item ui-state-default cartid_'+cartID+'" data-cart-id = "'+cartID+'" data-order="'+cartRank+'"><h5 data-toggle="tooltip" data-placement="top" title="Return to Provider" class="mt-1 mb-1 cart-rank font-weight-bold highlight-red "> '+cartID+'<span style="display:none" class="icd_tertiary_ranking">('+icd_tertiary_ranking+')</span><div class="cartdiag" style="display:none">:'+cartDiag+','+cartPrice+'</div></h5></a><a href="javascript:void(0);" data-id="'+cartID+'" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a></li>');
+        $('#ulcart').append('<li class="list-unstyled item ui-state-default cartid_'+cartID+'" data-cart-id = "'+cartID+'" data-order="'+cartRank+'"><h5 data-toggle="tooltip" data-placement="top" title="Return to Provider" class="mt-1 mb-1 cart-rank font-weight-bold highlight-red "> '+cartID+'<span style="display:none" class="icd_tertiary_ranking">('+icd_tertiary_ranking+')</span><div class="cartdiag" style="display:none">:'+cartDiag+','+cartPrice+'</div></h5><a href="javascript:void(0);" data-id="'+cartID+'" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a></li>');
         // Auto Sort
         
-        $('.field_wrapper li').sort(function(a, b)
+        $('#ulcart li').sort(function(a, b)
         {
           return $(a).data('order') - $(b).data('order');
-        }).appendTo('.field_wrapper');
+        }).appendTo('#ulcart');
     
         //$('.field_wrapper li').appendTo('.field_wrapper');
         
@@ -650,10 +656,10 @@ $(document).ready(function()
         $('#ulcart').append('<li class="list-unstyled item ui-state-default cartid_'+cartID+'" data-cart-id = "'+cartID+'" data-order="'+cartRank+'"><h5 class=" mt-1 mb-1 cart-rank font-weight-bold"> '+cartID+'<span style="display:none" class="icd_tertiary_ranking">('+icd_tertiary_ranking+')</span><div class="cartdiag" style="display:none">:'+cartDiag+' '+cartPrice+'</div></h5><a href="javascript:void(0);" data-id="'+cartID+'" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a></li>');
         
         // Auto Sort
-        $('.field_wrapper li').sort(function(a, b)
+        $('#ulcart li').sort(function(a, b)
         {
           return $(a).data('order') - $(b).data('order');
-        }).appendTo('.field_wrapper');
+        }).appendTo('#ulcart');
     
         //$('.field_wrapper li').appendTo('.field_wrapper');
         

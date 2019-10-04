@@ -74,7 +74,7 @@ class PatientController {
         $code = "";
         if (!empty($result)) {
             $medicalrecord = $result[0]['medicalrecord'];
-            $query = "SELECT pic.id,pic.icd_code,icd.icd_desc,icd.icd_secondary_ranking "
+            $query = "SELECT pic.id,pic.icd_code,icd.icd_desc,icd.icd_secondary_ranking,icd.icd_ranking "
                     . "FROM patient_icd_codes as pic "
                     . "INNER JOIN icd ON icd.icd_code = pic.icd_code "
                     . "where pic.medicalrecord = '" . $medicalrecord . "' "
@@ -82,7 +82,17 @@ class PatientController {
             $code_result = $pdo->getResult($query);
             if (!empty($code_result)) {
                 foreach ($code_result as $key => $value) {
-                    $sortable_html .= '<li class="ui-state-default" data-cart-id="' . $value['icd_code'] . '" data-order="' . $value['icd_secondary_ranking'] . '"><b>' . $value['icd_code'] . ' - ' . $value['icd_desc'] . '</b></li>';
+					
+					
+					if ( $value['icd_secondary_ranking'] == '0' || $value['icd_secondary_ranking'] == '' || $value['icd_secondary_ranking'] == null )
+					{
+						$rank = $value['icd_ranking'];
+					}
+					else
+					{
+						$rank = $value['icd_secondary_ranking'];
+					}
+                    $sortable_html .= '<li class="ui-state-default" data-cart-id="' . $value['icd_code'] . '" data-order="' . $rank . '"><b>' . $value['icd_code'] . ' - ' . $value['icd_desc'] . '</b></li>';
                     $code .= "," . $value['icd_code'];
                 }
                 $code = substr($code, 1);

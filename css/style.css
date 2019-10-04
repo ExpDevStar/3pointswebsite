@@ -294,7 +294,7 @@ display: flex;
   /* border-bottom: 1px solid #47748b; */
 }
 #sidebar-right ul li a {
-  padding: 10px;
+  padding: 0px;
   font-size: 1.1em;
   display: block;
 }
