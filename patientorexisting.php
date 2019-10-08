@@ -13,7 +13,7 @@ $_SESSION['medicalrecord'] = $medicalrecord;
 if (isset($_GET['logout'])) {
     session_destroy();
     unset($_SESSION['username']);
-    header("location: login.php");
+    header("location: /login.php");
 }
 ?>
 <html lang="en">
@@ -22,22 +22,22 @@ if (isset($_GET['logout'])) {
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <!-- Bootstrap core CSS -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
         <!-- Material Design Bootstrap -->
-        <link href="css/mdb.min.css" rel="stylesheet">
+        <link href="/css/mdb.min.css" rel="stylesheet">
         <!-- Your custom styles (optional) -->
-        <link href="css/style.css" rel="stylesheet">
+        <link href="/css/style.css" rel="stylesheet">
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
-        <script type="text/javascript" src="js/feedback.min.js"></script>
-        <script type="text/javascript" src="js/jquery-ui.min.js"></script>
-        <link rel="stylesheet" href="./css/feedback.min.css">
+        <script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="/js/feedback.min.js"></script>
+        <script type="text/javascript" src="/js/jquery-ui.min.js"></script>
+        <link rel="stylesheet" href="/css/feedback.min.css">
         <!-- Font Awesome JS -->
         <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
         <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 
-        <script type="text/javascript" src="backend/patient/main.js"></script>
+        <script type="text/javascript" src="/backend/patient/main.js"></script>
         <title>3Points</title>
         <style>
             .has-error {
@@ -78,7 +78,7 @@ if (isset($_GET['logout'])) {
             <div class="container">
                 <!-- Brand -->
                 <a class="navbar-brand waves-effect" href="3pointssoftware.com" target="_blank">
-                    <strong class="blue-text"><img src="./img/logo.png" width="70px"></strong>
+                    <strong class="blue-text"><img src="/img/logo.png" width="70px"></strong>
                 </a>
                 <!-- Collapse -->
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -110,7 +110,7 @@ if (isset($_GET['logout'])) {
                     <ul class="navbar-nav nav-flex-icons">
                         <li class="nav-item">
                             <?php if (isset($_SESSION['username'])) : ?>
-                                <a href="patientorexisting.php?logout='1'"  class="nav-link waves-effect" ><i class="fas fa-sign-out-alt"></i> </a>
+                                <a href="/patientorexisting.php?logout='1'"  class="nav-link waves-effect" ><i class="fas fa-sign-out-alt"></i> </a>
                             <?php endif ?>
                             </a>
                         </li>
@@ -141,7 +141,7 @@ if (isset($_GET['logout'])) {
         <div class="new-patient-form offset-md-2 col-lg-7 col-md-7">
             <div class="card">
                 <div class="card-body px-lg-5 pt-0">
-                    <form action="patientorexisting.php" class="text-center" method="post" style="color: #757575;">
+                    <form class="text-center" method="post" style="color: #757575;">
                         <?php include('errors.php'); ?>
                         <?php $medicalrecord = ""; ?>
                         <div class="form-row">
@@ -282,7 +282,7 @@ if (isset($_GET['logout'])) {
                     "ordering": false,
                     "bDestroy": true, 
                     "ajax": {
-                        "url": "data.php?action=getPatients",
+                        "url": "/data.php?action=getPatients",
                         "type": "POST"
                     },
                     "columns": [
@@ -366,14 +366,14 @@ if (isset($_GET['logout'])) {
 
     <!-- Optional JavaScript -->
     <!-- Bootstrap tooltips -->
-    <script type="text/javascript" src="js/popper.min.js"></script>
+    <script type="text/javascript" src="/js/popper.min.js"></script>
     <!-- Bootstrap core JavaScript -->
-    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
     <!-- MDB core JavaScript -->
-    <script type="text/javascript" src="js/mdb.js"></script>
-    <script type="text/javascript" src="js/typeahead.js"></script>
-    <script type="text/javascript" src="js/bloodhound.min.js"></script>
-    <script type="text/javascript" src="js/printThis.js"></script>
+    <script type="text/javascript" src="/js/mdb.js"></script>
+    <script type="text/javascript" src="/js/typeahead.js"></script>
+    <script type="text/javascript" src="/js/bloodhound.min.js"></script>
+    <script type="text/javascript" src="/js/printThis.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
     
     

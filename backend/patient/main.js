@@ -6,7 +6,7 @@ $(document).ready(function () {
         var patient_id = $(this).data('id');
         
         $.ajax({
-            url: 'backend/patient/Controller.php',
+            url: '/backend/patient/Controller.php',
             type: 'POST',
             data: {action: 'getPatientDetail', id: patient_id},
             success: function (data) {
@@ -77,7 +77,7 @@ $(document).ready(function () {
         //tags: [],
         multiple: true,
         ajax: {
-            url: 'getcode_select.php',
+            url: '/getcode_select.php',
             dataType: 'json',
             quietMillis: 50,
             type: "GET",
@@ -205,7 +205,7 @@ $(document).ready(function () {
         var patientname = $(this).data('patientname');
         var patient_id = $(this).data('id');
         $.ajax({
-            url: 'backend/patient/Controller.php',
+            url: '/backend/patient/Controller.php',
             type: 'POST',
             data: {action: 'deletePatient', id: patient_id},
             success: function (data) {
@@ -260,7 +260,7 @@ $(document).ready(function () {
         }
         if (error_count == 0) {
             $.ajax({
-                url: 'backend/patient/Controller.php',
+                url: '/backend/patient/Controller.php',
                 type: 'POST',
                 data: {action: 'savePatient', id: patient_id, firstname: firstname, lastname: lastname, medicalrecord: medicalrecord, hospital: hospital,medicalrecordinput:medicalrecordinput},
                 success: function (data) {

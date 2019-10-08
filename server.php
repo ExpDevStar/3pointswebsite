@@ -12,8 +12,6 @@ $medicalrecord    = "";
 $errors = array();
 
 
-
-
 // REGISTER USER
 if (isset($_POST['reg_user'])) {
   // receive all input values from the form
@@ -50,14 +48,16 @@ if (isset($_POST['reg_user'])) {
 
   // Finally, register user if there are no errors in the form
   if (count($errors) == 0) {
+	$patientRedirectUrl = str_replace( [' ', '\"', '\''], "-", strtolower($hospital) ) .'/patientorexisting.php';
   	$password = md5($password_1);//encrypt the password before saving in the database
 
   	$query = "INSERT INTO users (firstname, lastname, email, password, hospital)
   			  VALUES('$firstname', '$lastname', '$email', '$password', '$hospital')";
   	mysqli_query($db, $query);
   	$_SESSION['username'] = $email;
+	$_SESSION['hospital'] = $hospital;
   	$_SESSION['success'] = "You are now logged in";
-  	header('location: patientorexisting.php');
+  	header('location: /'.$patientRedirectUrl);
   }
 }
 
@@ -82,7 +82,8 @@ if (isset($_POST['login_user'])) {
   	  $_SESSION['username'] = $email;
   	  $_SESSION['hospital'] = $results[0]['Hospital'];
   	  $_SESSION['success'] = "You are now logged in";
-  	  header('location: patientorexisting.php');
+	  $patientRedirectUrl = str_replace( [' ', '\"', '\''], "-", strtolower($_SESSION['hospital']) ) .'/patientorexisting.php';
+  	  header('location: /'.$patientRedirectUrl);
   	}else {
   		array_push($errors, "Wrong email/password combination");
   	}
@@ -124,7 +125,8 @@ if (isset($_POST['reg_patient'])) {
     $_SESSION['hopsital'] = $hospital;
     $_SESSION['patient_name'] = $firstname.' '.$lastname;
   	$_SESSION['success'] = "Patient Created";
-  	header('location: index.php');
+	$patientRedirectUrl = str_replace( [' ', '\"', '\''], "-", strtolower($_SESSION['hospital']) ) .'/index.php';
+  	header('location: /'. $patientRedirectUrl);
   }
 }
 
@@ -202,11 +204,12 @@ if (isset($_POST['reg_medialsubmission'])) {
           VALUES(?, ?, ?, ?)";
       $pdo->insert($query, [$_SESSION['medicalrecord'], $q['id'], $answer, $points]);
     }
-   
+	
+    $patientRedirectUrl = str_replace( [' ', '\"', '\''], "-", strtolower($_SESSION['hospital']) ) .'/patientorexisting.php';
 
     flashMsg("Patient Record Submitted successfully and score was ". $totalScore);
     unset($_SESSION['medicalrecord']);
-    header('location: patientorexisting.php');
+    header('location: /'.$patientRedirectUrl);
   }
 }
 
