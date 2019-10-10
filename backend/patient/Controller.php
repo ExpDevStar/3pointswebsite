@@ -92,7 +92,8 @@ class PatientController {
 					{
 						$rank = $value['icd_secondary_ranking'];
 					}
-                    $sortable_html .= '<li class="ui-state-default" data-cart-id="' . $value['icd_code'] . '" data-order="' . $rank . '"><b>' . $value['icd_code'] . ' - ' . $value['icd_desc'] . '</b></li>';
+					//CB10-10
+                    $sortable_html .= '<li class="ui-state-default" data-cart-id="' . $value['icd_code'] . '" data-order="' . $rank . '"><b>' . $value['icd_code'] . ' - ' . $value['icd_desc'] . '</b>&nbsp;&nbsp;<button type="button" class="removeC close" aria-label="Close"><span aria-hidden="true">×</span></button></li>';
                     $code .= "," . $value['icd_code'];
                 }
                 $code = substr($code, 1);

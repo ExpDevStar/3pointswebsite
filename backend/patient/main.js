@@ -101,6 +101,37 @@ $(document).ready(function () {
             }
         }
     });
+	
+	//CB10-10
+	$(document).on('click','.select2-selection__choice__remove',function(){
+		
+		var gh = $(this).closest('li').attr('title');
+		$('#code_result').find('li').each(function(){
+			// this is inner scope, in reference to the .phrase element
+			var codeExists = '';
+							
+			var g = $(this).data('cart-id');
+			console.log(g);
+			if(g === gh){
+				$(this).remove();
+			}			
+		});
+		
+	});
+	//CB10-10
+	$(document).on('click','.removeC',function(){
+		
+		$(this).closest('li').remove();
+		var t = $(this).closest('li').data('cart-id');
+		  	$('.select2-selection__rendered').find('li').each(function(){
+										
+			var g = $(this).attr('title');
+			if(g === t){
+				$(this).find('.select2-selection__choice__remove').trigger('click');
+			}			
+		});
+		
+	});
     
     $('.js-data-example-ajax').on("select2:select", function (e) {
         console.log("selected tag");
@@ -110,39 +141,77 @@ $(document).ready(function () {
         var text = e.params.data.text;
         var icd_secondary_ranking = e.params.data.icd_secondary_ranking;
         var icd_ranking = e.params.data.icd_ranking;
-        var full_text = '<b>'+text+'-'+slug+'</b>';
+		//CB10-10
+        var full_text = '<b>'+text+'-'+slug+'</b>&nbsp;&nbsp;<button type="button" class="removeC close" aria-label="Close"><span aria-hidden="true">×</span></button></li>';
 		
-		if ( icd_secondary_ranking == '0' || icd_secondary_ranking == '' || icd_secondary_ranking == 'undefined' || icd_secondary_ranking == null )
-          {
-			  if(icd_ranking != 'N/A'){
-				var ranking = icd_ranking;
-			  }
-			  else{
-				  var ranking = '';
-			  }
-          }
-           else {
-             // var cartRankAdjusted = + 9.0 + icd_secondary_ranking;
-             var ranking = icd_secondary_ranking;
-             
-           }
 		
-        var $li = $("<li class='ui-state-default' data-cart-id='"+id+"' data-order='"+ranking+"' />").html(full_text);
-        $(".patient_code_sort").append($li);
-		//alert("rere");
-        $(".patient_code_sort").sortable('refresh');
-		if($('#customsorting').val() == '')
-		{
 			
-			$('.patient_code_sort li').sort(function(a, b)
+		//CB10-10
+		var codeExist = [];
+
+		$('#code_result').find('li').each(function(){
+			// this is inner scope, in reference to the .phrase element
+			var codeExists = '';
+							
+			var g = $(this).data('cart-id');
+			console.log(g);
+			if(g === id){
+				codeExists += id;
+				codeExist.push(codeExists);
+			}			
+		});
+		
+		//CB10-10
+		if(codeExist.length == 0){	
+		
+		
+			if ( icd_secondary_ranking == '0' || icd_secondary_ranking == '' || icd_secondary_ranking == 'undefined' || icd_secondary_ranking == null )
 			{
-				return $(a).data('order') - $(b).data('order');
-				 
-			}).appendTo('.patient_code_sort');
+				  if(icd_ranking != 'N/A'){
+					var ranking = icd_ranking;
+				  }
+				  else{
+					  var ranking = '';
+				  }
+			}
+			else {
+				// var cartRankAdjusted = + 9.0 + icd_secondary_ranking;
+				var ranking = icd_secondary_ranking;
+             
+			}
+		
+			var $li = $("<li  class='ui-state-default' data-cart-id='"+id+"' data-order='"+ranking+"' />").html(full_text);
+			$(".patient_code_sort").append($li);
+			//alert("rere");
+			$(".patient_code_sort").sortable('refresh');
+			if($('#customsorting').val() == '')
+			{
+				
+				$('.patient_code_sort li').sort(function(a, b)
+				{
+					return $(a).data('order') - $(b).data('order');
+					 
+				}).appendTo('.patient_code_sort');
+			}
+			
+			var medicalrecordinput = $("#medicalrecordinput").val();
+			$("#medicalrecordinput").val(medicalrecordinput+','+id);
+		
 		}
-        
-        var medicalrecordinput = $("#medicalrecordinput").val();
-        $("#medicalrecordinput").val(medicalrecordinput+','+id);
+		else{
+			//CB10-10
+			/* $('.select2-selection').find('li.select2-selection__choice').each(function(){
+									
+				var g = $(this).attr('title');
+			
+				if(g === id){
+					//$(this).find('.select2-selection__choice__remove').trigger('click');
+					$(this).closest('li').remove();
+				}			
+			}); */
+			alert("Code is already exists");
+			return false;
+		}
         
     });
     
