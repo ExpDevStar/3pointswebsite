@@ -38,6 +38,12 @@ if (isset($_REQUEST['action'])) {
         $result = $pdo->getResult("SELECT p.*, i.icd_desc, i.icd_tertiary_ranking FROM patient_icd_codes p INNER JOIN icd i ON (p.icd_code = i.icd_code) where medicalrecord = ? order by p.id asc", [$medicalrecord]); //icd_tertiary_ranking 
         $data['icd_codes'] = $result;
         echo json_encode($data);
+    } 
+	if ($_REQUEST['action'] == 'changehospital') {
+		$hospitalname	= $_POST['hospitalname'];
+        $_SESSION['hospital'] = $hospitalname;
+		$data['success'] = $_SESSION['hospital'];
+        echo json_encode($data);
     }
     /*if ($_REQUEST['action'] == 'getPatientDetail') {
         $result = $pdo->getResult("SELECT * FROM patients where id = ?", [$_POST['id']]);
