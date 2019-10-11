@@ -1,7 +1,7 @@
 <!doctype html>
 <?php include('server.php') ?>
 <?php require_once 'backend/patient/Controller.php'; ?>
-<?php 
+<?php
 // $feedbackdata = json_decode($_SESSION['feedbackdata']);
 if (!isset($_SESSION['username'])) {
     $_SESSION['msg'] = "You must log in first";
@@ -60,7 +60,7 @@ if (isset($_GET['logout'])) {
                 z-index:10050;
             }
             .select2-container--open{
-                z-index:9999999         
+                z-index:9999999
             }
             .selection {
                 width: 100% !important;
@@ -77,7 +77,7 @@ if (isset($_GET['logout'])) {
         <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
             <div class="container">
                 <!-- Brand -->
-                <a class="navbar-brand waves-effect" href="3pointssoftware.com" target="_blank">
+                <a class="navbar-brand waves-effect" href="https://www.3pointssoftware.com" target="_blank">
                     <strong class="blue-text"><img src="./img/logo.png" width="70px"></strong>
                 </a>
                 <!-- Collapse -->
@@ -200,7 +200,7 @@ if (isset($_GET['logout'])) {
         <div class="container text-center py-4 text-md-left mt-5">
             <div class="row mt-3">
                 <!--First column-->
-                <div class="col-md-3 col-lg-4 col-xl-3 mb-4">
+                <!-- <div class="col-md-3 col-lg-4 col-xl-3 mb-4">
                     <h6 class="text-uppercase font-weight-bold">
                         <strong>Useful links</strong>
                     </h6>
@@ -208,7 +208,7 @@ if (isset($_GET['logout'])) {
                     <p>
                         <a id="footer-link-policy" href="/general/privacy-policy/">Privacy Policy</a>
                     </p>
-                </div>
+                </div> -->
                 <!--/.First column-->
                 <!--Second column-->
                 <!--/.Second column-->
@@ -270,7 +270,7 @@ if (isset($_GET['logout'])) {
         });
 
         $(document).ready(function () {
-            
+
             getpatient = function() {
                 $('#existingPatients').DataTable({
                     "processing": true,
@@ -280,7 +280,7 @@ if (isset($_GET['logout'])) {
                     "lengthChange": false,
                     "info": false,
                     "ordering": false,
-                    "bDestroy": true, 
+                    "bDestroy": true,
                     "ajax": {
                         "url": "data.php?action=getPatients",
                         "type": "POST"
@@ -303,7 +303,7 @@ if (isset($_GET['logout'])) {
                                 }
                                 return data;
                             }
-                        }], 
+                        }],
                 });
             }
             getpatient();
@@ -375,8 +375,8 @@ if (isset($_GET['logout'])) {
     <script type="text/javascript" src="js/bloodhound.min.js"></script>
     <script type="text/javascript" src="js/printThis.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-    
-    
+
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 

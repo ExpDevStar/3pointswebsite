@@ -119,7 +119,7 @@ if (isset($_GET['logout'])) {
   <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
     <div class="container">
       <!-- Brand -->
-      <a class="navbar-brand waves-effect" href="3pointssoftware.com" target="_blank">
+      <a class="navbar-brand waves-effect" href="https://www.3pointssoftware.com" target="_blank">
           <strong class="blue-text"><img src="./img/logo.png" width="70px"></strong>
       </a>
       <!-- Collapse -->
@@ -288,7 +288,7 @@ if (isset($_GET['logout'])) {
   <div class="container text-center py-4 text-md-left mt-5">
     <div class="row mt-3">
       <!--First column-->
-      <div class="col-md-4 col-lg-3 col-xl-3 mb-4">
+      <!-- <div class="col-md-4 col-lg-3 col-xl-3 mb-4">
         <h6 class="text-uppercase font-weight-bold">
           <strong>Legal</strong>
         </h6>
@@ -296,7 +296,7 @@ if (isset($_GET['logout'])) {
         <p>
           <a id="footer-link-policy" href="/general/privacy-policy/">Privacy Policy</a>
         </p>
-      </div>
+      </div> -->
       <!--/.First column-->
       <!--Second column-->
       <!--/.Second column-->
@@ -574,7 +574,7 @@ $(document).ready(function()
 			  else{
 				 $('#ranking').val('');
 			  }
-           
+
           }
            else {
              // var cartRankAdjusted = + 9.0 + icd_secondary_ranking;
@@ -644,25 +644,25 @@ $(document).ready(function()
         // Append Values to Sidebar
         $('#ulcart').append('<li class="list-unstyled item ui-state-default cartid_'+cartID+'" data-cart-id = "'+cartID+'" data-order="'+cartRank+'"><h5 data-toggle="tooltip" data-placement="top" title="Return to Provider" class="mt-1 mb-1 cart-rank font-weight-bold highlight-red "> '+cartID+'<span style="display:none" class="icd_tertiary_ranking">('+icd_tertiary_ranking+')</span><div class="cartdiag" style="display:none">:'+cartDiag+','+cartPrice+'</div></h5><a href="javascript:void(0);" data-id="'+cartID+'" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a></li>');
         // Auto Sort
-        
+
         $('#ulcart li').sort(function(a, b)
         {
           return $(a).data('order') - $(b).data('order');
         }).appendTo('#ulcart');
-    
+
         //$('.field_wrapper li').appendTo('.field_wrapper');
-        
+
       } else {
         $('#ulcart').append('<li class="list-unstyled item ui-state-default cartid_'+cartID+'" data-cart-id = "'+cartID+'" data-order="'+cartRank+'"><h5 class=" mt-1 mb-1 cart-rank font-weight-bold"> '+cartID+'<span style="display:none" class="icd_tertiary_ranking">('+icd_tertiary_ranking+')</span><div class="cartdiag" style="display:none">:'+cartDiag+' '+cartPrice+'</div></h5><a href="javascript:void(0);" data-id="'+cartID+'" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a></li>');
-        
+
         // Auto Sort
         $('#ulcart li').sort(function(a, b)
         {
           return $(a).data('order') - $(b).data('order');
         }).appendTo('#ulcart');
-    
+
         //$('.field_wrapper li').appendTo('.field_wrapper');
-        
+
       }
     }
   }); // === END addButton === //
@@ -687,7 +687,7 @@ $(document).ready(function()
   }); // === END wrapper Remove === //
 
 
-    
+
 
   // loop and clone to modal
   $('#completeBtn').on('click', function(e)
@@ -706,18 +706,18 @@ $(document).ready(function()
       // remove unncessary content
       $(".olcart > #cart").remove();
       $(".olcart > #ulcart").remove();
-      $(".olcart > .item > .remove_button").remove(); 
+      $(".olcart > .item > .remove_button").remove();
       // show whats left
       $(".olcart > .item > h5 > .cartdiag").show();
 
       // Enable Sortable now
       $( "#sortable" ).sortable({
-            tolerance: 'touch', 
+            tolerance: 'touch',
             placeholder: "ui-state-highlight",
             stop: function(evt, ui) {
-                //console.log("stop event");    
+                //console.log("stop event");
                 var code_list = '';
-                $('#sortable li').each(function(i, obj) { 
+                $('#sortable li').each(function(i, obj) {
                     console.log(obj);
                     var code_id = $(obj).attr('data-cart-id');
                     //console.log(code_id);
@@ -728,16 +728,16 @@ $(document).ready(function()
                 }
                 console.log(code_list);
                 $("#medicalrecordinput").val(code_list);
-            }, 
+            },
       });
-      
+
       $("#sortable").disableSelection();
       $('#sortable').sortable();
-      
-      
+
+
         /****************New Code ****************/
         var code_list = '';
-        $('#sortable li').each(function(i, obj) {   
+        $('#sortable li').each(function(i, obj) {
           var code_id = $(obj).attr('data-cart-id');
           code_list+=","+code_id;
         });
@@ -746,7 +746,7 @@ $(document).ready(function()
         }
         console.log(code_list);
         $("#medicalrecordinput").val(code_list);
-        
+
         /*****************************************/
       $.ajax(
       {
@@ -770,89 +770,14 @@ $(document).ready(function()
               </div>`)
       });
 
-    // Case Min Index Questionairre Logic
-    // $('input[name="cogCaseMin"]').click(function(){
-    //        if($(this).is(":checked")){
-    //          var i = parseInt($(this).attr('increment'));
-    //          var current_value = parseInt($('.caseMinIndexPrice').text());
-    //           $('.caseMinIndexPrice').text(current_value+i);
-    //        }
-    //        else if($(this).is(":not(:checked)")){
-    //          var i = parseInt($(this).attr('increment'));
-    //          var current_value = parseInt($('.caseMinIndexPrice').text());
-    //           $('.caseMinIndexPrice').text(current_value-i);
-    //        }
-    //    });
-    //  $('input[name="swallowCaseMin"]').click(function(){
-    //         if($(this).is(":checked")){
-    //           var i = parseInt($(this).attr('increment'));
-    //           var current_value = parseInt($('.caseMinIndexPrice').text());
-    //            $('.caseMinIndexPrice').text(current_value+i);
-    //         }
-    //         else if($(this).is(":not(:checked)")){
-    //           var i = parseInt($(this).attr('increment'));
-    //           var current_value = parseInt($('.caseMinIndexPrice').text());
-    //            $('.caseMinIndexPrice').text(current_value-i);
-    //         }
-    //     });
-    //   $('input[name="mechCaseMin"]').click(function(){
-    //          if($(this).is(":checked")){
-    //            var i = parseInt($(this).attr('increment'));
-    //            var current_value = parseInt($('.caseMinIndexPrice').text());
-    //             $('.caseMinIndexPrice').text(current_value+i);
-    //          }
-    //          else if($(this).is(":not(:checked)")){
-    //            var i = parseInt($(this).attr('increment'));
-    //            var current_value = parseInt($('.caseMinIndexPrice').text());
-    //             $('.caseMinIndexPrice').text(current_value-i);
-    //          }
-    //      });
+
   }); // === END Clone === //
 
   // Convert Cloned Data in LI to string// Javascript/jQuery WIP
 // Save Button To Database
   $("#save-btn").submit(function(e) {
     e.preventDefault();
-    // var liarray = [];
-    // $("li").each(function() {
-    //     array.push($(this).html());
-    // });
-    //
-    // var lisubmission = JSON.stringify(liarray);
-    //
-    //   var formData = {
-    //         'hospital'              : $('input[name=hospitalinput]').val(),
-    //         'medicalrecord'             : $('input[name=medicalrecordinput]').val(),
-    //         'submission'    : lisubmission
-    //     };
-    //     console.log(formData);
-    //     // process the form
-    //            $.ajax({
-    //                type        : 'POST',
-    //                url         : 'server.php',
-    //                data        : formData,
-    //                dataType    : 'json',
-    //               encode          : true
-    //            })
-    //                // using the done promise callback
-    //                .done(function(data) {
-    //
-    //                    // log data to the console so we can see
-    //                    console.log(data);
-    //                    // var array = [];
-    //                    // $("h3").each(function() {
-    //                    //     array.push($(this).html());
-    //                    // });
-    //                    //
-    //                    // var message = JSON.stringify(array);
-    //                    // $.post('test.php', {data: message}, function(data) {
-    //                    //     document.write(data); // "success"
-    //                    // });
-    //                    // here we will handle errors and validation messages
-    //                });
-    //
-    //            // stop the form from submitting the normal way and refreshing the page
-    //            event.preventDefault();
+
            });
 }); // === END Document Ready === //
 </script>
