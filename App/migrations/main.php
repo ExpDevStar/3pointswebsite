@@ -21,9 +21,12 @@ try{
 }
 
 try{
-    $existChk       = $pdo->getResult('SELECT 1 FROM patient_icd_codes LIMIT 1');
+    $existChk       = $pdo->getResult('SELECT 1 FROM users_hospitals LIMIT 1');
 } catch(Exception $e){
-    $pdo->run('CREATE TABLE `patient_icd_codes` ( `id` INT NOT NULL AUTO_INCREMENT, `medicalrecord` text, `icd_code` VARCHAR(10), PRIMARY KEY (`id`) )');
+    $pdo->run('CREATE TABLE `users_hospitals` (`id` int(11) NOT NULL,`user_id` int(11) NOT NULL,
+  `hospital_name` varchar(255) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1');
+	$pdo->run('ALTER TABLE `users_hospitals` ADD PRIMARY KEY (`id`)');
+	$pdo->run('ALTER TABLE `users_hospitals` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1');
 }
 
 echo 'Done';
