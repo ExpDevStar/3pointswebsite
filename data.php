@@ -32,10 +32,17 @@ if (isset($_REQUEST['action'])) {
         echo json_encode($arr);
     }
     if ($_REQUEST['action'] == 'getAnswers') {
-        $result = $pdo->getResult("SELECT p.*, q.title FROM patient_answers p INNER JOIN questions q ON (p.question_id = q.id) where medicalrecord = ?", [$_POST['medicalrecord']]);
+		$medicalrecord	= urldecode($_POST['medicalrecord']);
+        $result = $pdo->getResult("SELECT p.*, q.title FROM patient_answers p INNER JOIN questions q ON (p.question_id = q.id) where medicalrecord = ?", [$medicalrecord]);
         $data['answers'] = $result;
-        $result = $pdo->getResult("SELECT p.*, i.icd_desc, i.icd_tertiary_ranking FROM patient_icd_codes p INNER JOIN icd i ON (p.icd_code = i.icd_code) where medicalrecord = ? order by p.id asc", [$_POST['medicalrecord']]); //icd_tertiary_ranking 
+        $result = $pdo->getResult("SELECT p.*, i.icd_desc, i.icd_tertiary_ranking FROM patient_icd_codes p INNER JOIN icd i ON (p.icd_code = i.icd_code) where medicalrecord = ? order by p.id asc", [$medicalrecord]); //icd_tertiary_ranking 
         $data['icd_codes'] = $result;
+        echo json_encode($data);
+    } 
+	if ($_REQUEST['action'] == 'changehospital') {
+		$hospitalname	= $_POST['hospitalname'];
+        $_SESSION['hospital'] = $hospitalname;
+		$data['success'] = $_SESSION['hospital'];
         echo json_encode($data);
     }
     /*if ($_REQUEST['action'] == 'getPatientDetail') {

@@ -23,7 +23,7 @@ if (!isset($_SESSION['medicalrecord']) || empty($_SESSION['medicalrecord'])) {
 if (isset($_GET['logout'])) {
     session_destroy();
     unset($_SESSION['username']);
-    header("location: login.php");
+    header("location: /login.php");
 }
 ?>
 <html lang="en">
@@ -32,18 +32,18 @@ if (isset($_GET['logout'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
     <!-- Material Design Bootstrap -->
-    <link href="css/mdb.min.css" rel="stylesheet">
+    <link href="/css/mdb.min.css" rel="stylesheet">
     <!-- Jquery UI -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
     <!-- Your custom styles (optional) -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
-    <script type="text/javascript" src="js/feedback.min.js"></script>
-    <script type="text/javascript" src="js/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="./css/feedback.min.css">
+    <script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/js/feedback.min.js"></script>
+    <script type="text/javascript" src="/js/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="/css/feedback.min.css">
     <!-- Font Awesome JS -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
@@ -119,8 +119,8 @@ if (isset($_GET['logout'])) {
   <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
     <div class="container">
       <!-- Brand -->
-      <a class="navbar-brand waves-effect" href="https://www.3pointssoftware.com" target="_blank">
-          <strong class="blue-text"><img src="./img/logo.png" width="70px"></strong>
+      <a class="navbar-brand waves-effect" href="3pointssoftware.com" target="_blank">
+          <strong class="blue-text"><img src="/img/logo.png" width="70px"></strong>
       </a>
       <!-- Collapse -->
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -324,21 +324,21 @@ if (isset($_GET['logout'])) {
 </footer>
 <!-- Optional JavaScript -->
 <!-- Bootstrap tooltips -->
-<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="/js/popper.min.js"></script>
 <!-- Bootstrap core JavaScript -->
-<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
 <!-- MDB core JavaScript -->
-<script type="text/javascript" src="js/mdb.js"></script>
-<script type="text/javascript" src="js/typeahead.js"></script>
-<script type="text/javascript" src="js/bloodhound.min.js"></script>
-<script type="text/javascript" src="js/printThis.js"></script>
+<script type="text/javascript" src="/js/mdb.js"></script>
+<script type="text/javascript" src="/js/typeahead.js"></script>
+<script type="text/javascript" src="/js/bloodhound.min.js"></script>
+<script type="text/javascript" src="/js/printThis.js"></script>
 <script>
 // Enable tooltips
   // feedback
 document.addEventListener('DOMContentLoaded',
   function () {
     $.feedback({
-      ajaxURL: 'feedback-listener.php',
+      ajaxURL: '/feedback-listener.php',
       html2canvasURL: 'js/html2canvas.js',
       onClose: function() { window.location.reload(); }
     });
@@ -393,7 +393,7 @@ $(document).ready(function()
        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('icd_code'),
        queryTokenizer: Bloodhound.tokenizers.whitespace,
        remote: {
-           url: 'getautocomplete.php?st=%QUERY',
+           url: '/getautocomplete.php?st=%QUERY',
            wildcard: '%QUERY'
        }
    });
@@ -402,7 +402,7 @@ $(document).ready(function()
        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('icd_desc'),
        queryTokenizer: Bloodhound.tokenizers.whitespace,
        remote: {
-           url: 'getautocomplete.php?std=%QUERY',
+           url: '/getautocomplete.php?std=%QUERY',
            wildcard: '%QUERY'
        }
    });
@@ -470,7 +470,7 @@ $(document).ready(function()
     // ajax call it and return the category ID
     $.ajax(
     {
-      url: 'getautocomplete.php',
+      url: '/getautocomplete.php',
       type: 'POST',
       data:
       {
@@ -489,7 +489,7 @@ $(document).ready(function()
     })
     $.ajax(
     {
-      url: 'getautocomplete.php',
+      url: '/getautocomplete.php',
       type: 'POST',
       data:
       {
@@ -524,7 +524,7 @@ $(document).ready(function()
       // console.log(iid)
       $.ajax(
       {
-        url: 'data.php',
+        url: '/data.php',
         method: 'POST',
         dataType : 'html',
         data: 'cid=' + cid
@@ -549,7 +549,7 @@ $(document).ready(function()
       })
       $.ajax(
       {
-        url: 'data.php',
+        url: '/data.php',
         method: 'POST',
         dataType : 'html',
         data: 'iid=' + iid
@@ -750,7 +750,7 @@ $(document).ready(function()
         /*****************************************/
       $.ajax(
       {
-        url: 'data.php',
+        url: '/data.php',
         method: 'POST',
         dataType : 'html',
         data: {action: 'getQuestions'}
