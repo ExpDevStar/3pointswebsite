@@ -26,10 +26,10 @@ $(document).ready(function () {
                 $("#code_result").html(data.code_result);
 				
 				//CB
-				$('.patient_code_sort li').sort(function(a, b)
+				/* $('.patient_code_sort li').sort(function(a, b)
 				{
 					 return $(a).data('order') - $(b).data('order');
-				}).appendTo('.patient_code_sort');
+				}).appendTo('.patient_code_sort'); */
 				
                 if(data.medicalrecordinput !='' && data.medicalrecordinput!=null) {
                     $("#medicalrecordinput").val(data.medicalrecordinput);
@@ -138,7 +138,7 @@ $(document).ready(function () {
 				medicalrecordinputArr.splice(i,1);
 			}
 		}
-		var finalVal 		= medicalrecordinputArr.join(',');
+		var finalVal = medicalrecordinputArr.join(',');
 		$("#medicalrecordinput").val(finalVal);
 		
 	});
