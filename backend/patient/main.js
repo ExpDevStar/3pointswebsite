@@ -131,6 +131,16 @@ $(document).ready(function () {
 			}			
 		});
 		
+		var medicalrecordinput = $("#medicalrecordinput").val();
+		var medicalrecordinputArr = medicalrecordinput.split(',');
+		for (var i = medicalrecordinputArr.length - 1; i >= 0; i--) {
+			if(medicalrecordinputArr[i] == t){
+				medicalrecordinputArr.splice(i,1);
+			}
+		}
+		var finalVal 		= medicalrecordinputArr.join(',');
+		$("#medicalrecordinput").val(finalVal);
+		
 	});
     
     $('.js-data-example-ajax').on("select2:select", function (e) {
