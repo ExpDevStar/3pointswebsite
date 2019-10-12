@@ -120,6 +120,27 @@ if (isset($_GET['logout'])) {
                           </h3>
                         </div> -->
                     <?php endif ?>
+					
+					<div class="col-3">
+					<select class="form-control" id="materialRegisterFormHospital_top" >
+							
+								<?php 
+									foreach($otherhospitalsA as $Val){
+										if(!empty($Val)){
+											if($Val == $hospital){
+												$selected = 'selected="selected"';
+											} else {
+												$selected = '';
+											}
+									
+								?>
+											<option <?php echo $selected ?> value="<?php echo $Val ?>"><?php echo $Val; ?></option>
+								<?php 	} 
+									} ?>
+								
+							
+							</select>
+						</div>
                     <!-- Right -->
                     <ul class="navbar-nav nav-flex-icons">
                         <li class="nav-item">
@@ -177,21 +198,9 @@ if (isset($_GET['logout'])) {
                         </div>
                         <!-- Hospital -->
                         <div class="md-form mt-0">
-                            <!--<input class="form-control" id="materialRegisterFormHospital" name="hospital" placeholder="Hospital Name" type="text" value="<?php //echo $hospital; ?>">-->
+                            <input class="form-control" readonly id="materialRegisterFormHospital" name="hospital" placeholder="SNF (Skilled Nursing Facilities)" type="text" value="<?php echo $hospital; ?>">
 							
-							<select class="form-control" id="materialRegisterFormHospital" name="hospital">
 							
-								<?php foreach($otherhospitalsA as $Val){ 
-								if($Val == $hospital){
-									$selected = 'selected="selected"';
-								} else {
-									$selected = '';
-								}
-								?>
-								<option <?php echo $selected ?> value="<?php echo $Val ?>"><?php echo $Val; ?></option>
-								<?php } ?>
-							
-							</select>
                         </div>
                         <button class="btn btn-outline-info btn-rounded btn-block my-4 btn-blue waves-effect z-depth-0" id="register-btn" name="reg_patient" type="submit">Create Patient</button>
 
@@ -288,7 +297,7 @@ if (isset($_GET['logout'])) {
     <script>
 	
 	
-		$(document).on('change', '#materialRegisterFormHospital', function () {
+		$(document).on('change', '#materialRegisterFormHospital_top', function () {
         
 			var h = $(this).val();
             $.ajax({
@@ -297,7 +306,9 @@ if (isset($_GET['logout'])) {
                 data: {action: 'changehospital', hospitalname: h},
                 success: function (data) {
 					 var data = JSON.parse(data);
-                   // window.location = window.location;
+					 console.log(data);
+					 var url = data.success; 
+                     window.location = '/'+url+'/patientorexisting.php';
 					
 				}				
 			});

@@ -23,7 +23,7 @@ if (!isset($_SESSION['medicalrecord']) || empty($_SESSION['medicalrecord'])) {
 if (isset($_GET['logout'])) {
     session_destroy();
     unset($_SESSION['username']);
-    header("location: login.php");
+    header("location: /login.php");
 }
 ?>
 <html lang="en">
