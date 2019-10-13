@@ -80,7 +80,7 @@ class PatientController {
             $result = $pdo->getResult("SELECT * FROM patients WHERE id = ?", [$_POST['id']]);
             $ques = $pdo->getResult("SELECT * FROM questions");
             foreach($ques as $key => $value) {
-                                $quesHtml  .= '<div class="custom-control custom-checkbox float-left"><input type="checkbox" class="form-check-input" id="q'. $value['id'] .'" name="ques['. $value['id'] .']" increment="1" value="yes">  <label class="form-check-label" for="q'. $value['id'] .'">'. $value['title']. '</label></div><br>';
+                $quesHtml  .= '<div class="custom-control custom-checkbox float-left"><input type="checkbox" data-id = "' . $value['id'] . '"class="form-check-input" id="q' . $value['id'] . '" name="ques" increment="1" value="yes">  <label class="form-check-label" for="q' . $value['id'] . '">' . $value['title'] . '</label></div><br>';
                             $qids[] = $value['id'];
             }
         }
@@ -89,11 +89,11 @@ class PatientController {
             foreach ($result as $key => $value) {
             $ques = $pdo->getResult("SELECT * FROM questions WHERE id= {$value['question_id']}");
             if($value['answer'] == 'Yes') {
-                $quesHtml  .= '<div class="custom-control custom-checkbox float-left"><input type="checkbox" class="form-check-input" id="q'. $ques[0]['id'] .'" name="ques['. $ques[0]['id'] .']" increment="1" value="yes" checked>  <label class="form-check-label" for="q'. $ques[0]['id'] .'">'. $ques[0]['title']. '</label></div><br>';
+                $quesHtml  .= '<div class="custom-control custom-checkbox float-left"><input type="checkbox" data-id = "' . $ques[0]['id'] . '"class="form-check-input" id="q' . $ques[0]['id'] . '" name="ques" increment="1" value="yes" checked>  <label class="form-check-label" for="q' . $ques[0]['id'] . '">' . $ques[0]['title'] . '</label></div><br>';
                 $yesAns[] = $ques[0]['id'];
             }
             else {
-                $quesHtml  .= '<div class="custom-control custom-checkbox float-left"><input type="checkbox" class="form-check-input" id="q'. $ques[0]['id'] .'" name="ques['. $ques[0]['id'] .']" increment="1" value="yes">  <label class="form-check-label" for="q'. $ques[0]['id'] .'">'. $ques[0]['title']. '</label></div><br>';
+                                    $quesHtml  .= '<div class="custom-control custom-checkbox float-left"><input type="checkbox" data-id = "' . $ques[0]['id'] . '"class="form-check-input" id="q' . $ques[0]['id'] . '" name="ques" increment="1" value="yes">  <label class="form-check-label" for="q' . $ques[0]['id'] . '">' . $ques[0]['title'] . '</label></div><br>';
             }
             $qids[] = $ques[0]['id'];
             }
@@ -148,13 +148,50 @@ class PatientController {
         echo json_encode($data);
         die;
     }
-    public function savePatient($pdo, $pdo_connection) {
-
+       public function savePatient($pdo, $pdo_connection)
+    {
         $check_medical_record = " SELECT * FROM patients WHERE medicalrecord = '" . $_POST['hospital'] . "' AND id != " . $_POST['id'] . " ";
         $code_result = $pdo_connection->getResult($check_medical_record);
+        $totalScore   = 0;
+        if (!empty($_POST['oldAnswers'])) {
+            //May be some updation in the questions
+        } else {
+            //Can add answers or not
+            $args       = explode(',', $_POST['questions']);
+            $ques       = $pdo_connection->getResult('select * from questions where id IN (' . str_pad('', count($args) * 2 - 1, '?,') . ')', $args);
+            $score      = [];
+            foreach ($ques as $q) {
+                $key    = $q['id'];
+                // scores are based on what is in db Creating score array based on id
+                $score[$key]  = $q['points'];
+            }
 
-        if(empty($code_result)) { 
-            $query = "UPDATE patients SET firstname = '" . mysqli_real_escape_string($pdo,$_POST["firstname"]) . "',lastname='" . mysqli_real_escape_string($pdo,$_POST['lastname']) . "',medicalrecord = '" . mysqli_real_escape_string($pdo,$_POST['medicalrecord']) . "',hospital='" . mysqli_real_escape_string($pdo,$_POST['hospital']) . "' where id = " . $_POST['id'];
+            foreach ($_POST['ques'] as $key => $value) {
+                if (isset($score[$value['key']])) {
+                    $totalScore += $score[$value['key']];
+                }
+            }
+            $i = 0;
+            $arr = $_POST['ques'];
+            foreach($ques as $q){
+                $key    = $q['id'];
+                $answer = 'No';
+                $points   = 0;
+                if($i < count($arr)) {
+                    if($arr[$i]['key'] == $key){
+                        $points   = $score[$key];
+                        $answer = 'Yes';
+                        $i++;
+                      }
+                }
+                $query = "INSERT INTO patient_answers (medicalrecord, question_id, answer, points)
+                    VALUES(?, ?, ?, ?)";
+                $pdo_connection->insert($query, [$_POST['medicalrecord'], $q['id'], $answer, $points]);
+              }
+        }
+        $icd_nat_score = 0;
+        if (empty($code_result)) {
+            $query = "UPDATE patients SET firstname = '" . mysqli_real_escape_string($pdo, $_POST["firstname"]) . "',lastname='" . mysqli_real_escape_string($pdo, $_POST['lastname']) . "',medicalrecord = '" . mysqli_real_escape_string($pdo, $_POST['medicalrecord']) . "',hospital='" . mysqli_real_escape_string($pdo, $_POST['hospital']) . "' where id = " . $_POST['id'];
             $result = mysqli_query($pdo, $query) or die(mysqli_error());
 
             $query = "DELETE FROM  patient_icd_codes where medicalrecord = '" . $_POST['medicalrecord'] . "' ";
@@ -163,13 +200,21 @@ class PatientController {
             if (isset($_POST['medicalrecordinput']) && $_POST['medicalrecordinput'] != '') {
                 $code = explode(',', $_POST['medicalrecordinput']);
                 foreach ($code as $key => $value) {
-                    $query = "INSERT INTO  patient_icd_codes (medicalrecord,icd_code) VALUES ('" . mysqli_real_escape_string($pdo,$_POST['medicalrecord']) . "','" . mysqli_real_escape_string($pdo,$value) . "') ";
+                    $arr_icd_data = $pdo_connection->getResult('select * from icd where icd_code = ?', array($value));
+                    //print_r($arr_icd_data);
+                    if (count($arr_icd_data) > 0) {
+                        if ($arr_icd_data[0]['icd_tertiary_ranking'] > 0) {
+                            $icd_nat_score = $arr_icd_data[0]['icd_tertiary_ranking'];
+                        }
+                    }
+                    $query = "INSERT INTO  patient_icd_codes (medicalrecord,icd_code) VALUES ('" . mysqli_real_escape_string($pdo, $_POST['medicalrecord']) . "','" . mysqli_real_escape_string($pdo, $value) . "') ";
                     $result = mysqli_query($pdo, $query) or die(mysqli_error());
                 }
             }
-            echo json_encode(array("status" => 1,"msg"=>"")); 
-        } else { 
-            echo json_encode(array("status" => 0,"msg"=>"Medical record already exist"));
+            $totalScore += $icd_nat_score;
+            echo json_encode(array("status" => 1, "msg" => ""));
+        } else {
+            echo json_encode(array("status" => 0, "msg" => "Medical record already exist"));
         }
         die;
     }

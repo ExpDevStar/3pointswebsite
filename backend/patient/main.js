@@ -307,7 +307,15 @@ $(document).ready(function () {
         var medicalrecord = $("#medicalrecord").val();
         var hospital = $("#hospital").val();
         var patient_id = $("#patient_id").val();
-        
+        var questions = $('#qids').val();
+        var oldAnswers = $('#aids').val();
+        var ans = [];
+$.each($("input[name='ques']:checked"), function(){   
+    var id = $(this).data('id');
+    var val = $(this).val();
+    var data = {key: id, value: val}
+    ans.push(data);
+});
         
         /*var code_data = $(".js-data-example-ajax").select2("val");
         $("#medicalrecordinput").val(code_data);*/
@@ -342,7 +350,7 @@ $(document).ready(function () {
             $.ajax({
                 url: '/backend/patient/Controller.php',
                 type: 'POST',
-                data: {action: 'savePatient', id: patient_id, firstname: firstname, lastname: lastname, medicalrecord: medicalrecord, hospital: hospital,medicalrecordinput:medicalrecordinput},
+                data: {action: 'savePatient', id: patient_id, firstname: firstname, lastname: lastname, medicalrecord: medicalrecord, hospital: hospital,medicalrecordinput:medicalrecordinput, questions: questions, oldAnswers: oldAnswers,ques: ans},
                 success: function (data) {
                     var data = JSON.parse(data);
                     if (data.status == "1") {
