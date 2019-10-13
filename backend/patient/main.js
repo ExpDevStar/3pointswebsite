@@ -4,14 +4,13 @@ $(document).ready(function () {
         var medicalRecord = $(this).data('medicalrecord');
         var patientname = $(this).data('patientname');
         var patient_id = $(this).data('id');
-        
+        console.log(patient_id);
         $.ajax({
             url: '/backend/patient/Controller.php',
             type: 'POST',
             data: {action: 'getPatientDetail', id: patient_id},
             success: function (data) {
                 var data = JSON.parse(data);
-                console.log(data);
                 var firstname = data.data[0].firstname;
                 var lastname = data.data[0].lastname;
                 var medicalrecord = data.data[0].medicalrecord;
@@ -24,6 +23,8 @@ $(document).ready(function () {
                 $('#editPatient').modal('show');
 
                 $("#code_result").html(data.code_result);
+                $('#ques_html').html(data.quesHtml);
+                $('#hiddenInputs').html(data.hiddenInputs);
 				
 				//CB
 				/* $('.patient_code_sort li').sort(function(a, b)

@@ -22,7 +22,7 @@ class PatientController {
                         </button>
                     </div>
                     <!--Body-->
-                    <div class="modal-body" data-keyboard="false" data-backdrop="static" > 
+                    <div class="modal-body" data-keyboard="false" data-backdrop="static" >
                     
                         <div class="alert alert-success" role="alert" style="display:none;"></div>
                         <div class="alert alert-danger" role="alert" style="display:none;"></div>
@@ -49,13 +49,19 @@ class PatientController {
                               <select class="js-data-example-ajax"></select>
                             </div>
                         </div>
+                        <div class="form-group">
                         <div id="code_result"></div>
-
+                        <div id="ques_html">
+                        </div>
+                        </div>
+                        <br>
+                        <br>
                         <div class="form-group">
                           <label>Hospital:</label>
                           <input type="text" class="form-control" id="hospital" readonly="">
                         </div>
-                        
+                        <div id="hiddenInputs">
+                        </div>
                         <input type="hidden" name="patient_id" id="patient_id">
                         <input type="hidden" name="medicalrecordinput" id="medicalrecordinput" value="">
                         <input type="hidden" name="customsorting" id="customsorting" value="">
@@ -67,7 +73,31 @@ class PatientController {
     }
 
     public function getPatientDetail($pdo) {
-        $result = $pdo->getResult("SELECT * FROM patients where id = ?", [$_POST['id']]);
+        $result = $pdo->getResult("SELECT * FROM patients INNER JOIN patient_answers ON patients.medicalrecord = patient_answers.medicalrecord where patients.id = ?", [$_POST['id']]);
+        $quesHtml = '';
+        if(empty($result)){
+            //if user did not selected or answered any question
+            $result = $pdo->getResult("SELECT * FROM patients WHERE id = ?", [$_POST['id']]);
+            $ques = $pdo->getResult("SELECT * FROM questions");
+            foreach($ques as $key => $value) {
+                                $quesHtml  .= '<div class="custom-control custom-checkbox float-left"><input type="checkbox" class="form-check-input" id="q'. $value['id'] .'" name="ques['. $value['id'] .']" increment="1" value="yes">  <label class="form-check-label" for="q'. $value['id'] .'">'. $value['title']. '</label></div><br>';
+                            $qids[] = $value['id'];
+            }
+        }
+        else {
+            //If user selected at least one answer.
+            foreach ($result as $key => $value) {
+            $ques = $pdo->getResult("SELECT * FROM questions WHERE id= {$value['question_id']}");
+            if($value['answer'] == 'Yes') {
+                $quesHtml  .= '<div class="custom-control custom-checkbox float-left"><input type="checkbox" class="form-check-input" id="q'. $ques[0]['id'] .'" name="ques['. $ques[0]['id'] .']" increment="1" value="yes" checked>  <label class="form-check-label" for="q'. $ques[0]['id'] .'">'. $ques[0]['title']. '</label></div><br>';
+                $yesAns[] = $ques[0]['id'];
+            }
+            else {
+                $quesHtml  .= '<div class="custom-control custom-checkbox float-left"><input type="checkbox" class="form-check-input" id="q'. $ques[0]['id'] .'" name="ques['. $ques[0]['id'] .']" increment="1" value="yes">  <label class="form-check-label" for="q'. $ques[0]['id'] .'">'. $ques[0]['title']. '</label></div><br>';
+            }
+            $qids[] = $ques[0]['id'];
+            }
+        }
 
         $code_result = [];
         $sortable_html = '<ul id="sortable" class="patient_code_sort">';
@@ -82,17 +112,17 @@ class PatientController {
             $code_result = $pdo->getResult($query);
             if (!empty($code_result)) {
                 foreach ($code_result as $key => $value) {
-					
-					
-					if ( $value['icd_secondary_ranking'] == '0' || $value['icd_secondary_ranking'] == '' || $value['icd_secondary_ranking'] == null )
-					{
-						$rank = $value['icd_ranking'];
-					}
-					else
-					{
-						$rank = $value['icd_secondary_ranking'];
-					}
-					//CB10-10
+                    
+                    
+                    if ( $value['icd_secondary_ranking'] == '0' || $value['icd_secondary_ranking'] == '' || $value['icd_secondary_ranking'] == null )
+                    {
+                        $rank = $value['icd_ranking'];
+                    }
+                    else
+                    {
+                        $rank = $value['icd_secondary_ranking'];
+                    }
+                    //CB10-10
                     $sortable_html .= '<li class="ui-state-default" data-cart-id="' . $value['icd_code'] . '" data-order="' . $rank . '"><b>' . $value['icd_code'] . ' - ' . $value['icd_desc'] . '</b>&nbsp;&nbsp;<button type="button" class="removeC close" aria-label="Close"><span aria-hidden="true">×</span></button></li>';
                     $code .= "," . $value['icd_code'];
                 }
@@ -100,14 +130,24 @@ class PatientController {
             }
         }
         $sortable_html .= '</ul>';
-
+        $qstr = implode(', ',$qids);
+        if(isset($yesAns)){
+                 $astr = implode(', ',$yesAns);
+        }
+        else {
+            $astr = '';
+        }
+        $hiddenInputs = '';
+        $hiddenInputs .= '<input type="hidden" id="qids" name="qids" value="'.$qstr.'">';
+        $hiddenInputs .= '<input type="hidden" id="aids" name="aids" value="'.$astr.'">';
         $data['data'] = $result;
+        $data['hiddenInputs'] = $hiddenInputs;
+        $data['quesHtml'] = $quesHtml;
         $data['code_result'] = $sortable_html;
         $data['medicalrecordinput'] = $code;
         echo json_encode($data);
         die;
     }
-
     public function savePatient($pdo, $pdo_connection) {
 
         $check_medical_record = " SELECT * FROM patients WHERE medicalrecord = '" . $_POST['hospital'] . "' AND id != " . $_POST['id'] . " ";
