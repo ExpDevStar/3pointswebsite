@@ -148,16 +148,12 @@ class PatientController {
         echo json_encode($data);
         die;
     }
-       public function savePatient($pdo, $pdo_connection)
+    public function savePatient($pdo, $pdo_connection)
     {
         $check_medical_record = " SELECT * FROM patients WHERE medicalrecord = '" . $_POST['hospital'] . "' AND id != " . $_POST['id'] . " ";
         $code_result = $pdo_connection->getResult($check_medical_record);
         $totalScore   = 0;
-        if (!empty($_POST['oldAnswers'])) {
-            //May be some updation in the questions
-        } else {
-            //Can add answers or not
-            $args       = explode(',', $_POST['questions']);
+        $args       = explode(',', $_POST['questions']);
             $ques       = $pdo_connection->getResult('select * from questions where id IN (' . str_pad('', count($args) * 2 - 1, '?,') . ')', $args);
             $score      = [];
             foreach ($ques as $q) {
@@ -165,12 +161,19 @@ class PatientController {
                 // scores are based on what is in db Creating score array based on id
                 $score[$key]  = $q['points'];
             }
-
+        if(isset($_POST['ques'])){
             foreach ($_POST['ques'] as $key => $value) {
                 if (isset($score[$value['key']])) {
                     $totalScore += $score[$value['key']];
                 }
             }
+        }
+        if (!empty($_POST['oldAnswers'])) {
+            //May be some updation in the questions
+            $query = "DELETE FROM  patient_answers where medicalrecord = '" . $_POST['medicalrecord'] . "' ";
+            $result = mysqli_query($pdo, $query) or die(mysqli_error());
+        }
+        if(isset($_POST['ques'])){
             $i = 0;
             $arr = $_POST['ques'];
             foreach($ques as $q){
@@ -218,7 +221,6 @@ class PatientController {
         }
         die;
     }
-
     public function deletePatient($pdo,$pdo_connection) {
         $result = $pdo_connection->getResult("SELECT * FROM patients where id = ?", [$_POST['id']]);
         $medicalrecord = $result[0]['medicalrecord']; 
