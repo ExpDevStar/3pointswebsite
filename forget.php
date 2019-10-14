@@ -64,7 +64,7 @@ if(isset($_POST['submit']))
 	<nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
 		<div class="container">
 			<!-- Brand -->
-			<a class="navbar-brand waves-effect" href="3pointssoftware.com" target="_blank">
+			<a class="navbar-brand waves-effect" href="https://www.3pointssoftware.com" target="_blank">
 				<strong class="blue-text"><img src="./img/logo.png" width="40px"></strong>
 			</a>
 		</div>
