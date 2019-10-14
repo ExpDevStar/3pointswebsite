@@ -12,7 +12,7 @@ $_SESSION['medicalrecord'] = $medicalrecord;
 
 
 if(!empty($otherhospitals)){
-	
+
 	if(!empty($otherhospitals[0]['hospital'])){
 		$Arr = $otherhospitals[0]['Hospital'].'|'.$otherhospitals[0]['hospital'];
 	}
@@ -20,7 +20,7 @@ if(!empty($otherhospitals)){
 		$Arr = $otherhospitals[0]['Hospital'].'|';
 	}
 	$otherhospitalsA = explode('|',$Arr);
-		
+
 }
 
 
@@ -91,7 +91,7 @@ if (isset($_GET['logout'])) {
         <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
             <div class="container">
                 <!-- Brand -->
-                <a class="navbar-brand waves-effect" href="3pointssoftware.com" target="_blank">
+                <a class="navbar-brand waves-effect" href="https://www.3pointssoftware.com" target="_blank">
                     <strong class="blue-text"><img src="/img/logo.png" width="70px"></strong>
                 </a>
                 <!-- Collapse -->
@@ -120,11 +120,11 @@ if (isset($_GET['logout'])) {
                           </h3>
                         </div> -->
                     <?php endif ?>
-					
+
 					<div class="col-3">
 					<select class="form-control" id="materialRegisterFormHospital_top" >
-							
-								<?php 
+
+								<?php
 									foreach($otherhospitalsA as $Val){
 										if(!empty($Val)){
 											if($Val == $hospital){
@@ -132,13 +132,13 @@ if (isset($_GET['logout'])) {
 											} else {
 												$selected = '';
 											}
-									
+
 								?>
 											<option <?php echo $selected ?> value="<?php echo $Val ?>"><?php echo $Val; ?></option>
-								<?php 	} 
+								<?php 	}
 									} ?>
-								
-							
+
+
 							</select>
 						</div>
                     <!-- Right -->
@@ -199,8 +199,8 @@ if (isset($_GET['logout'])) {
                         <!-- Hospital -->
                         <div class="md-form mt-0">
                             <input class="form-control" readonly id="materialRegisterFormHospital" name="hospital" placeholder="SNF (Skilled Nursing Facilities)" type="text" value="<?php echo $hospital; ?>">
-							
-							
+
+
                         </div>
                         <button class="btn btn-outline-info btn-rounded btn-block my-4 btn-blue waves-effect z-depth-0" id="register-btn" name="reg_patient" type="submit">Create Patient</button>
 
@@ -250,7 +250,7 @@ if (isset($_GET['logout'])) {
                 <!--Second column-->
                 <!--/.Second column-->
                 <!--Fourth column-->
-                <div class="col-md-4 col-lg-3 col-xl-3">
+                <div class="col-md-4 col-lg-4 col-xl-4">
                     <h6 class="text-uppercase font-weight-bold">
                         <strong>Support</strong>
                     </h6>
@@ -295,10 +295,10 @@ if (isset($_GET['logout'])) {
         <?php echo PatientController::getEditModal(); ?>
     </footer>
     <script>
-	
-	
+
+
 		$(document).on('change', '#materialRegisterFormHospital_top', function () {
-        
+
 			var h = $(this).val();
             $.ajax({
 				url: 'data.php',
@@ -307,13 +307,13 @@ if (isset($_GET['logout'])) {
                 success: function (data) {
 					 var data = JSON.parse(data);
 					 console.log(data);
-					 var url = data.success; 
+					 var url = data.success;
                      window.location = '/'+url+'/patientorexisting.php';
-					
-				}				
+
+				}
 			});
 		});
-	
+
         var getpatient = '';
         $('.existing-patient-content').hide();
         $('.new-patient').on('click', function () {
