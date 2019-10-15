@@ -8,7 +8,8 @@ class PatientController {
       return $pdo = new DbConnect();
       } */
 
-    public function getEditModal() {
+    public function getEditModal()
+    {
         return '<div class="modal modal-print fade" id="editPatient" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
              aria-hidden="true">
             <div class="modal-dialog modal-notify modal-success" role="document">
@@ -51,13 +52,14 @@ class PatientController {
                         </div>
                         <div class="form-group">
                         <div id="code_result"></div>
+                        <br>
                         <div id="ques_html">
                         </div>
                         </div>
                         <br>
                         <br>
                         <div class="form-group">
-                          <label>Hospital:</label>
+                          <label>SNF:</label>
                           <input type="text" class="form-control" id="hospital" readonly="">
                         </div>
                         <div id="hiddenInputs">
@@ -66,6 +68,7 @@ class PatientController {
                         <input type="hidden" name="medicalrecordinput" id="medicalrecordinput" value="">
                         <input type="hidden" name="customsorting" id="customsorting" value="">
                         <button type="button" class="btn btn-primary submitPatient">Submit</button>
+                        <button type="button" data-dismiss="modal" class="btn btn-danger cancel">Cancel</button>
                     </div>
                 </div>
             </div>
