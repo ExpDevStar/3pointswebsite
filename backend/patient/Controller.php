@@ -52,10 +52,13 @@ class PatientController {
                         </div>
                         <div class="form-group">
                         <div id="code_result"></div>
+                        <button type="button" id="resetCodeRank" class="btn btn-default cancel" style="float: right;">Reset Code Rankings</button>
                         <br>
                         <div id="ques_html">
                         </div>
                         </div>
+                        <br>
+                        <br>
                         <br>
                         <br>
                         <div class="form-group">
@@ -65,6 +68,7 @@ class PatientController {
                         <div id="hiddenInputs">
                         </div>
                         <input type="hidden" name="patient_id" id="patient_id">
+                        <input type="hidden" name="reset_code_rank" id="reset_code_rank">
                         <input type="hidden" name="medicalrecordinput" id="medicalrecordinput" value="">
                         <input type="hidden" name="customsorting" id="customsorting" value="">
                         <button type="button" class="btn btn-primary submitPatient">Submit</button>
@@ -74,7 +78,7 @@ class PatientController {
             </div>
         </div>';
     }
-
+    
     public function getPatientDetail($pdo) {
         $result = $pdo->getResult("SELECT * FROM patients INNER JOIN patient_answers ON patients.medicalrecord = patient_answers.medicalrecord where patients.id = ?", [$_POST['id']]);
         $quesHtml = '';
@@ -204,9 +208,19 @@ class PatientController {
             $result = mysqli_query($pdo, $query) or die(mysqli_error());
 
             if (isset($_POST['medicalrecordinput']) && $_POST['medicalrecordinput'] != '') {
+                $resetCode = false;
+                if(isset($_POST['reset_code_rank'])) {
+                    $resetCode = true;
+                }
                 $code = explode(',', $_POST['medicalrecordinput']);
                 foreach ($code as $key => $value) {
                     $arr_icd_data = $pdo_connection->getResult('select * from icd where icd_code = ?', array($value));
+                    if($resetCode == true) {
+                        if($arr_icd_data['0']['icd_secondary_ranking'] == null && $arr_icd_data[0]['icd_ranking'] != 'N/A') {
+                            $updateQuery = "UPDATE icd SET icd_ranking = 'N/A', icd_secondary_ranking = 13";
+                            $result = mysqli_query($pdo,$updateQuery) or die(mysqli_error());
+                        }
+                    }
                     //print_r($arr_icd_data);
                     if (count($arr_icd_data) > 0) {
                         if ($arr_icd_data[0]['icd_tertiary_ranking'] > 0) {
@@ -224,6 +238,7 @@ class PatientController {
         }
         die;
     }
+    
     public function deletePatient($pdo,$pdo_connection) {
         $result = $pdo_connection->getResult("SELECT * FROM patients where id = ?", [$_POST['id']]);
         $medicalrecord = $result[0]['medicalrecord']; 

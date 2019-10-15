@@ -69,7 +69,13 @@ $(document).ready(function () {
         });
 
     });
-    
+    /**
+     * Reset Code Rank
+     */
+    $(document).on('click','#resetCodeRank',function(){
+        $('#reset_code_rank').val('1');
+        alert("Code Rank Will be resetted based on codes after clicking on submit button");
+    });
     /******************Edit code *******************/
     $('.filter-modal select').css('width', '100%');
     $('.js-data-example-ajax').select2({
@@ -309,6 +315,7 @@ $(document).ready(function () {
         var patient_id = $("#patient_id").val();
         var questions = $('#qids').val();
         var oldAnswers = $('#aids').val();
+        var resetCodeRank = $('#reset_code_rank').val();
         var ans = [];
 $.each($("input[name='ques']:checked"), function(){   
     var id = $(this).data('id');
@@ -350,7 +357,7 @@ $.each($("input[name='ques']:checked"), function(){
             $.ajax({
                 url: '/backend/patient/Controller.php',
                 type: 'POST',
-                data: {action: 'savePatient', id: patient_id, firstname: firstname, lastname: lastname, medicalrecord: medicalrecord, hospital: hospital,medicalrecordinput:medicalrecordinput, questions: questions, oldAnswers: oldAnswers,ques: ans},
+                data: {action: 'savePatient', id: patient_id, firstname: firstname, lastname: lastname, medicalrecord: medicalrecord, hospital: hospital,medicalrecordinput:medicalrecordinput, questions: questions, oldAnswers: oldAnswers,ques: ans,reset_code_rank:resetCodeRank},
                 success: function (data) {
                     var data = JSON.parse(data);
                     if (data.status == "1") {
