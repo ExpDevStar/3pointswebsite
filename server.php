@@ -11,7 +11,6 @@ $hospital    = isset($_SESSION['hospital']) ? $_SESSION['hospital'] : '';
 $medicalrecord    = "";
 $errors = array();
 
-
 // REGISTER USER
 if (isset($_POST['reg_user'])) {
 	
@@ -84,7 +83,7 @@ if (isset($_POST['reg_user'])) {
   	$_SESSION['username'] = $email;
 	$_SESSION['hospital'] = $hospital;
   	$_SESSION['success'] = "You are now logged in";
-  	header('location: /'.$patientRedirectUrl);
+  	header('location: '. getLink($patientRedirectUrl));
   }
 }
 
@@ -111,7 +110,7 @@ if (isset($_POST['login_user'])) {
   	  $_SESSION['hospital'] = $results[0]['Hospital'];
   	  $_SESSION['success'] = "You are now logged in";
 	  $patientRedirectUrl = str_replace( [' ', '\"', '\''], "-", strtolower($_SESSION['hospital']) ) .'/patientorexisting.php';
-  	  header('location: /'.$patientRedirectUrl);
+  	  header('location: '. getLink($patientRedirectUrl));
   	}else {
   		array_push($errors, "Wrong email/password combination");
   	}
@@ -159,7 +158,7 @@ if (isset($_POST['reg_patient'])) {
 	//echo strtolower($_SESSION['hospital']) .'/index.php';
 	$patientRedirectUrl = str_replace( [' ', '\"', '\''], "-", strtolower($_SESSION['hospital']) ) .'/index.php';
 	
-  	header('location: /'. $patientRedirectUrl);
+  	header('location: '. getLink($patientRedirectUrl));
   }
 }
 
@@ -242,7 +241,7 @@ if (isset($_POST['reg_medialsubmission'])) {
 
     flashMsg("Patient Record Submitted successfully and score was ". $totalScore);
     unset($_SESSION['medicalrecord']);
-    header('location: /'.$patientRedirectUrl);
+    header('location: '. getLink($patientRedirectUrl));
   }
 }
 /* echo $_SESSION['id']; */
