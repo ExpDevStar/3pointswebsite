@@ -1,7 +1,7 @@
 <!doctype html>
 <?php include('server.php') ?>
 <?php require_once 'backend/patient/Controller.php'; ?>
-<?php 
+<?php
 // $feedbackdata = json_decode($_SESSION['feedbackdata']);
 if (!isset($_SESSION['username'])) {
     $_SESSION['msg'] = "You must log in first";
@@ -10,10 +10,24 @@ if (!isset($_SESSION['username'])) {
 // send to next page
 $_SESSION['medicalrecord'] = $medicalrecord;
 
+
+if(!empty($otherhospitals)){
+
+	if(!empty($otherhospitals[0]['hospital'])){
+		$Arr = $otherhospitals[0]['Hospital'].'|'.$otherhospitals[0]['hospital'];
+	}
+	else{
+		$Arr = $otherhospitals[0]['Hospital'].'|';
+	}
+	$otherhospitalsA = explode('|',$Arr);
+
+}
+
+
 if (isset($_GET['logout'])) {
     session_destroy();
     unset($_SESSION['username']);
-    header("location: login.php");
+    header("location: /login.php");
 }
 ?>
 <html lang="en">
@@ -22,22 +36,22 @@ if (isset($_GET['logout'])) {
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <!-- Bootstrap core CSS -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
         <!-- Material Design Bootstrap -->
-        <link href="css/mdb.min.css" rel="stylesheet">
+        <link href="/css/mdb.min.css" rel="stylesheet">
         <!-- Your custom styles (optional) -->
-        <link href="css/style.css" rel="stylesheet">
+        <link href="/css/style.css" rel="stylesheet">
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
-        <script type="text/javascript" src="js/feedback.min.js"></script>
-        <script type="text/javascript" src="js/jquery-ui.min.js"></script>
-        <link rel="stylesheet" href="./css/feedback.min.css">
+        <script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="/js/feedback.min.js"></script>
+        <script type="text/javascript" src="/js/jquery-ui.min.js"></script>
+        <link rel="stylesheet" href="/css/feedback.min.css">
         <!-- Font Awesome JS -->
         <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
         <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 
-        <script type="text/javascript" src="backend/patient/main.js"></script>
+        <script type="text/javascript" src="/backend/patient/main.js"></script>
         <title>3Points</title>
         <style>
             .has-error {
@@ -60,7 +74,7 @@ if (isset($_GET['logout'])) {
                 z-index:10050;
             }
             .select2-container--open{
-                z-index:9999999         
+                z-index:9999999
             }
             .selection {
                 width: 100% !important;
@@ -77,8 +91,8 @@ if (isset($_GET['logout'])) {
         <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
             <div class="container">
                 <!-- Brand -->
-                <a class="navbar-brand waves-effect" href="3pointssoftware.com" target="_blank">
-                    <strong class="blue-text"><img src="./img/logo.png" width="70px"></strong>
+                <a class="navbar-brand waves-effect" href="https://www.3pointssoftware.com" target="_blank">
+                    <strong class="blue-text"><img src="/img/logo.png" width="70px"></strong>
                 </a>
                 <!-- Collapse -->
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -106,11 +120,32 @@ if (isset($_GET['logout'])) {
                           </h3>
                         </div> -->
                     <?php endif ?>
+
+					<div class="col-3">
+					<select class="form-control" id="materialRegisterFormHospital_top" >
+
+								<?php
+									foreach($otherhospitalsA as $Val){
+										if(!empty($Val)){
+											if($Val == $hospital){
+												$selected = 'selected="selected"';
+											} else {
+												$selected = '';
+											}
+
+								?>
+											<option <?php echo $selected ?> value="<?php echo $Val ?>"><?php echo $Val; ?></option>
+								<?php 	}
+									} ?>
+
+
+							</select>
+						</div>
                     <!-- Right -->
                     <ul class="navbar-nav nav-flex-icons">
                         <li class="nav-item">
                             <?php if (isset($_SESSION['username'])) : ?>
-                                <a href="patientorexisting.php?logout='1'"  class="nav-link waves-effect" ><i class="fas fa-sign-out-alt"></i> </a>
+                                <a href="/patientorexisting.php?logout='1'"  class="nav-link waves-effect" ><i class="fas fa-sign-out-alt"></i> </a>
                             <?php endif ?>
                             </a>
                         </li>
@@ -141,7 +176,7 @@ if (isset($_GET['logout'])) {
         <div class="new-patient-form offset-md-2 col-lg-7 col-md-7">
             <div class="card">
                 <div class="card-body px-lg-5 pt-0">
-                    <form action="patientorexisting.php" class="text-center" method="post" style="color: #757575;">
+                    <form class="text-center" method="post" style="color: #757575;">
                         <?php include('errors.php'); ?>
                         <?php $medicalrecord = ""; ?>
                         <div class="form-row">
@@ -163,7 +198,9 @@ if (isset($_GET['logout'])) {
                         </div>
                         <!-- Hospital -->
                         <div class="md-form mt-0">
-                            <input class="form-control" id="materialRegisterFormHospital" name="hospital" placeholder="Hospital Name" type="text" value="<?php echo $hospital; ?>">
+                            <input class="form-control" readonly id="materialRegisterFormHospital" name="hospital" placeholder="SNF (Skilled Nursing Facilities)" type="text" value="<?php echo $hospital; ?>">
+
+
                         </div>
                         <button class="btn btn-outline-info btn-rounded btn-block my-4 btn-blue waves-effect z-depth-0" id="register-btn" name="reg_patient" type="submit">Create Patient</button>
 
@@ -200,7 +237,7 @@ if (isset($_GET['logout'])) {
         <div class="container text-center py-4 text-md-left mt-5">
             <div class="row mt-3">
                 <!--First column-->
-                <div class="col-md-3 col-lg-4 col-xl-3 mb-4">
+                <!-- <div class="col-md-3 col-lg-4 col-xl-3 mb-4">
                     <h6 class="text-uppercase font-weight-bold">
                         <strong>Useful links</strong>
                     </h6>
@@ -208,12 +245,12 @@ if (isset($_GET['logout'])) {
                     <p>
                         <a id="footer-link-policy" href="/general/privacy-policy/">Privacy Policy</a>
                     </p>
-                </div>
+                </div> -->
                 <!--/.First column-->
                 <!--Second column-->
                 <!--/.Second column-->
                 <!--Fourth column-->
-                <div class="col-md-4 col-lg-3 col-xl-3">
+                <div class="col-md-4 col-lg-4 col-xl-4">
                     <h6 class="text-uppercase font-weight-bold">
                         <strong>Support</strong>
                     </h6>
@@ -258,6 +295,25 @@ if (isset($_GET['logout'])) {
         <?php echo PatientController::getEditModal(); ?>
     </footer>
     <script>
+
+
+		$(document).on('change', '#materialRegisterFormHospital_top', function () {
+
+			var h = $(this).val();
+            $.ajax({
+				url: 'data.php',
+                type: 'POST',
+                data: {action: 'changehospital', hospitalname: h},
+                success: function (data) {
+					 var data = JSON.parse(data);
+					 console.log(data);
+					 var url = data.success;
+                     window.location = '/'+url+'/patientorexisting.php';
+
+				}
+			});
+		});
+
         var getpatient = '';
         $('.existing-patient-content').hide();
         $('.new-patient').on('click', function () {
@@ -270,7 +326,7 @@ if (isset($_GET['logout'])) {
         });
 
         $(document).ready(function () {
-            
+
             getpatient = function() {
                 $('#existingPatients').DataTable({
                     "processing": true,
@@ -280,9 +336,9 @@ if (isset($_GET['logout'])) {
                     "lengthChange": false,
                     "info": false,
                     "ordering": false,
-                    "bDestroy": true, 
+                    "bDestroy": true,
                     "ajax": {
-                        "url": "data.php?action=getPatients",
+                        "url": "/data.php?action=getPatients",
                         "type": "POST"
                     },
                     "columns": [
@@ -303,7 +359,7 @@ if (isset($_GET['logout'])) {
                                 }
                                 return data;
                             }
-                        }], 
+                        }],
                 });
             }
             getpatient();
@@ -366,17 +422,17 @@ if (isset($_GET['logout'])) {
 
     <!-- Optional JavaScript -->
     <!-- Bootstrap tooltips -->
-    <script type="text/javascript" src="js/popper.min.js"></script>
+    <script type="text/javascript" src="/js/popper.min.js"></script>
     <!-- Bootstrap core JavaScript -->
-    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
     <!-- MDB core JavaScript -->
-    <script type="text/javascript" src="js/mdb.js"></script>
-    <script type="text/javascript" src="js/typeahead.js"></script>
-    <script type="text/javascript" src="js/bloodhound.min.js"></script>
-    <script type="text/javascript" src="js/printThis.js"></script>
+    <script type="text/javascript" src="/js/mdb.js"></script>
+    <script type="text/javascript" src="/js/typeahead.js"></script>
+    <script type="text/javascript" src="/js/bloodhound.min.js"></script>
+    <script type="text/javascript" src="/js/printThis.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-    
-    
+
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 

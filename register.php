@@ -25,7 +25,7 @@
   <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
     <div class="container">
       <!-- Brand -->
-      <a class="navbar-brand waves-effect" href="3pointssoftware.com" target="_blank">
+      <a class="navbar-brand waves-effect" href="https://www.3pointssoftware.com" target="_blank">
         <strong class="blue-text"><img src="./img/logo.png" width="70px"></strong>
       </a>
     </div>
@@ -88,10 +88,15 @@
 
                   </div>
                   <!-- Hospital -->
-                     <div class="md-form mt-0">
-                         <input type="text" id="materialRegisterFormHospital" class="form-control" name="hospital" placeholder="Hospital Name"  value="<?php echo $hospital; ?>">
-
+                     <div class="md-form mt-0 addMorehospital">
+                         <input type="text" id="materialRegisterFormHospital" class="form-control" name="snf[]" placeholder="SNF (Skilled Nursing Facilities)"  value="<?php echo $hospital; ?>">
+	
                      </div>
+					 <div class="md-form mt-0 text-left">
+					 <a class="btn btn-success btn-sm moreSNF" href="javascript:void(0)" role="button"><i class="fa fa-plus cursor-pointer" aria-hidden="true"></i>&nbsp;Add SNF</a>
+						<input type="hidden" id="counter">
+					</div>
+
                   <!-- Terms of service -->
                 <div class="checkbox" style="text-align: left;">
                        <input id="checkTerms" name="checkbox" type="checkbox">
@@ -116,6 +121,23 @@
 <script>
 $('#checkTerms').change(function () {
     $('#register-btn').prop("disabled", !this.checked);
+});
+
+
+
+$(document).on('click','.removeInv',function(){
+	var removeid = $(this).data('id');
+	$('#inv-'+removeid).remove();
+	
+});	
+$(document).on('click','.moreSNF',function(){
+	
+	var i = parseInt($('#counter').val()) + parseInt(1);
+	/* let editHtml = '<span id="inv-'+i+'" class="col-sm-12 sp-padding"><input type="email" class="form-control invitesize" name="invite_email[]" placeholder="Email Address" ><a href="javascript:void(0)" class="removeInv" data-id="'+i+'" ><img width="32" src="App/assets/images/cross.png"></a></span>'; */
+	let editHtml = '<input type="text" class="form-control snf" name="snf[]" placeholder="SNF Name" >';
+	$('.addMorehospital').append(editHtml);
+	$('#counter').val(i);
+	
 });
 </script>
   <!-- Material form register -->

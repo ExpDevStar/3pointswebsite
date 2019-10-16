@@ -23,7 +23,7 @@ if (!isset($_SESSION['medicalrecord']) || empty($_SESSION['medicalrecord'])) {
 if (isset($_GET['logout'])) {
     session_destroy();
     unset($_SESSION['username']);
-    header("location: login.php");
+    header("location: /login.php");
 }
 ?>
 <html lang="en">
@@ -32,18 +32,18 @@ if (isset($_GET['logout'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
     <!-- Material Design Bootstrap -->
-    <link href="css/mdb.min.css" rel="stylesheet">
+    <link href="/css/mdb.min.css" rel="stylesheet">
     <!-- Jquery UI -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
     <!-- Your custom styles (optional) -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
-    <script type="text/javascript" src="js/feedback.min.js"></script>
-    <script type="text/javascript" src="js/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="./css/feedback.min.css">
+    <script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/js/feedback.min.js"></script>
+    <script type="text/javascript" src="/js/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="/css/feedback.min.css">
     <!-- Font Awesome JS -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
@@ -119,8 +119,8 @@ if (isset($_GET['logout'])) {
   <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
     <div class="container">
       <!-- Brand -->
-      <a class="navbar-brand waves-effect" href="3pointssoftware.com" target="_blank">
-          <strong class="blue-text"><img src="./img/logo.png" width="70px"></strong>
+      <a class="navbar-brand waves-effect" href="https://www.3pointssoftware.com" target="_blank">
+          <strong class="blue-text"><img src="/img/logo.png" width="70px"></strong>
       </a>
       <!-- Collapse -->
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -288,7 +288,7 @@ if (isset($_GET['logout'])) {
   <div class="container text-center py-4 text-md-left mt-5">
     <div class="row mt-3">
       <!--First column-->
-      <div class="col-md-4 col-lg-3 col-xl-3 mb-4">
+      <!-- <div class="col-md-4 col-lg-3 col-xl-3 mb-4">
         <h6 class="text-uppercase font-weight-bold">
           <strong>Legal</strong>
         </h6>
@@ -296,12 +296,12 @@ if (isset($_GET['logout'])) {
         <p>
           <a id="footer-link-policy" href="/general/privacy-policy/">Privacy Policy</a>
         </p>
-      </div>
+      </div> -->
       <!--/.First column-->
       <!--Second column-->
       <!--/.Second column-->
       <!--Fourth column-->
-      <div class="col-md-4 col-lg-3 col-xl-3">
+      <div class="col-md-4 col-lg-4 col-xl-4">
         <h6 class="text-uppercase font-weight-bold">
           <strong>Support</strong>
         </h6>
@@ -324,21 +324,21 @@ if (isset($_GET['logout'])) {
 </footer>
 <!-- Optional JavaScript -->
 <!-- Bootstrap tooltips -->
-<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="/js/popper.min.js"></script>
 <!-- Bootstrap core JavaScript -->
-<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
 <!-- MDB core JavaScript -->
-<script type="text/javascript" src="js/mdb.js"></script>
-<script type="text/javascript" src="js/typeahead.js"></script>
-<script type="text/javascript" src="js/bloodhound.min.js"></script>
-<script type="text/javascript" src="js/printThis.js"></script>
+<script type="text/javascript" src="/js/mdb.js"></script>
+<script type="text/javascript" src="/js/typeahead.js"></script>
+<script type="text/javascript" src="/js/bloodhound.min.js"></script>
+<script type="text/javascript" src="/js/printThis.js"></script>
 <script>
 // Enable tooltips
   // feedback
 document.addEventListener('DOMContentLoaded',
   function () {
     $.feedback({
-      ajaxURL: 'feedback-listener.php',
+      ajaxURL: '/feedback-listener.php',
       html2canvasURL: 'js/html2canvas.js',
       onClose: function() { window.location.reload(); }
     });
@@ -393,7 +393,7 @@ $(document).ready(function()
        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('icd_code'),
        queryTokenizer: Bloodhound.tokenizers.whitespace,
        remote: {
-           url: 'getautocomplete.php?st=%QUERY',
+           url: '/getautocomplete.php?st=%QUERY',
            wildcard: '%QUERY'
        }
    });
@@ -402,7 +402,7 @@ $(document).ready(function()
        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('icd_desc'),
        queryTokenizer: Bloodhound.tokenizers.whitespace,
        remote: {
-           url: 'getautocomplete.php?std=%QUERY',
+           url: '/getautocomplete.php?std=%QUERY',
            wildcard: '%QUERY'
        }
    });
@@ -470,7 +470,7 @@ $(document).ready(function()
     // ajax call it and return the category ID
     $.ajax(
     {
-      url: 'getautocomplete.php',
+      url: '/getautocomplete.php',
       type: 'POST',
       data:
       {
@@ -489,7 +489,7 @@ $(document).ready(function()
     })
     $.ajax(
     {
-      url: 'getautocomplete.php',
+      url: '/getautocomplete.php',
       type: 'POST',
       data:
       {
@@ -524,7 +524,7 @@ $(document).ready(function()
       // console.log(iid)
       $.ajax(
       {
-        url: 'data.php',
+        url: '/data.php',
         method: 'POST',
         dataType : 'html',
         data: 'cid=' + cid
@@ -549,7 +549,7 @@ $(document).ready(function()
       })
       $.ajax(
       {
-        url: 'data.php',
+        url: '/data.php',
         method: 'POST',
         dataType : 'html',
         data: 'iid=' + iid
@@ -574,7 +574,7 @@ $(document).ready(function()
 			  else{
 				 $('#ranking').val('');
 			  }
-           
+
           }
            else {
              // var cartRankAdjusted = + 9.0 + icd_secondary_ranking;
@@ -644,25 +644,25 @@ $(document).ready(function()
         // Append Values to Sidebar
         $('#ulcart').append('<li class="list-unstyled item ui-state-default cartid_'+cartID+'" data-cart-id = "'+cartID+'" data-order="'+cartRank+'"><h5 data-toggle="tooltip" data-placement="top" title="Return to Provider" class="mt-1 mb-1 cart-rank font-weight-bold highlight-red "> '+cartID+'<span style="display:none" class="icd_tertiary_ranking">('+icd_tertiary_ranking+')</span><div class="cartdiag" style="display:none">:'+cartDiag+','+cartPrice+'</div></h5><a href="javascript:void(0);" data-id="'+cartID+'" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a></li>');
         // Auto Sort
-        
+
         $('#ulcart li').sort(function(a, b)
         {
           return $(a).data('order') - $(b).data('order');
         }).appendTo('#ulcart');
-    
+
         //$('.field_wrapper li').appendTo('.field_wrapper');
-        
+
       } else {
         $('#ulcart').append('<li class="list-unstyled item ui-state-default cartid_'+cartID+'" data-cart-id = "'+cartID+'" data-order="'+cartRank+'"><h5 class=" mt-1 mb-1 cart-rank font-weight-bold"> '+cartID+'<span style="display:none" class="icd_tertiary_ranking">('+icd_tertiary_ranking+')</span><div class="cartdiag" style="display:none">:'+cartDiag+' '+cartPrice+'</div></h5><a href="javascript:void(0);" data-id="'+cartID+'" class="remove_button"> <i class="fa fa-times" aria-hidden="true"></i></a></li>');
-        
+
         // Auto Sort
         $('#ulcart li').sort(function(a, b)
         {
           return $(a).data('order') - $(b).data('order');
         }).appendTo('#ulcart');
-    
+
         //$('.field_wrapper li').appendTo('.field_wrapper');
-        
+
       }
     }
   }); // === END addButton === //
@@ -687,7 +687,7 @@ $(document).ready(function()
   }); // === END wrapper Remove === //
 
 
-    
+
 
   // loop and clone to modal
   $('#completeBtn').on('click', function(e)
@@ -706,18 +706,18 @@ $(document).ready(function()
       // remove unncessary content
       $(".olcart > #cart").remove();
       $(".olcart > #ulcart").remove();
-      $(".olcart > .item > .remove_button").remove(); 
+      $(".olcart > .item > .remove_button").remove();
       // show whats left
       $(".olcart > .item > h5 > .cartdiag").show();
 
       // Enable Sortable now
       $( "#sortable" ).sortable({
-            tolerance: 'touch', 
+            tolerance: 'touch',
             placeholder: "ui-state-highlight",
             stop: function(evt, ui) {
-                //console.log("stop event");    
+                //console.log("stop event");
                 var code_list = '';
-                $('#sortable li').each(function(i, obj) { 
+                $('#sortable li').each(function(i, obj) {
                     console.log(obj);
                     var code_id = $(obj).attr('data-cart-id');
                     //console.log(code_id);
@@ -728,16 +728,16 @@ $(document).ready(function()
                 }
                 console.log(code_list);
                 $("#medicalrecordinput").val(code_list);
-            }, 
+            },
       });
-      
+
       $("#sortable").disableSelection();
       $('#sortable').sortable();
-      
-      
+
+
         /****************New Code ****************/
         var code_list = '';
-        $('#sortable li').each(function(i, obj) {   
+        $('#sortable li').each(function(i, obj) {
           var code_id = $(obj).attr('data-cart-id');
           code_list+=","+code_id;
         });
@@ -746,11 +746,11 @@ $(document).ready(function()
         }
         console.log(code_list);
         $("#medicalrecordinput").val(code_list);
-        
+
         /*****************************************/
       $.ajax(
       {
-        url: 'data.php',
+        url: '/data.php',
         method: 'POST',
         dataType : 'html',
         data: {action: 'getQuestions'}
@@ -770,89 +770,14 @@ $(document).ready(function()
               </div>`)
       });
 
-    // Case Min Index Questionairre Logic
-    // $('input[name="cogCaseMin"]').click(function(){
-    //        if($(this).is(":checked")){
-    //          var i = parseInt($(this).attr('increment'));
-    //          var current_value = parseInt($('.caseMinIndexPrice').text());
-    //           $('.caseMinIndexPrice').text(current_value+i);
-    //        }
-    //        else if($(this).is(":not(:checked)")){
-    //          var i = parseInt($(this).attr('increment'));
-    //          var current_value = parseInt($('.caseMinIndexPrice').text());
-    //           $('.caseMinIndexPrice').text(current_value-i);
-    //        }
-    //    });
-    //  $('input[name="swallowCaseMin"]').click(function(){
-    //         if($(this).is(":checked")){
-    //           var i = parseInt($(this).attr('increment'));
-    //           var current_value = parseInt($('.caseMinIndexPrice').text());
-    //            $('.caseMinIndexPrice').text(current_value+i);
-    //         }
-    //         else if($(this).is(":not(:checked)")){
-    //           var i = parseInt($(this).attr('increment'));
-    //           var current_value = parseInt($('.caseMinIndexPrice').text());
-    //            $('.caseMinIndexPrice').text(current_value-i);
-    //         }
-    //     });
-    //   $('input[name="mechCaseMin"]').click(function(){
-    //          if($(this).is(":checked")){
-    //            var i = parseInt($(this).attr('increment'));
-    //            var current_value = parseInt($('.caseMinIndexPrice').text());
-    //             $('.caseMinIndexPrice').text(current_value+i);
-    //          }
-    //          else if($(this).is(":not(:checked)")){
-    //            var i = parseInt($(this).attr('increment'));
-    //            var current_value = parseInt($('.caseMinIndexPrice').text());
-    //             $('.caseMinIndexPrice').text(current_value-i);
-    //          }
-    //      });
+
   }); // === END Clone === //
 
   // Convert Cloned Data in LI to string// Javascript/jQuery WIP
 // Save Button To Database
   $("#save-btn").submit(function(e) {
     e.preventDefault();
-    // var liarray = [];
-    // $("li").each(function() {
-    //     array.push($(this).html());
-    // });
-    //
-    // var lisubmission = JSON.stringify(liarray);
-    //
-    //   var formData = {
-    //         'hospital'              : $('input[name=hospitalinput]').val(),
-    //         'medicalrecord'             : $('input[name=medicalrecordinput]').val(),
-    //         'submission'    : lisubmission
-    //     };
-    //     console.log(formData);
-    //     // process the form
-    //            $.ajax({
-    //                type        : 'POST',
-    //                url         : 'server.php',
-    //                data        : formData,
-    //                dataType    : 'json',
-    //               encode          : true
-    //            })
-    //                // using the done promise callback
-    //                .done(function(data) {
-    //
-    //                    // log data to the console so we can see
-    //                    console.log(data);
-    //                    // var array = [];
-    //                    // $("h3").each(function() {
-    //                    //     array.push($(this).html());
-    //                    // });
-    //                    //
-    //                    // var message = JSON.stringify(array);
-    //                    // $.post('test.php', {data: message}, function(data) {
-    //                    //     document.write(data); // "success"
-    //                    // });
-    //                    // here we will handle errors and validation messages
-    //                });
-    //
-    //            // stop the form from submitting the normal way and refreshing the page
-    //            event.preventDefault();
+
            });
 }); // === END Document Ready === //
 </script>

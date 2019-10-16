@@ -1,6 +1,5 @@
 <?php include('server.php') ?>
 <!DOCTYPE html>
-<html>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
@@ -25,7 +24,7 @@
   <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
     <div class="container">
       <!-- Brand -->
-      <a class="navbar-brand waves-effect" href="3pointssoftware.com" target="_blank">
+      <a class="navbar-brand waves-effect" href="https://www.3pointssoftware.com" target="_blank">
         <strong class="blue-text"><img src="./img/logo.png" width="70px"></strong>
       </a>
     </div>
@@ -103,7 +102,7 @@
       </div>
       <!--/.Fourth column-->
       <!--First column-->
-      <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+      <!-- <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
         <h6 class="text-uppercase font-weight-bold">
           <strong>About Us</strong>
         </h6>
@@ -111,10 +110,10 @@
         <p>
           <a id="footer-link-policy" href="./about-us.php">About Us</a>
         </p>
-      </div>
+      </div> -->
       <!--/.First column-->
       <!--Second column-->
-      <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-4">
+      <!-- <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-4">
         <h6 class="text-uppercase font-weight-bold">
           <strong>Use Cases</strong>
         </h6>
@@ -123,7 +122,7 @@
           <a id="footer-link-tutBootstrap" href="./usecase.php">Use Case</a>
         </p>
         <p>
-      </div>
+      </div> -->
     </div>
   </div>
   <!--/.Footer Links-->

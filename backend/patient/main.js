@@ -4,14 +4,13 @@ $(document).ready(function () {
         var medicalRecord = $(this).data('medicalrecord');
         var patientname = $(this).data('patientname');
         var patient_id = $(this).data('id');
-        
+        console.log(patient_id);
         $.ajax({
-            url: 'backend/patient/Controller.php',
+            url: '/backend/patient/Controller.php',
             type: 'POST',
             data: {action: 'getPatientDetail', id: patient_id},
             success: function (data) {
                 var data = JSON.parse(data);
-                console.log(data);
                 var firstname = data.data[0].firstname;
                 var lastname = data.data[0].lastname;
                 var medicalrecord = data.data[0].medicalrecord;
@@ -24,12 +23,14 @@ $(document).ready(function () {
                 $('#editPatient').modal('show');
 
                 $("#code_result").html(data.code_result);
+                $('#ques_html').html(data.quesHtml);
+                $('#hiddenInputs').html(data.hiddenInputs);
 				
 				//CB
-				$('.patient_code_sort li').sort(function(a, b)
+				/* $('.patient_code_sort li').sort(function(a, b)
 				{
 					 return $(a).data('order') - $(b).data('order');
-				}).appendTo('.patient_code_sort');
+				}).appendTo('.patient_code_sort'); */
 				
                 if(data.medicalrecordinput !='' && data.medicalrecordinput!=null) {
                     $("#medicalrecordinput").val(data.medicalrecordinput);
@@ -68,7 +69,13 @@ $(document).ready(function () {
         });
 
     });
-    
+    /**
+     * Reset Code Rank
+     */
+    $(document).on('click','#resetCodeRank',function(){
+        $('#reset_code_rank').val('1');
+        alert("Code Rank Will be resetted based on codes after clicking on submit button");
+    });
     /******************Edit code *******************/
     $('.filter-modal select').css('width', '100%');
     $('.js-data-example-ajax').select2({
@@ -77,7 +84,7 @@ $(document).ready(function () {
         //tags: [],
         multiple: true,
         ajax: {
-            url: 'getcode_select.php',
+            url: '/getcode_select.php',
             dataType: 'json',
             quietMillis: 50,
             type: "GET",
@@ -101,6 +108,47 @@ $(document).ready(function () {
             }
         }
     });
+	
+	//CB10-10
+	$(document).on('click','.select2-selection__choice__remove',function(){
+		
+		var gh = $(this).closest('li').attr('title');
+		$('#code_result').find('li').each(function(){
+			// this is inner scope, in reference to the .phrase element
+			var codeExists = '';
+							
+			var g = $(this).data('cart-id');
+			console.log(g);
+			if(g === gh){
+				$(this).remove();
+			}			
+		});
+		
+	});
+	//CB10-10
+	$(document).on('click','.removeC',function(){
+		
+		$(this).closest('li').remove();
+		var t = $(this).closest('li').data('cart-id');
+		  	$('.select2-selection__rendered').find('li').each(function(){
+										
+			var g = $(this).attr('title');
+			if(g === t){
+				$(this).find('.select2-selection__choice__remove').trigger('click');
+			}			
+		});
+		
+		var medicalrecordinput = $("#medicalrecordinput").val();
+		var medicalrecordinputArr = medicalrecordinput.split(',');
+		for (var i = medicalrecordinputArr.length - 1; i >= 0; i--) {
+			if(medicalrecordinputArr[i] == t){
+				medicalrecordinputArr.splice(i,1);
+			}
+		}
+		var finalVal = medicalrecordinputArr.join(',');
+		$("#medicalrecordinput").val(finalVal);
+		
+	});
     
     $('.js-data-example-ajax').on("select2:select", function (e) {
         console.log("selected tag");
@@ -110,39 +158,77 @@ $(document).ready(function () {
         var text = e.params.data.text;
         var icd_secondary_ranking = e.params.data.icd_secondary_ranking;
         var icd_ranking = e.params.data.icd_ranking;
-        var full_text = '<b>'+text+'-'+slug+'</b>';
+		//CB10-10
+        var full_text = '<b>'+text+'-'+slug+'</b>&nbsp;&nbsp;<button type="button" class="removeC close" aria-label="Close"><span aria-hidden="true">×</span></button></li>';
 		
-		if ( icd_secondary_ranking == '0' || icd_secondary_ranking == '' || icd_secondary_ranking == 'undefined' || icd_secondary_ranking == null )
-          {
-			  if(icd_ranking != 'N/A'){
-				var ranking = icd_ranking;
-			  }
-			  else{
-				  var ranking = '';
-			  }
-          }
-           else {
-             // var cartRankAdjusted = + 9.0 + icd_secondary_ranking;
-             var ranking = icd_secondary_ranking;
-             
-           }
 		
-        var $li = $("<li class='ui-state-default' data-cart-id='"+id+"' data-order='"+ranking+"' />").html(full_text);
-        $(".patient_code_sort").append($li);
-		//alert("rere");
-        $(".patient_code_sort").sortable('refresh');
-		if($('#customsorting').val() == '')
-		{
 			
-			$('.patient_code_sort li').sort(function(a, b)
+		//CB10-10
+		var codeExist = [];
+
+		$('#code_result').find('li').each(function(){
+			// this is inner scope, in reference to the .phrase element
+			var codeExists = '';
+							
+			var g = $(this).data('cart-id');
+			console.log(g);
+			if(g === id){
+				codeExists += id;
+				codeExist.push(codeExists);
+			}			
+		});
+		
+		//CB10-10
+		if(codeExist.length == 0){	
+		
+		
+			if ( icd_secondary_ranking == '0' || icd_secondary_ranking == '' || icd_secondary_ranking == 'undefined' || icd_secondary_ranking == null )
 			{
-				return $(a).data('order') - $(b).data('order');
-				 
-			}).appendTo('.patient_code_sort');
+				  if(icd_ranking != 'N/A'){
+					var ranking = icd_ranking;
+				  }
+				  else{
+					  var ranking = '';
+				  }
+			}
+			else {
+				// var cartRankAdjusted = + 9.0 + icd_secondary_ranking;
+				var ranking = icd_secondary_ranking;
+             
+			}
+		
+			var $li = $("<li  class='ui-state-default' data-cart-id='"+id+"' data-order='"+ranking+"' />").html(full_text);
+			$(".patient_code_sort").append($li);
+			//alert("rere");
+			$(".patient_code_sort").sortable('refresh');
+			if($('#customsorting').val() == '')
+			{
+				
+				$('.patient_code_sort li').sort(function(a, b)
+				{
+					return $(a).data('order') - $(b).data('order');
+					 
+				}).appendTo('.patient_code_sort');
+			}
+			
+			var medicalrecordinput = $("#medicalrecordinput").val();
+			$("#medicalrecordinput").val(medicalrecordinput+','+id);
+		
 		}
-        
-        var medicalrecordinput = $("#medicalrecordinput").val();
-        $("#medicalrecordinput").val(medicalrecordinput+','+id);
+		else{
+			//CB10-10
+			/* $('.select2-selection').find('li.select2-selection__choice').each(function(){
+									
+				var g = $(this).attr('title');
+			
+				if(g === id){
+					//$(this).find('.select2-selection__choice__remove').trigger('click');
+					$(this).closest('li').remove();
+				}			
+			}); */
+			alert("Code is already exists");
+			return false;
+		}
         
     });
     
@@ -205,7 +291,7 @@ $(document).ready(function () {
         var patientname = $(this).data('patientname');
         var patient_id = $(this).data('id');
         $.ajax({
-            url: 'backend/patient/Controller.php',
+            url: '/backend/patient/Controller.php',
             type: 'POST',
             data: {action: 'deletePatient', id: patient_id},
             success: function (data) {
@@ -227,7 +313,16 @@ $(document).ready(function () {
         var medicalrecord = $("#medicalrecord").val();
         var hospital = $("#hospital").val();
         var patient_id = $("#patient_id").val();
-        
+        var questions = $('#qids').val();
+        var oldAnswers = $('#aids').val();
+        var resetCodeRank = $('#reset_code_rank').val();
+        var ans = [];
+$.each($("input[name='ques']:checked"), function(){   
+    var id = $(this).data('id');
+    var val = $(this).val();
+    var data = {key: id, value: val}
+    ans.push(data);
+});
         
         /*var code_data = $(".js-data-example-ajax").select2("val");
         $("#medicalrecordinput").val(code_data);*/
@@ -260,9 +355,9 @@ $(document).ready(function () {
         }
         if (error_count == 0) {
             $.ajax({
-                url: 'backend/patient/Controller.php',
+                url: '/backend/patient/Controller.php',
                 type: 'POST',
-                data: {action: 'savePatient', id: patient_id, firstname: firstname, lastname: lastname, medicalrecord: medicalrecord, hospital: hospital,medicalrecordinput:medicalrecordinput},
+                data: {action: 'savePatient', id: patient_id, firstname: firstname, lastname: lastname, medicalrecord: medicalrecord, hospital: hospital,medicalrecordinput:medicalrecordinput, questions: questions, oldAnswers: oldAnswers,ques: ans,reset_code_rank:resetCodeRank},
                 success: function (data) {
                     var data = JSON.parse(data);
                     if (data.status == "1") {

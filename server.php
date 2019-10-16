@@ -12,10 +12,23 @@ $medicalrecord    = "";
 $errors = array();
 
 
-
-
 // REGISTER USER
 if (isset($_POST['reg_user'])) {
+	
+	
+	if(isset($_POST['snf']) && !empty($_POST['snf'])){
+		
+		$_POST['hospital'] = $_POST['snf'][0];
+
+	}	
+
+	unset($_POST['snf'][0]);
+
+	/* echo "<pre>";
+		print_r($_POST['snf']);
+		die; */
+	
+	
   // receive all input values from the form
   $firstname = mysqli_real_escape_string($db, $_POST['firstname']);
   $lastname = mysqli_real_escape_string($db, $_POST['lastname']);
@@ -50,14 +63,28 @@ if (isset($_POST['reg_user'])) {
 
   // Finally, register user if there are no errors in the form
   if (count($errors) == 0) {
+	$patientRedirectUrl = str_replace( [' ', '\"', '\''], "-", strtolower($hospital) ) .'/patientorexisting.php';
   	$password = md5($password_1);//encrypt the password before saving in the database
 
   	$query = "INSERT INTO users (firstname, lastname, email, password, hospital)
   			  VALUES('$firstname', '$lastname', '$email', '$password', '$hospital')";
   	mysqli_query($db, $query);
+	$last_id = mysqli_insert_id($db);
+	
+	
+	foreach($_POST['snf'] as $hosp){
+		$query1 = "INSERT INTO users_hospitals (user_id, hospital_name)
+  			  VALUES('$last_id', '$hosp')";
+		mysqli_query($db, $query1);
+	}
+	
+	
+  	
+  	$_SESSION['id'] = $last_id;
   	$_SESSION['username'] = $email;
+	$_SESSION['hospital'] = $hospital;
   	$_SESSION['success'] = "You are now logged in";
-  	header('location: patientorexisting.php');
+  	header('location: /'.$patientRedirectUrl);
   }
 }
 
@@ -79,10 +106,12 @@ if (isset($_POST['login_user'])) {
   	$query = "SELECT * FROM users WHERE email=? AND password=?";
     $results  =  $pdo->getResult($query, [$email, $password]);
   	if ($results) {
+  	  $_SESSION['id'] 		= $results[0]['id'];
   	  $_SESSION['username'] = $email;
   	  $_SESSION['hospital'] = $results[0]['Hospital'];
   	  $_SESSION['success'] = "You are now logged in";
-  	  header('location: patientorexisting.php');
+	  $patientRedirectUrl = str_replace( [' ', '\"', '\''], "-", strtolower($_SESSION['hospital']) ) .'/patientorexisting.php';
+  	  header('location: /'.$patientRedirectUrl);
   	}else {
   		array_push($errors, "Wrong email/password combination");
   	}
@@ -91,6 +120,9 @@ if (isset($_POST['login_user'])) {
 
 // REGISTER Patient
 if (isset($_POST['reg_patient'])) {
+	
+
+	
   // receive all input values from the form
   $firstname = mysqli_real_escape_string($db, $_POST['firstname']);
   $lastname = mysqli_real_escape_string($db, $_POST['lastname']);
@@ -121,10 +153,13 @@ if (isset($_POST['reg_patient'])) {
     VALUES(?,?,?,?)";
     $patientId   = $pdo->insert($query, [$firstname, $lastname, $medicalrecord, $hospital]);
   	$_SESSION['medicalrecord'] = $medicalrecord;
-    $_SESSION['hopsital'] = $hospital;
+    $_SESSION['hospital'] = $hospital;
     $_SESSION['patient_name'] = $firstname.' '.$lastname;
   	$_SESSION['success'] = "Patient Created";
-  	header('location: index.php');
+	//echo strtolower($_SESSION['hospital']) .'/index.php';
+	$patientRedirectUrl = str_replace( [' ', '\"', '\''], "-", strtolower($_SESSION['hospital']) ) .'/index.php';
+	
+  	header('location: /'. $patientRedirectUrl);
   }
 }
 
@@ -202,13 +237,18 @@ if (isset($_POST['reg_medialsubmission'])) {
           VALUES(?, ?, ?, ?)";
       $pdo->insert($query, [$_SESSION['medicalrecord'], $q['id'], $answer, $points]);
     }
-   
+	
+    $patientRedirectUrl = str_replace( [' ', '\"', '\''], "-", strtolower($_SESSION['hospital']) ) .'/patientorexisting.php';
 
     flashMsg("Patient Record Submitted successfully and score was ". $totalScore);
     unset($_SESSION['medicalrecord']);
-    header('location: patientorexisting.php');
+    header('location: /'.$patientRedirectUrl);
   }
 }
+/* echo $_SESSION['id']; */
+if(isset($_SESSION['id']) && !empty($_SESSION['id'])){
+	
+	$otherhospitals  = $pdo->getResult("SELECT a.Hospital,GROUP_CONCAT(b.hospital_name SEPARATOR '|') AS hospital FROM users as a left join users_hospitals as b on a.id=b.user_id where a.id='".$_SESSION['id']."' GROUP BY a.id ORDER BY a.id");
 
-
+}
 ?>
