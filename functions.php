@@ -22,3 +22,12 @@
             }
         }
     }
+
+    function getLink($url){
+        global $config;
+        if(empty($config)){
+            $config = require_once('config.php');
+        }
+        $siteUrl    = $config['siteurl'];
+        return $siteUrl . $url;
+    }

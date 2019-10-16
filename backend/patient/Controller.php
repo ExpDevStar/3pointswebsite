@@ -79,7 +79,7 @@ class PatientController {
         </div>';
     }
     
-    public function getPatientDetail($pdo) {
+    public static function getPatientDetail($pdo) {
         $result = $pdo->getResult("SELECT * FROM patients INNER JOIN patient_answers ON patients.medicalrecord = patient_answers.medicalrecord where patients.id = ?", [$_POST['id']]);
         $quesHtml = '';
         if(empty($result)){
@@ -155,7 +155,7 @@ class PatientController {
         echo json_encode($data);
         die;
     }
-    public function savePatient($pdo, $pdo_connection)
+    public static function savePatient($pdo, $pdo_connection)
     {
         $check_medical_record = " SELECT * FROM patients WHERE medicalrecord = '" . $_POST['hospital'] . "' AND id != " . $_POST['id'] . " ";
         $code_result = $pdo_connection->getResult($check_medical_record);
@@ -239,7 +239,7 @@ class PatientController {
         die;
     }
     
-    public function deletePatient($pdo,$pdo_connection) {
+    public static function deletePatient($pdo,$pdo_connection) {
         $result = $pdo_connection->getResult("SELECT * FROM patients where id = ?", [$_POST['id']]);
         $medicalrecord = $result[0]['medicalrecord']; 
         
@@ -270,4 +270,3 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'savePatient') {
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletePatient') {
     PatientController::deletePatient($db,$pdo);
 }
-
