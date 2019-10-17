@@ -69,10 +69,19 @@ $(document).ready(function() {
    * Reset Code Rank
    */
   $(document).on("click", "#resetCodeRank", function() {
-    $("#reset_code_rank").val("1");
-    alert(
-      "Code Rank Will be resetted based on codes after clicking on submit button"
-    );
+    //sortable
+    $("#sortable li").sort(sort_li) // sort elements
+    .appendTo('#sortable'); // append again to the list
+// sort function callback
+function sort_li(a, b) {
+    return ($(b).data('order')) < ($(a).data('order')) ? 1 : -1;
+}
+$("#medicalrecordinput").val('');
+let codes = [];
+$("#sortable li").each(function(index,i) {
+    codes.push($(this).data('cart-id'));
+})
+$("#medicalrecordinput").val(codes);
   });
   /******************Edit code *******************/
   $(".filter-modal select").css("width", "100%");
