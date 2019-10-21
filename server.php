@@ -156,7 +156,7 @@ if (isset($_POST['reg_patient'])) {
     $_SESSION['patient_name'] = $firstname.' '.$lastname;
   	$_SESSION['success'] = "Patient Created";
 	//echo strtolower($_SESSION['hospital']) .'/index.php';
-	$patientRedirectUrl = str_replace( [' ', '\"', '\''], "-", strtolower($_SESSION['hospital']) ) .'/index.php';
+	//$patientRedirectUrl = str_replace( [' ', '\"', '\''], "-", strtolower($_SESSION['hospital']) ) .'/index.php';
 	
   	header('location: '. getLink($patientRedirectUrl));
   }
@@ -237,7 +237,7 @@ if (isset($_POST['reg_medialsubmission'])) {
       $pdo->insert($query, [$_SESSION['medicalrecord'], $q['id'], $answer, $points]);
     }
 	
-    $patientRedirectUrl = str_replace( [' ', '\"', '\''], "-", strtolower($_SESSION['hospital']) ) .'/patientorexisting.php';
+   // $patientRedirectUrl = str_replace( [' ', '\"', '\''], "-", strtolower($_SESSION['hospital']) ) .'/patientorexisting.php';
 
     flashMsg("Patient Record Submitted successfully and score was ". $totalScore);
     unset($_SESSION['medicalrecord']);
