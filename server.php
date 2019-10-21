@@ -62,7 +62,7 @@ if (isset($_POST['reg_user'])) {
 
   // Finally, register user if there are no errors in the form
   if (count($errors) == 0) {
-	$patientRedirectUrl = str_replace( [' ', '\"', '\''], "-", strtolower($hospital) ) .'/patientorexisting.php';
+	// $patientRedirectUrl = str_replace( [' ', '\"', '\''], "-", strtolower($hospital) ) .'/patientorexisting.php';
   	$password = md5($password_1);//encrypt the password before saving in the database
 
   	$query = "INSERT INTO users (firstname, lastname, email, password, hospital)
@@ -109,7 +109,7 @@ if (isset($_POST['login_user'])) {
   	  $_SESSION['username'] = $email;
   	  $_SESSION['hospital'] = $results[0]['Hospital'];
   	  $_SESSION['success'] = "You are now logged in";
-	  $patientRedirectUrl = str_replace( [' ', '\"', '\''], "-", strtolower($_SESSION['hospital']) ) .'/patientorexisting.php';
+	  //$patientRedirectUrl = str_replace( [' ', '\"', '\''], "-", strtolower($_SESSION['hospital']) ) .'/patientorexisting.php';
   	  header('location: '. getLink($patientRedirectUrl));
   	}else {
   		array_push($errors, "Wrong email/password combination");
