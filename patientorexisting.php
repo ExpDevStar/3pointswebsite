@@ -330,7 +330,7 @@ $(document).on('change', '#materialRegisterFormHospital_top', function() {
             var data = JSON.parse(data);
             console.log(data);
             var url = data.success;
-            window.location = siteurl + '/patientorexisting.php';
+            window.location = siteurl + 'patientorexisting.php';
 
         }
     });
